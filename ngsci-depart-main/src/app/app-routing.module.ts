@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { MatchComponent } from './match/match.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MescartesComponent } from './components/mescartes/mescartes.component';
+import { MagasinComponent } from './components/magasin/magasin.component';
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent },
@@ -11,6 +12,7 @@ const routes: Routes = [
     path: '', component: HomeComponent, children: [
       { path: '', component: WelcomeComponent },
       { path: 'mescartes', component: MescartesComponent },
+      { path: 'magasin', component: MagasinComponent },
     ]
   },
   { path: '**', redirectTo: '/' }
