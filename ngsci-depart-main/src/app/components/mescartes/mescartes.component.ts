@@ -18,13 +18,14 @@ export class MescartesComponent implements OnInit {
 
   apiUrl = "https://localhost:7179/api/";
 
-  listecartes: Card[] | undefined;
+
+  listemescartes: Card[] | undefined;
   constructor(private http: HttpClient) { }
 
 
   async ngOnInit() {
-    this.listecartes = await lastValueFrom(this.http.get<any>(this.apiUrl + "Card/GetPlayersCards"))
-    console.log(this.listecartes)
+    this.listemescartes = await lastValueFrom(this.http.get<any>(this.apiUrl + "Card/GetPlayersCards"))
+    console.log(this.listemescartes)
   }
 
 
