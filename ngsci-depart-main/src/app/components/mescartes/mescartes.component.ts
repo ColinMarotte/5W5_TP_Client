@@ -5,13 +5,14 @@ import { Card } from 'src/app/models/models';
 import { CardComponent } from '../card/card.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TriComponent } from '../tri/tri.component';
 
 @Component({
   selector: 'app-mescartes',
   templateUrl: './mescartes.component.html',
   styleUrls: ['./mescartes.component.css'],
   standalone: true,
-  imports: [CardComponent, FormsModule, CommonModule]
+  imports: [CardComponent, FormsModule, CommonModule, TriComponent]
 })
 export class MescartesComponent implements OnInit {
 
