@@ -2,8 +2,10 @@
 <mat-toolbar style="display: flex;">
   <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
   <a routerLink="/"><span>Super Cartes Infinies</span></a>
-  <a routerLink="/mescartes"><span>mes cartes</span></a>
+  <button mat-raised-button [routerLink]="['/mescartes']">Mes cartes</button>
+  <button mat-raised-button [routerLink]="['/magasin']">Magasin</button>
   <span style="flex: 1 1 auto;"></span>
+  <mat-chip style="margin-right: 20px;"> Se connecter </mat-chip>
   @if (isLogged()) {
   <mat-chip style="margin-right: 20px;">
     {{getUsername()}}
