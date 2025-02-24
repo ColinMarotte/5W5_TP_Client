@@ -36,23 +36,23 @@ export class TriComponent implements OnInit {
 
     if (this.champ === 'attaque') {
       if (this.order === 'croissant') {
-        this.listecartes = this.listecartes?.sort((a, b) => b.attack - a.attack)
+        this.listecartes = this.listecartes?.sort((b, a) => b.attack - a.attack)
       } else {
-        this.listecartes = this.listecartes?.sort((a, b) => a.attack - b.attack)
+        this.listecartes = this.listecartes?.sort((b, a) => a.attack - b.attack)
       }
     }
     else if (this.champ === 'points') {
       if (this.order === 'croissant') {
-        this.listecartes = this.listecartes?.sort((a, b) => b.health - a.health)
+        this.listecartes = this.listecartes?.sort((b, a) => b.health - a.health)
       } else {
-        this.listecartes = this.listecartes?.sort((a, b) => a.health - b.health)
+        this.listecartes = this.listecartes?.sort((b, a) => a.health - b.health)
       }
     }
     else if (this.champ === 'cout') {
       if (this.order === 'croissant') {
-        this.listecartes = this.listecartes?.sort((a, b) => b.cost - a.cost)
+        this.listecartes = this.listecartes?.sort((b, a) => b.cost - a.cost)
       } else {
-        this.listecartes = this.listecartes?.sort((a, b) => a.cost - b.cost)
+        this.listecartes = this.listecartes?.sort((b, a) => a.cost - b.cost)
       }
     }
 
