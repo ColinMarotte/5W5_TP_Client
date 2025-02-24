@@ -12,10 +12,34 @@ import { FormsModule } from '@angular/forms';
 export class TriComponent implements OnInit {
 
   @Input() listecartes: any[] = [];
-  croissant: String | undefined;
+  champ!: String;
+  order!: String;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  Champs() {
+    if (this.champ = 'attaque') {
+
+    }
+    else if (this.champ = 'points') {
+
+    }
+    else {
+
+    }
+  }
+
+
+  EnOrdre() {
+    if (this.order = 'croissant') {
+
+    }
+    else if (this.order = 'decroissant') {
+
+    }
   }
 
 }
