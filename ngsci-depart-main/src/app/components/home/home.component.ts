@@ -4,6 +4,7 @@ import { MatchService } from '../../services/match.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -14,9 +15,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public router: Router, public match: MatchService) { }
+  constructor(public router: Router, public match: MatchService, public dialog: MatDialog) { }
 
-  recherche!: Boolean;
+  recherche: Boolean = false;
   ngOnInit() {
 
   }
@@ -29,7 +30,11 @@ export class HomeComponent implements OnInit {
     let matchId = -1;
     this.recherche = true;
 
+    const dialogRef = this.dialog.open(DialogComponent, {
+      disableClose: true, // Empêche l'utilisateur de fermer la boîte de dialogue
+    });
     setTimeout(() => {
+      dialogRef.close();
       this.router.navigate(['/match/' + matchId]);
 
     },
