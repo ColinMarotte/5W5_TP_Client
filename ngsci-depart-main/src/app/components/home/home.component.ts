@@ -12,7 +12,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [MatButtonModule, RouterOutlet, CommonModule, FormsModule, MatIcon]
+  imports: [MatButtonModule, RouterOutlet, CommonModule, FormsModule, MatIcon, DialogComponent]
 })
 export class HomeComponent implements OnInit {
 
