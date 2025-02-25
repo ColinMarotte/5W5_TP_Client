@@ -3,17 +3,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { MatchComponent } from './match/match.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './auth.interceptor';
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent },
-  { path: '', component: HomeComponent, children: [
-    { path: '', component: WelcomeComponent },
-  ]},
-  { path: '**', redirectTo: '/'}
+  {
+    path: '', component: HomeComponent, children: [
+      { path: '', component: WelcomeComponent },
+    ]
+  },
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [provideHttpClient(withInterceptors([authInterceptor]))]
 })
 export class AppRoutingModule { }
