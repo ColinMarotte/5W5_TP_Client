@@ -17,9 +17,63 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(public httpService: HttpService, public router: Router) { }
+  form: FormGroup<any>
+
+  formData?: Data;
+
+  constructor(public httpService: HttpService, public router: Router, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, this.passwordValidator]],
+      passwordConfirm: ["", [Validators.required]]
+    },
+      { validators: this.passwordConfirmValidator });
+
+    this.form.valueChanges.subscribe(() => {
+      this.formData = this.form.value;
+    });
+  }
 
   ngOnInit() {
   }
 
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.value;
+
+    if (!password) {
+      return null;
+    }
+
+    let passwordLengthValid: boolean = true;
+
+    if (password.length < 6) {
+      passwordLengthValid = false;
+    }
+
+    return !passwordLengthValid ? { passwordLengthError: true } : null;
+  }
+
+  passwordConfirmValidator(form: AbstractControl): ValidationErrors | null {
+    const password = form.get('password')?.value;
+    const passwordConfirm = form.get('passwordConfirm')?.value;
+
+    if (!password || !passwordConfirm) {
+      return null;
+    }
+
+    let samePasswords: boolean = true;
+
+    if (password != passwordConfirm) {
+      samePasswords = false;
+    }
+
+    return !samePasswords ? { passwordNotConfirmed: true } : null;
+  }
+
+}
+
+interface Data {
+  email?: string | null;
+  password?: string | null;
+  passwordConfirm?: string | null;
 }

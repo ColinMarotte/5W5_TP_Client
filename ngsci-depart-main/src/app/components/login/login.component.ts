@@ -17,9 +17,27 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public httpService: HttpService, public router: Router) { }
+  form: FormGroup<any>
+
+  formData?: Data;
+
+  constructor(public httpService: HttpService, public router: Router, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: ["", [Validators.required]],
+      password: ["", [Validators.required]]
+    });
+
+    this.form.valueChanges.subscribe(() => {
+      this.formData = this.form.value;
+    });
+  }
 
   ngOnInit() {
   }
 
+}
+
+interface Data {
+  email?: string | null;
+  password?: string | null;
 }
