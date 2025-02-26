@@ -6,6 +6,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpService } from './services/http.service';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,12 +21,13 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     RouterOutlet,
     MatButtonModule,
+    MatSnackBarModule
   ],
 })
 export class AppComponent {
   title = 'supercartesinfinies';
 
-  constructor(public router: Router, public matchService: MatchService) { }
+  constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   isLogged(): boolean {
     if (sessionStorage.getItem("token") != null) {
@@ -38,14 +42,19 @@ export class AppComponent {
     return username;
   }
 
-  async logout() {
+  logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("playerId");
     sessionStorage.removeItem("username");
     console.log('Déconnexion réussie');
   }
 
-  async login() {
+  login() {
     this.router.navigate(['/login']);
+  }
+
+  async test(){
+    let testData: string = (await this.httpService.test()).toString();
+    this.snackBar.open(testData, 'OK', { duration: 5000 });
   }
 }

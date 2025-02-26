@@ -50,4 +50,10 @@ export class HttpService {
       return "success";
     }
   }
+
+  async test() : Promise<string[]>{
+    let x = await lastValueFrom(this.http.get<string[]>(domain + "api/Account/PrivateData"));
+    console.log(x);
+    return x;
+  }
 }
