@@ -72,9 +72,23 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
-        // const manaGained = event.manaAmount;
-        // this.playerData!.mana += manaGained;
-        // console.log("player ${event.playerId} gains ${manaGained} mana. Total mana: ${playerData.mana}`);")
+        let joueur = this.currentPlayerId
+        let joueurE = event.playerId
+        console.log(joueur, joueurE)
+        let opponent = this.adversaryData
+        console.log(opponent)
+
+
+        if (joueur === joueurE) {
+          const manaGained = event.mana;
+          this.playerData!.mana += manaGained;
+          console.log(`Joueur ${joueur} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
+        }
+        else {
+          const manaGained = event.mana;
+          this.adversaryData!.mana += manaGained;
+          console.log(`Joueur ${opponent} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
+        }
         break;
       }
 
