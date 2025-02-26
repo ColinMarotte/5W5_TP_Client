@@ -9,21 +9,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { PlayerhandComponent } from './playerhand/playerhand.component';
 import { EnemyhandComponent } from './enemyhand/enemyhand.component';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 
 @Component({
-    selector: 'app-match',
-    templateUrl: './match.component.html',
-    styleUrls: ['./match.component.css'],
-    standalone: true,
-    imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
+  selector: 'app-match',
+  templateUrl: './match.component.html',
+  styleUrls: ['./match.component.css'],
+  standalone: true,
+  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule]
 })
 export class MatchComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, public router: Router, public matchService:MatchService, public apiService:ApiService, public faker:FakerService) { }
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService) { }
+
+
+
 
   async ngOnInit() {
-    let matchId:number  = parseInt(this.route.snapshot.params["id"]);
+    let matchId: number = parseInt(this.route.snapshot.params["id"]);
     // TODO Tâche Hub: Se connecter au Hub et obtenir le matchData
 
     // Test: À retirer une fois que le Hub est fonctionnel
@@ -32,6 +37,7 @@ export class MatchComponent implements OnInit {
 
     let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
     this.matchService.applyEvent(fakeStartMatchEvent);
+
   }
 
   async endTurn() {
@@ -62,6 +68,7 @@ export class MatchComponent implements OnInit {
   fakeSurrender() {
     let fakeEndMatchEvent = this.faker.createFakeEndMatchEvent(this.matchService.adversaryData!);
     this.matchService.applyEvent(fakeEndMatchEvent);
+    console.log(this.matchService.matchfini)
   }
 
   endMatch() {
@@ -70,7 +77,7 @@ export class MatchComponent implements OnInit {
   }
 
   isVictory() {
-    if(this.matchService.matchData?.winningPlayerId)
+    if (this.matchService.matchData?.winningPlayerId)
       return this.matchService.matchData!.winningPlayerId === this.matchService.playerData!.playerId
     return false;
   }

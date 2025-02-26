@@ -18,6 +18,10 @@ export class MatchService {
   opponentSurrendered: boolean = false;
   isCurrentPlayerTurn: boolean = false;
 
+  matchfini: boolean = false;
+  victoire: boolean = false;
+  perdant: number = -1;
+
   constructor(public faker: FakerService) { }
 
   clearMatch() {
@@ -27,6 +31,10 @@ export class MatchService {
     this.adversaryData = undefined;
     this.opponentSurrendered = false;
     this.isCurrentPlayerTurn = false;
+
+    this.matchfini = false;
+    this.victoire = false;
+    this.perdant = -1;
   }
 
   playTestMatch(cards: Card[]) {
@@ -82,11 +90,13 @@ export class MatchService {
         if (joueur === joueurE) {
           const manaGained = event.mana;
           this.playerData!.mana += manaGained;
+
           console.log(`Joueur ${joueur} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
         }
         else {
           const manaGained = event.mana;
           this.adversaryData!.mana += manaGained;
+
           console.log(`Joueur ${opponent} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
         }
         break;
@@ -112,6 +122,16 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+
+        if (event.winningPlayerId === this.currentPlayerId) {
+          this.victoire = true;
+          console.log("Victoire pour le joueur " + this.currentPlayerId);
+        } else {
+          this.victoire = false;
+          this.perdant = this.currentPlayerId;
+          console.log("Défaite pour le joueur " + this.currentPlayerId);
+        }
+
         break;
       }
     }
