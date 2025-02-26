@@ -63,20 +63,26 @@ export class RegisterComponent implements OnInit {
   }
 
   passwordConfirmValidator(form: AbstractControl): ValidationErrors | null {
-    const password = form.get('password')?.value;
-    const passwordConfirm = form.get('passwordConfirm')?.value;
+    const passwordControl = form.get('password');
+    const passwordConfirmControl = form.get('passwordConfirm');
 
-    if (!password || !passwordConfirm) {
+    if (!passwordControl?.value || !passwordConfirmControl?.value) {
       return null;
     }
 
-    let samePasswords: boolean = true;
-
-    if (password != passwordConfirm) {
-      samePasswords = false;
+    if (passwordControl.errors && !passwordControl.errors?.['passwordNotConfirmed']) {
+      return null;
     }
 
-    return !samePasswords ? { passwordNotConfirmed: true } : null;
+    if (passwordControl.value !== passwordConfirmControl.value) {
+      passwordControl.setErrors({ passwordNotConfirmed: true });
+      passwordConfirmControl.setErrors({ passwordNotConfirmed: true });
+      return { passwordNotConfirmed: true };
+    } else {
+      passwordControl.setErrors(null);
+      passwordConfirmControl.setErrors(null);
+      return null;
+    }
   }
 
   async register() {

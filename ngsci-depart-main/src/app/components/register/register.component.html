@@ -17,7 +17,7 @@
         <mat-error *ngIf="form.get('password')?.hasError('required')">
           Le mot de passe est <strong>requis</strong>.
         </mat-error>
-        <mat-error *ngIf="form.hasError('passwordNotConfirmed')">
+        <mat-error *ngIf="form.get('password')?.hasError('passwordNotConfirmed')">
           Les mots de passe ne sont pas identiques.
         </mat-error>
         <mat-error *ngIf="form.get('password')?.hasError('passwordLengthError')">
@@ -31,7 +31,7 @@
         <mat-error *ngIf="form.get('passwordConfirm')?.hasError('required')">
           La confirmation du mot de passe est <strong>requise</strong>.
         </mat-error>
-        <mat-error *ngIf="form.hasError('passwordNotConfirmed')">
+        <mat-error *ngIf="form.get('passwordConfirm')?.hasError('passwordNotConfirmed')">
           Les mots de passe ne sont pas identiques.
         </mat-error>
       </mat-form-field>
