@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginDTO, RegisterDTO } from '../models/dtos';
 import { lastValueFrom } from 'rxjs';
 
@@ -35,20 +35,23 @@ export class HttpService {
       email,
       password);
 
-    let x = await lastValueFrom(this.http.post<any>(domain + "api/Account/Login", loginDTO));
-    console.log(x);
+    let stringResponse: string = ""
 
-    if (x.error) {
-      console.log(x.error);
-      return x.error;
-    } else {
-      console.log('Token: ' + x.token);
-      console.log('Player Id: ' + x.playerId);
-      sessionStorage.setItem("token", x.token);
-      sessionStorage.setItem("playerId", x.playerId);
+    await lastValueFrom(this.http.post<any>(domain + "api/Account/Login", loginDTO)).catch((error: HttpErrorResponse) => {
+      console.log("error: ", error.error.error);
+      stringResponse =  error.error.error
+    }).then(response => {
+      if (stringResponse == ""){
+      console.log("Réponse: ", response);
+      console.log('Token: ' + response.token);
+      console.log('Player Id: ' + response.playerId);
+      sessionStorage.setItem("token", response.token);
+      sessionStorage.setItem("playerId", response.playerId);
       sessionStorage.setItem("username", email);
-      return "success";
-    }
+      stringResponse = "success";
+      }
+    })
+    return stringResponse;
   }
 
   async test() : Promise<string[]>{
