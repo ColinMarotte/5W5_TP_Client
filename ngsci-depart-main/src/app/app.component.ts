@@ -42,6 +42,7 @@ export class AppComponent {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("playerId");
     sessionStorage.removeItem("username");
+    console.log('Déconnexion réussie');
   }
 
   async login() {

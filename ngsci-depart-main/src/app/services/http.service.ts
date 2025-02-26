@@ -42,8 +42,8 @@ export class HttpService {
       console.log(x.error);
       return x.error;
     } else {
-      console.log(x.token);
-      console.log(x.playerId);
+      console.log('Token: ' + x.token);
+      console.log('Player Id: ' + x.playerId);
       sessionStorage.setItem("token", x.token);
       sessionStorage.setItem("playerId", x.playerId);
       sessionStorage.setItem("username", email);

@@ -7,13 +7,14 @@ import { MatCard } from '@angular/material/card';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatCard, MatInput]
+  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatCard, MatInput, MatButton]
 })
 export class RegisterComponent implements OnInit {
 
@@ -21,13 +22,21 @@ export class RegisterComponent implements OnInit {
 
   formData?: Data;
 
+  emailInput: string | null = null;
+
+  passwordInput: string | null = null;
+
+  passwordConfirmInput: string | null = null;
+
+  reponse: string = "";
+
   constructor(public httpService: HttpService, public router: Router, private fb: FormBuilder) {
     this.form = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, this.passwordValidator]],
       passwordConfirm: ["", [Validators.required]]
     },
-      { validators: this.passwordConfirmValidator });
+      { validators: [this.passwordConfirmValidator] });
 
     this.form.valueChanges.subscribe(() => {
       this.formData = this.form.value;
@@ -68,6 +77,19 @@ export class RegisterComponent implements OnInit {
     }
 
     return !samePasswords ? { passwordNotConfirmed: true } : null;
+  }
+
+  async register() {
+    if(this.emailInput != null && this.passwordInput != null && this.passwordConfirmInput != null){
+      this.reponse = await this.httpService.register(this.emailInput, this.passwordInput, this.passwordConfirmInput);
+      if(this.reponse == "success"){
+        this.router.navigate(['/home']);
+      }
+    }
+  }
+
+  toLogin(){
+    this.router.navigate(['/login']);
   }
 
 }

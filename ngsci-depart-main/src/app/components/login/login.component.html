@@ -3,21 +3,26 @@
   <mat-card class="artist-card" style="margin: 16px; padding: 16px;">
     <form [formGroup]="form">
       <mat-form-field style="width: 100%">
-        <input matInput type="email" placeholder="Courriel" formControlName="email" name="email" />
+        <input matInput [(ngModel)]="emailInput" type="email" placeholder="Courriel*" formControlName="email" name="email" required/>
         <mat-error *ngIf="form.get('email')?.hasError('required')">
           Le courriel est <strong>requis</strong>.
         </mat-error>
       </mat-form-field>
 
       <mat-form-field style="width: 100%">
-        <input matInput type="password" placeholder="Mot de passe" formControlName="password" name="password" />
+        <input matInput [(ngModel)]="passwordInput" type="password" placeholder="Mot de passe*" formControlName="password" name="password" required/>
         <mat-error *ngIf="form.get('password')?.hasError('required')">
           Le mot de passe est <strong>requis</strong>.
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" [disabled]="!form.valid">
+      <button mat-raised-button color="primary" (click)="login()" [disabled]="!form.valid">
         Se connecter
+      </button>
+      <br>
+      <br>
+      <button mat-raised-button color="primary" (click)="toRegister()">
+        Créer un compte
       </button>
     </form>
   </mat-card>
