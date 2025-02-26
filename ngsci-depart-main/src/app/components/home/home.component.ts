@@ -1,24 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatchService } from '../../services/match.service';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, Validators } from '@angular/forms';
-import { DialogComponent } from '../dialog/dialog.component';
-import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [MatButtonModule, RouterOutlet, CommonModule, FormsModule, MatIcon, DialogComponent]
+  imports: [MatProgressSpinner, RouterOutlet, CommonModule, FormsModule]
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public router: Router, public match: MatchService, private fb: FormBuilder) { }
+  constructor(public router: Router, public match: MatchService) { }
 
-  recherche: Boolean = false;
+  recherche: boolean = false;
 
   ngOnInit() {
 
@@ -30,20 +28,17 @@ export class HomeComponent implements OnInit {
     // TODO: Hub: Se connecter au Hub et joindre un match
 
     let matchId = -1;
-    this.recherche = true;
 
-    /* const dialogRef = this.dialog.open(DialogComponent, {
-      disableClose: true, // Empêche l'utilisateur de fermer la boîte de dialogue
-    }); */
     setTimeout(() => {
-      // dialogRef.close();
+
       this.router.navigate(['/match/' + matchId]);
-
+      console.log('match trouvé !');
     },
-      1000)
+      5000)
 
 
-    console.log()
+    this.recherche = true;
+    console.log('recherche de joueur en cours...');
   }
 }
 

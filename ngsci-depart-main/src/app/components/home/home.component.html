@@ -2,9 +2,10 @@
   <button mat-raised-button color="accent" style="margin-right: 20px;" (click)="joinMatch()">Joindre une partie</button>
 </div>
 
-<div *ngIf="recherche">
-
+<div class="loading-dialog" *ngIf="recherche">
+  <h2>Recherche d'un adversaire...</h2>
+  <mat-spinner> ></mat-spinner>
 </div>
 
-<app-dialog></app-dialog>
+
 <router-outlet></router-outlet>
