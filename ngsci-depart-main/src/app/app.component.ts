@@ -23,18 +23,28 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent {
   title = 'supercartesinfinies';
 
-  constructor(public router: Router, public matchService: MatchService) {}
+  constructor(public router: Router, public matchService: MatchService) { }
 
-  isLogged() {
-    // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
-    return true;
+  isLogged(): boolean {
+    if (sessionStorage.getItem("token") != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getUsername() {
-    return 'USERNAME';
+    let username: string | null = sessionStorage.getItem("username");
+    return username;
   }
 
   async logout() {
-    // TODO: Gérer le logout
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("playerId");
+    sessionStorage.removeItem("username");
+  }
+
+  async login() {
+    this.router.navigate(['/login']);
   }
 }
