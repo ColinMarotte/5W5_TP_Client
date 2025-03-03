@@ -30,11 +30,11 @@ export class MatchService {
   }
 
   playTestMatch(cards:Card[]){
-    let matchData:MatchData =this.faker.createFakeMatchData(cards);
+    // let matchData:MatchData =this.faker.createFakeMatchData(cards);
 
     // Le joueur B est celui qui commence à jouer en premier. Pour le test, on est le joueur B.
-    this.playMatch(matchData, matchData.playerB.id);
-    return matchData;
+    /*this.playMatch(matchData, matchData.playerB.id);
+    return matchData;*/
   }
 
   playMatch(matchData:MatchData, currentPlayerId:number) {
@@ -73,7 +73,10 @@ export class MatchService {
       }
 
       case "GainMana": {
-        // TODO
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
+          playerData.mana += event.mana;
+        }
         break;
       }
 
