@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatchService } from '../services/match.service';
 import { ApiService } from '../services/api.service';
 import { FakerService } from '../services/faker.service';
-import { HubService } from '../services/hub.service';
 import { MatchData } from '../models/models';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
 import { EnemyhandComponent } from './enemyhand/enemyhand.component';
@@ -20,6 +19,7 @@ import { HealthComponent } from './health/health.component';
 })
 export class MatchComponent implements OnInit {
 
+  userId: string = "";
   matchId: number = 0;
 
   constructor(
@@ -27,22 +27,17 @@ export class MatchComponent implements OnInit {
     public router: Router,
     public matchService: MatchService,
     public apiService: ApiService,
-    public faker: FakerService,
-    public hubService: HubService
+    //public faker: FakerService,
+    //public hubService: HubService
   ) {}
 
   async ngOnInit() {
     this.matchId = parseInt(this.route.snapshot.params["id"], 10);
-    let playerId: string | null = sessionStorage.getItem("playerId");
-
-    if (playerId && this.hubService.joiningMatchData) {
-      this.matchService.playMatch(this.hubService.joiningMatchData, this.hubService.joiningMatchData.playerA.id);
-    }
-
-    if (this.hubService.startMatchEvent) {
-      await this.matchService.applyEvent(this.hubService.startMatchEvent);
-    }
-
+    let playerIdString: string | null = sessionStorage.getItem("playerId");
+    let playerId : number | null=null;
+    if(playerIdString){
+    playerId= parseInt(playerIdString); }
+        
         /*
     let cards = await this.apiService.getPlayersCards();
     this.matchService.playTestMatch(cards);
@@ -52,46 +47,38 @@ export class MatchComponent implements OnInit {
     */
   }
 
+  public async joinMatch(userId: string){
+    this.matchService.joinMatch(userId)
+      
+    this.userId=userId  
+    }
+  
   async endTurn() {
-
-    await this.hubService.endTurn(this.hubService.userId, this.matchId);
-    await this.matchService.applyEvent(this.hubService.endTurnEvent);
+    this.matchService.endTurn();
     // this.fakeEndTurn();
   }
 
-  async fakeEndTurn() {
-    let fakeEndTurnEvent = this.faker.createFakePlayerEndTurnEvent(this.matchService.playerData!, this.matchService.adversaryData!);
-    await this.matchService.applyEvent(fakeEndTurnEvent);
+  // async fakeEndTurn() {
+  //   let fakeEndTurnEvent = this.faker.createFakePlayerEndTurnEvent(this.matchService.playerData!, this.matchService.adversaryData!);
+  //   await this.matchService.applyEvent(fakeEndTurnEvent);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+  //   await new Promise(resolve => setTimeout(resolve, 3000));
 
-    let adversaryFakeEndTurnEvent = this.faker.createFakePlayerEndTurnEvent(this.matchService.adversaryData!, this.matchService.playerData!);
-    await this.matchService.applyEvent(adversaryFakeEndTurnEvent);
-  }
+  //   let adversaryFakeEndTurnEvent = this.faker.createFakePlayerEndTurnEvent(this.matchService.adversaryData!, this.matchService.playerData!);
+  //   await this.matchService.applyEvent(adversaryFakeEndTurnEvent);
+  // }
 
   async surrender() {
-    let playerId: string | null = sessionStorage.getItem("playerId");
-    if (!playerId || !this.hubService.joiningMatchData) return;
 
-    let matchId: number = parseInt(this.route.snapshot.params["id"], 10);
-    let userId: number | null = null;
-
-    if (parseInt(playerId, 10) === this.hubService.joiningMatchData.playerA.id) {
-      userId = this.hubService.joiningMatchData.playerA.id;
-    }
-
-    if (userId) {
-      await this.hubService.surrender(userId.toString(), matchId);
-      await this.matchService.applyEvent(this.hubService.surrenderEvent);
-    }
+    this.matchService.surrender()
 
     // this.fakeSurrender();
   }
 
-  fakeSurrender() {
-    let fakeEndMatchEvent = this.faker.createFakeEndMatchEvent(this.matchService.adversaryData!);
-    this.matchService.applyEvent(fakeEndMatchEvent);
-  }
+  // fakeSurrender() {
+  //   let fakeEndMatchEvent = this.faker.createFakeEndMatchEvent(this.matchService.adversaryData!);
+  //   this.matchService.applyEvent(fakeEndMatchEvent);
+  // }
 
   endMatch() {
     this.matchService.clearMatch();

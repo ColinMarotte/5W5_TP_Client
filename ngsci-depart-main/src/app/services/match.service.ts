@@ -3,6 +3,11 @@ import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
 import { FakerService } from './faker.service';
+import { HubConnection } from '@microsoft/signalr';
+import * as signalR from '@microsoft/signalr';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
+const _hubUrl = "https://localhost:7179/matchHub";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +16,7 @@ export class MatchService {
   match:Match | null = null;
   matchData:MatchData | null = null;
   currentPlayerId:number = -1;
+  currentUserId:string="";
 
   playerData: PlayerData | undefined;
   adversaryData: PlayerData | undefined;
@@ -18,8 +24,80 @@ export class MatchService {
   opponentSurrendered:boolean = false;
   isCurrentPlayerTurn:boolean = false;
 
-  constructor(public faker:FakerService) { }
+  hubConnection: HubConnection | undefined;
+  private startMatchSubject = new BehaviorSubject<any>(null);
+  startMatch$ = this.startMatchSubject.asObservable();
+  
+  constructor(public faker:FakerService) {
+     this.connectToHub();
+    }
 
+
+  private async connectToHub() {
+    this.hubConnection = await new signalR.HubConnectionBuilder()
+                              .withUrl(_hubUrl)
+                              .build();
+
+    this.hubConnection.on('JoiningMatchData', (data) => {
+      console.log("JoiningMatchData", data);
+      this.startMatchSubject.next(data)
+      this.playMatch(data, this.currentPlayerId)     
+    })
+
+    this.hubConnection.on('StartMatchEvent', (data) => {
+      console.log("startMatchEvent:",data);
+      this.applyEvent(data)
+    })
+
+    this.hubConnection.on('EndTurnEvent', (data) => {
+      console.log("endturnevent:", data)
+      this.applyEvent(data)
+    })
+
+    this.hubConnection.on('SurrenderEvent', (data) => {
+      console.log("SurrenderEvent:",data);
+      this.applyEvent(data)
+    })
+
+    this.hubConnection
+                      .start()
+                      .then(() => {
+                          console.log('La connexion est active!');
+                        })
+                      .catch(err => console.log('Error while starting connection: ' + err));
+}
+public async joinMatch(userId: string){
+  if (!this.hubConnection) {
+    console.error('La connexion SignalR n\'est pas établie.');
+    return ;
+  }
+
+  this.currentUserId=userId
+
+  await this.hubConnection.invoke('JoinMatch', userId );
+  console.log("invoked JoinMatch");
+  }
+
+  public async endTurn(){
+      console.log("Ending Turn Event:", this.match?.id);
+      if (!this.hubConnection) {
+        console.error('La connexion SignalR n\'est pas établie.');
+        return ;
+      }
+      await this.hubConnection.invoke('EndTurn', this.currentUserId, this.match?.id);
+      console.log("invoked EndTurn")
+  }
+
+  public async surrender(){
+    console.log("Ending Turn Event:", this.match?.id);
+      if (!this.hubConnection) {
+        console.error('La connexion SignalR n\'est pas établie.');
+        return ;
+      }
+      console.log("Surrendering")
+    await this.hubConnection.invoke('Surrender', this.currentUserId, this.match?.id );
+    
+  }
   clearMatch(){
     this.match = null;
     this.matchData = null;
@@ -102,6 +180,7 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+        console.log("MatchEnded, winner: "+this.matchData?.winningPlayerId);
         break;
       }
     }
