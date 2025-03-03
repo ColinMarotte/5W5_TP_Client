@@ -18,16 +18,18 @@ export class HttpService {
       password,
       passwordConfirm);
 
-    let x = await lastValueFrom(this.http.post<any>(domain + "api/Account/Register", registerDTO));
-    console.log(x);
+    let stringResponse: string = "";
 
-    if (x.error) {
-      console.log(x.error);
-      return x.error;
-    } else {
-      console.log(x.message);
-      return await this.login(email, password);
-    }
+    await lastValueFrom(this.http.post<any>(domain + "api/Account/Register", registerDTO)).catch((error: HttpErrorResponse) => {
+      console.log("Erreur: ", error.error.error);
+      stringResponse =  error.error.error;
+    }).then(async response => {
+      if (stringResponse == ""){
+      console.log("Réponse: ", response);
+      stringResponse = await this.login(email, password);
+      }
+    })
+    return stringResponse;
   }
 
   async login(email: string, password: string): Promise<string> {
@@ -35,11 +37,11 @@ export class HttpService {
       email,
       password);
 
-    let stringResponse: string = ""
+    let stringResponse: string = "";
 
     await lastValueFrom(this.http.post<any>(domain + "api/Account/Login", loginDTO)).catch((error: HttpErrorResponse) => {
-      console.log("error: ", error.error.error);
-      stringResponse =  error.error.error
+      console.log("Erreur: ", error.error.error);
+      stringResponse =  error.error.error;
     }).then(response => {
       if (stringResponse == ""){
       console.log("Réponse: ", response);

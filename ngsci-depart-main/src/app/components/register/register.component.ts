@@ -8,13 +8,14 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButton } from '@angular/material/button';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatCard, MatInput, MatButton]
+  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatCard, MatInput, MatButton, MatSnackBarModule]
 })
 export class RegisterComponent implements OnInit {
 
@@ -30,7 +31,7 @@ export class RegisterComponent implements OnInit {
 
   reponse: string = "";
 
-  constructor(public httpService: HttpService, public router: Router, private fb: FormBuilder) {
+  constructor(public httpService: HttpService, public router: Router, private fb: FormBuilder, public snackBar: MatSnackBar) {
     this.form = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, this.passwordValidator]],
@@ -90,6 +91,7 @@ export class RegisterComponent implements OnInit {
       this.reponse = await this.httpService.register(this.emailInput, this.passwordInput, this.passwordConfirmInput);
       if(this.reponse == "success"){
         this.router.navigate(['/home']);
+        this.snackBar.open('Inscription réussie!', 'OK', { duration: 5000 });
       }
     }
   }

@@ -36,6 +36,12 @@
         </mat-error>
       </mat-form-field>
 
+      <div style="color: #db3f23;">
+        {{reponse}}
+      </div>
+      
+      <br>
+
       <button mat-raised-button color="primary" (click)="register()" [disabled]="!form.valid">
         Créer un compte
       </button>

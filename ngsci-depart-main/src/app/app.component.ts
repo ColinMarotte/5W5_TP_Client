@@ -8,7 +8,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpService } from './services/http.service';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +45,8 @@ export class AppComponent {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("playerId");
     sessionStorage.removeItem("username");
-    console.log('Déconnexion réussie');
+    console.log('Déconnexion réussie!');
+    this.snackBar.open('Déconnexion réussie!', 'OK', { duration: 5000 });
   }
 
   login() {
