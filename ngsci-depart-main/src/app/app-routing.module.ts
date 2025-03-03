@@ -9,14 +9,15 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { apiGuard } from './guard/api.guard';
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent },
   {
     path: '', component: HomeComponent, children: [
       { path: '', component: WelcomeComponent },
-      { path: 'mescartes', component: MescartesComponent },
-      { path: 'magasin', component: MagasinComponent },
+      { path: 'mescartes', component: MescartesComponent, canActivate: [apiGuard] },
+      { path: 'magasin', component: MagasinComponent, canActivate: [apiGuard] },
     ]
   },
   { path: 'register', component: RegisterComponent },

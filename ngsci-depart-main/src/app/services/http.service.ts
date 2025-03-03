@@ -12,6 +12,14 @@ export class HttpService {
 
   constructor(public http: HttpClient) { }
 
+  async isLogged(): Promise<boolean> {
+    const token = sessionStorage.getItem("token")
+    if (token != "") {
+      return true
+    }
+    return false
+  }
+
   async register(email: string, password: string, passwordConfirm: string): Promise<string> {
     let registerDTO = new RegisterDTO(
       email,
@@ -22,11 +30,11 @@ export class HttpService {
 
     await lastValueFrom(this.http.post<any>(domain + "api/Account/Register", registerDTO)).catch((error: HttpErrorResponse) => {
       console.log("Erreur: ", error.error.error);
-      stringResponse =  error.error.error;
+      stringResponse = error.error.error;
     }).then(async response => {
-      if (stringResponse == ""){
-      console.log("Réponse: ", response);
-      stringResponse = await this.login(email, password);
+      if (stringResponse == "") {
+        console.log("Réponse: ", response);
+        stringResponse = await this.login(email, password);
       }
     })
     return stringResponse;
@@ -41,22 +49,22 @@ export class HttpService {
 
     await lastValueFrom(this.http.post<any>(domain + "api/Account/Login", loginDTO)).catch((error: HttpErrorResponse) => {
       console.log("Erreur: ", error.error.error);
-      stringResponse =  error.error.error;
+      stringResponse = error.error.error;
     }).then(response => {
-      if (stringResponse == ""){
-      console.log("Réponse: ", response);
-      console.log('Token: ' + response.token);
-      console.log('Player Id: ' + response.playerId);
-      sessionStorage.setItem("token", response.token);
-      sessionStorage.setItem("playerId", response.playerId);
-      sessionStorage.setItem("username", email);
-      stringResponse = "success";
+      if (stringResponse == "") {
+        console.log("Réponse: ", response);
+        console.log('Token: ' + response.token);
+        console.log('Player Id: ' + response.playerId);
+        sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("playerId", response.playerId);
+        sessionStorage.setItem("username", email);
+        stringResponse = "success";
       }
     })
     return stringResponse;
   }
 
-  async test() : Promise<string[]>{
+  async test(): Promise<string[]> {
     let x = await lastValueFrom(this.http.get<string[]>(domain + "api/Account/PrivateData"));
     console.log(x);
     return x;
