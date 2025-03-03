@@ -6,6 +6,7 @@ import { CardComponent } from '../card/card.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TriComponent } from '../tri/tri.component';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-mescartes',
@@ -20,11 +21,13 @@ export class MescartesComponent implements OnInit {
 
 
   listemescartes: Card[] | undefined;
-  constructor(private http: HttpClient) { }
+  constructor(private apiservice: ApiService) { }
 
 
+  playerId = sessionStorage.getItem("playerId")
   async ngOnInit() {
-    this.listemescartes = await lastValueFrom(this.http.get<any>(this.apiUrl + "Card/GetPlayersCards"))
+
+    this.apiservice.getPlayersCards(this.playerId!)
     console.log(this.listemescartes)
   }
 

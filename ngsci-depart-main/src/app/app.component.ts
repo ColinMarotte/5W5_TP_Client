@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpService } from './services/http.service';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
     MatChipsModule,
     RouterOutlet,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
     RouterLink
   ],
 })
@@ -54,7 +54,7 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
-  async test(){
+  async test() {
     let testData: string = (await this.httpService.test()).toString();
     this.snackBar.open(testData, 'OK', { duration: 5000 });
   }

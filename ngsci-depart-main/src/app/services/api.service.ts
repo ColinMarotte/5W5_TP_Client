@@ -19,8 +19,8 @@ export class ApiService {
     return result;
   }
 
-  async getPlayersCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards'));
+  async getPlayersCards(playerId: string): Promise<Card[]> {
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards/' + playerId));
     return result;
   }
 }

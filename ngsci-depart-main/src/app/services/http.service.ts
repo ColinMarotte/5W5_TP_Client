@@ -14,7 +14,7 @@ export class HttpService {
 
   async isLogged(): Promise<boolean> {
     const token = sessionStorage.getItem("token")
-    if (token != "") {
+    if (token != null) {
       return true
     }
     return false

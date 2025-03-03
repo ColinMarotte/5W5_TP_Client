@@ -32,7 +32,8 @@ export class MatchComponent implements OnInit {
     // TODO Tâche Hub: Se connecter au Hub et obtenir le matchData
 
     // Test: À retirer une fois que le Hub est fonctionnel
-    let cards = await this.apiService.getPlayersCards();
+    const playerId = sessionStorage.getItem("playerId")
+    let cards = await this.apiService.getPlayersCards(playerId!);
     this.matchService.playTestMatch(cards);
 
     let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
