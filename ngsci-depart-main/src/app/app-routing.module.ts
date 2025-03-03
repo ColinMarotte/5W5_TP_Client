@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { MatchComponent } from './match/match.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { MescartesComponent } from './components/mescartes/mescartes.component';
+import { MagasinComponent } from './components/magasin/magasin.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 import { RegisterComponent } from './components/register/register.component';
@@ -13,6 +15,8 @@ const routes: Routes = [
   {
     path: '', component: HomeComponent, children: [
       { path: '', component: WelcomeComponent },
+      { path: 'mescartes', component: MescartesComponent },
+      { path: 'magasin', component: MagasinComponent },
     ]
   },
   { path: 'register', component: RegisterComponent },

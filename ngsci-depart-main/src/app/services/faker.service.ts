@@ -11,8 +11,8 @@ export class FakerService {
 
   constructor() { }
 
-  public createFakeMatchData(cards:Card[]) : MatchData {
-    let matchData:MatchData = {
+  public createFakeMatchData(cards: Card[]): MatchData {
+    let matchData: MatchData = {
       match: {
         id: -1,
         isMatchCompleted: false,
@@ -36,34 +36,34 @@ export class FakerService {
     return matchData;
   }
 
-  private createFakePlayerData(playerId:number, name:string) : PlayerData {
-    let playerData:PlayerData = {
-          id: -1,
-          health: 20,
-          maxhealth: 20,
-          mana: 0,
-          playerId: playerId,
-          playerName: name,
-          cardsPile: [],
-          hand: [],
-          battleField: [],
-          graveyard: []
+  private createFakePlayerData(playerId: number, name: string): PlayerData {
+    let playerData: PlayerData = {
+      id: -1,
+      health: 20,
+      maxhealth: 20,
+      mana: 0,
+      playerId: playerId,
+      playerName: name,
+      cardsPile: [],
+      hand: [],
+      battleField: [],
+      graveyard: []
     }
     return playerData;
   }
 
   // Ajoute des cartes aux piles des joueurs en générant un playableCardId (Les 2 joueurs ont leur propre copie de chaque carte)
-  private addCardsToPlayersPiles(matchData:MatchData, cards:Card[]){
+  private addCardsToPlayersPiles(matchData: MatchData, cards: Card[]) {
     let playableCardId: number = 1;
-    for(let c of cards){
-      let playableCardB:PlayableCard = {
+    for (let c of cards) {
+      let playableCardB: PlayableCard = {
         id: playableCardId++,
         card: c,
         health: c.health,
       };
       matchData.match.playerDataB.cardsPile.push(playableCardB);
 
-      let playableCardA:PlayableCard = {
+      let playableCardA: PlayableCard = {
         id: playableCardId++,
         card: c,
         health: c.health,
@@ -119,9 +119,9 @@ export class FakerService {
     };
   }
 
-  private createDrawCardEventsForTest(playerData:PlayerData, nbCards:number) : any[]{
-    let drawCardEvents:any[] = [];
-    for(let i = 0; i < nbCards; i++){
+  private createDrawCardEventsForTest(playerData: PlayerData, nbCards: number): any[] {
+    let drawCardEvents: any[] = [];
+    for (let i = 0; i < nbCards; i++) {
       drawCardEvents.push(
         {
           eventType: "DrawCard",
@@ -133,7 +133,7 @@ export class FakerService {
     return drawCardEvents;
   }
 
-  createFakePlayerEndTurnEvent(currentPlayer:PlayerData, nextPlayer:PlayerData){
+  createFakePlayerEndTurnEvent(currentPlayer: PlayerData, nextPlayer: PlayerData) {
     let fakeAdversaryStartTurnEvent = this.createFakeStartTurnEvent(nextPlayer);
 
     return {
@@ -143,7 +143,7 @@ export class FakerService {
     }
   }
 
-  private createFakeStartTurnEvent(playerData:PlayerData){
+  private createFakeStartTurnEvent(playerData: PlayerData) {
     // Creation d'un Array de DrawCardEvents
     let events = this.createDrawCardEventsForTest(playerData, 1);
     // Ajout d'un GainMana event
@@ -160,7 +160,7 @@ export class FakerService {
     }
   }
 
-  createFakeEndMatchEvent(playerData:PlayerData) {
+  createFakeEndMatchEvent(playerData: PlayerData) {
     return {
       eventType: "EndMatch",
       winningPlayerId: playerData.playerId

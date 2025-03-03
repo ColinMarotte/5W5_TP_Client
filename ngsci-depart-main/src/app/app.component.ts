@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatchService } from './services/match.service';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +21,7 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
     RouterOutlet,
     MatButtonModule,
     MatSnackBarModule
+    RouterLink
   ],
 })
 export class AppComponent {

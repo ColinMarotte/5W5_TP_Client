@@ -8,50 +8,56 @@ import { FakerService } from './faker.service';
   providedIn: 'root'
 })
 export class MatchService {
-  match:Match | null = null;
-  matchData:MatchData | null = null;
-  currentPlayerId:number = -1;
+  match: Match | null = null;
+  matchData: MatchData | null = null;
+  currentPlayerId: number = -1;
 
   playerData: PlayerData | undefined;
   adversaryData: PlayerData | undefined;
 
-  opponentSurrendered:boolean = false;
-  isCurrentPlayerTurn:boolean = false;
+  opponentSurrendered: boolean = false;
+  isCurrentPlayerTurn: boolean = false;
 
-  constructor(public faker:FakerService) { }
+  matchfini: boolean = false;
+  victoire: boolean = false;
+  perdant: number = -1;
 
-  clearMatch(){
+  constructor(public faker: FakerService) { }
+
+  clearMatch() {
     this.match = null;
     this.matchData = null;
     this.playerData = undefined;
     this.adversaryData = undefined;
     this.opponentSurrendered = false;
     this.isCurrentPlayerTurn = false;
+
+    this.matchfini = false;
+    this.victoire = false;
+    this.perdant = -1;
   }
 
-  playTestMatch(cards:Card[]){
-    let matchData:MatchData =this.faker.createFakeMatchData(cards);
+  playTestMatch(cards: Card[]) {
+    let matchData: MatchData = this.faker.createFakeMatchData(cards);
 
     // Le joueur B est celui qui commence à jouer en premier. Pour le test, on est le joueur B.
     this.playMatch(matchData, matchData.playerB.id);
     return matchData;
   }
 
-  playMatch(matchData:MatchData, currentPlayerId:number) {
+  playMatch(matchData: MatchData, currentPlayerId: number) {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
 
-    if(this.match.playerDataA.playerId == this.currentPlayerId)
-    {
+    if (this.match.playerDataA.playerId == this.currentPlayerId) {
       this.playerData = this.match.playerDataA!;
       this.playerData.playerName = matchData.playerA.name;
       this.adversaryData = this.match.playerDataB!;
       this.adversaryData.playerName = matchData.playerB.name;
       this.isCurrentPlayerTurn = this.match.isPlayerATurn;
     }
-    else
-    {
+    else {
       this.playerData = this.match.playerDataB!;
       this.playerData.playerName = matchData.playerB.name;
       this.adversaryData = this.match.playerDataA!;
@@ -64,9 +70,9 @@ export class MatchService {
 
   // La méthode qui passe à travers l'arbre d'évènements reçu par le serveur
   // Utiliser pour mettre les données à jour et jouer les animations
-  async applyEvent(event:any){
+  async applyEvent(event: any) {
     console.log("ApplyingEvent: " + event.eventType);
-    switch(event.eventType){
+    switch (event.eventType) {
       case "StartMatch": {
         await new Promise(resolve => setTimeout(resolve, 1000));
         break;
@@ -74,12 +80,30 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
+        let joueur = this.currentPlayerId
+        let joueurE = event.playerId
+        console.log(joueur, joueurE)
+        let opponent = this.adversaryData
+        console.log(opponent)
+
+
+        if (joueur === joueurE) {
+          const manaGained = event.mana;
+          this.playerData!.mana += manaGained;
+
+          console.log(`Joueur ${joueur} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
+        }
+        else {
+          const manaGained = event.mana;
+          this.adversaryData!.mana += manaGained;
+
+          console.log(`Joueur ${opponent} gained ${manaGained} mana. New mana: ${this.playerData?.mana}`);
+        }
         break;
       }
 
       case "PlayerEndTurn": {
-        if(this.match)
-        {
+        if (this.match) {
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
@@ -88,8 +112,7 @@ export class MatchService {
       }
       case "DrawCard": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData)
-        {
+        if (playerData) {
           this.moveCard(playerData.cardsPile, playerData.hand, event.playableCardId);
           await new Promise(resolve => setTimeout(resolve, 250));
         }
@@ -99,32 +122,42 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+
+        if (event.winningPlayerId === this.currentPlayerId) {
+          this.victoire = true;
+          console.log("Victoire pour le joueur " + this.currentPlayerId);
+        } else {
+          this.victoire = false;
+          this.perdant = this.currentPlayerId;
+          console.log("Défaite pour le joueur " + this.currentPlayerId);
+        }
+
         break;
       }
     }
-    if(event.events){
-      for(let e of event.events){
+    if (event.events) {
+      for (let e of event.events) {
         await this.applyEvent(e);
       }
     }
   }
 
   // Obtenir le PlayerData d'un match à partir de l'Id du Player
-  getPlayerData(playerId:any) : PlayerData | null{
-    if(this.match){
-      if(playerId == this.match.playerDataA.playerId)
+  getPlayerData(playerId: any): PlayerData | null {
+    if (this.match) {
+      if (playerId == this.match.playerDataA.playerId)
         return this.match.playerDataA;
-      else if(playerId == this.match.playerDataB.playerId)
+      else if (playerId == this.match.playerDataB.playerId)
         return this.match.playerDataB;
     }
     return null;
   }
 
   // Déplace une carte d'un array à l'autre
-  moveCard(src:PlayableCard[], dst:PlayableCard[], playableCardId:any){
+  moveCard(src: PlayableCard[], dst: PlayableCard[], playableCardId: any) {
     let playableCard = src.find(c => c.id == playableCardId);
 
-    if(playableCard != undefined){
+    if (playableCard != undefined) {
       let index = src.findIndex(c => c.id == playableCardId);
       // Retire l'élément de l'array
       src.splice(index, 1);
