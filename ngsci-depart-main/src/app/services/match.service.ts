@@ -2,7 +2,7 @@ import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
-import { FakerService } from './faker.service';
+// import { FakerService } from './faker.service';
 import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -25,10 +25,16 @@ export class MatchService {
   isCurrentPlayerTurn:boolean = false;
 
   hubConnection: HubConnection | undefined;
+  private joiningMatchSubject = new BehaviorSubject<any>(null);
+  joiningMatch$ = this.joiningMatchSubject.asObservable();
   private startMatchSubject = new BehaviorSubject<any>(null);
   startMatch$ = this.startMatchSubject.asObservable();
+  private endTurnSubject = new BehaviorSubject<any>(null);
+  endTurn$ = this.joiningMatchSubject.asObservable();
+  private surrenderSubject = new BehaviorSubject<any>(null);
+  surrender$ = this.startMatchSubject.asObservable();
   
-  constructor(public faker:FakerService) {
+  constructor(/*public faker:FakerService*/) {
      this.connectToHub();
     }
 
@@ -40,22 +46,25 @@ export class MatchService {
 
     this.hubConnection.on('JoiningMatchData', (data) => {
       console.log("JoiningMatchData", data);
-      this.startMatchSubject.next(data)
+      this.joiningMatchSubject.next(data)
       this.playMatch(data, this.currentPlayerId)     
     })
 
     this.hubConnection.on('StartMatchEvent', (data) => {
       console.log("startMatchEvent:",data);
+      this.startMatchSubject.next(data)
       this.applyEvent(data)
     })
 
     this.hubConnection.on('EndTurnEvent', (data) => {
       console.log("endturnevent:", data)
+      this.endTurnSubject.next(data)
       this.applyEvent(data)
     })
 
     this.hubConnection.on('SurrenderEvent', (data) => {
       console.log("SurrenderEvent:",data);
+      this.surrenderSubject.next(data)
       this.applyEvent(data)
     })
 
@@ -107,13 +116,13 @@ public async joinMatch(userId: string){
     this.isCurrentPlayerTurn = false;
   }
 
-  playTestMatch(cards:Card[]){
-    // let matchData:MatchData =this.faker.createFakeMatchData(cards);
+  /*playTestMatch(cards:Card[]){
+    let matchData:MatchData =this.faker.createFakeMatchData(cards);
 
-    // Le joueur B est celui qui commence à jouer en premier. Pour le test, on est le joueur B.
-    /*this.playMatch(matchData, matchData.playerB.id);
-    return matchData;*/
-  }
+    Le joueur B est celui qui commence à jouer en premier. Pour le test, on est le joueur B.
+    this.playMatch(matchData, matchData.playerB.id);
+    return matchData;
+  }*/
 
   playMatch(matchData:MatchData, currentPlayerId:number) {
     this.matchData = matchData;

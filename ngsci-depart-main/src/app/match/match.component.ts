@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatchService } from '../services/match.service';
 import { ApiService } from '../services/api.service';
-import { FakerService } from '../services/faker.service';
+// import { FakerService } from '../services/faker.service';
 import { MatchData } from '../models/models';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
 import { EnemyhandComponent } from './enemyhand/enemyhand.component';
 import { PlayerhandComponent } from './playerhand/playerhand.component';
 import { HealthComponent } from './health/health.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-match',
@@ -17,18 +18,21 @@ import { HealthComponent } from './health/health.component';
   standalone: true,
   imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit, OnDestroy {
 
   userId: string = "";
   matchId: number = 0;
+
+  private startMatchSubscription : Subscription | null = null;
+  private endTurnSubscription : Subscription | null = null;
+  private surrenderSubscription : Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
     public router: Router,
     public matchService: MatchService,
     public apiService: ApiService,
-    //public faker: FakerService,
-    //public hubService: HubService
+    //public faker: FakerService
   ) {}
 
   async ngOnInit() {
@@ -38,6 +42,27 @@ export class MatchComponent implements OnInit {
     if(playerIdString){
     playerId= parseInt(playerIdString); }
         
+    this.startMatchSubscription = this.matchService.startMatch$.subscribe(async (event) => {
+      if (event) {
+        console.log("Received StartMatchEvent:", event);
+        const matchId = event.match.matchId;
+        this.router.navigate(['/match/' + matchId]);
+      }
+    });
+    this.endTurnSubscription = this.matchService.endTurn$.subscribe(async (event) => {
+      if (event) {
+        console.log("Received EndTurnEvent:", event);
+        const matchId = event.match.matchId;
+        this.router.navigate(['/match/' + matchId]);
+      }
+    });
+    this.surrenderSubscription = this.matchService.surrender$.subscribe(async (event) => {
+      if (event) {
+        console.log("Received SurrenderEvent:", event);
+        const matchId = event.match.matchId;
+        this.router.navigate(['/match/' + matchId]);
+      }
+    });
         /*
     let cards = await this.apiService.getPlayersCards();
     this.matchService.playTestMatch(cards);
@@ -45,6 +70,18 @@ export class MatchComponent implements OnInit {
     let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
     this.matchService.applyEvent(fakeStartMatchEvent);
     */
+  }
+
+  ngOnDestroy() {
+    if (this.startMatchSubscription) {
+      this.startMatchSubscription.unsubscribe();
+    }
+    if (this.endTurnSubscription) {
+      this.endTurnSubscription.unsubscribe();
+    }
+    if (this.surrenderSubscription) {
+      this.surrenderSubscription.unsubscribe();
+    }
   }
 
   public async joinMatch(userId: string){

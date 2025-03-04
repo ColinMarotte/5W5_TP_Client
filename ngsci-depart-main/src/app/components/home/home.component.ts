@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class HomeComponent implements OnInit, OnDestroy {
 
   estJoueur1: boolean = true;
-  private startMatchSubscription: Subscription | null = null;
+  private joiningMatchSubscription: Subscription | null = null;
 
   constructor(
     public router: Router,
@@ -23,10 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Subscribe to start match event
-    this.startMatchSubscription = this.match.startMatch$.subscribe(async (event) => {
+    this.joiningMatchSubscription = this.match.joiningMatch$.subscribe(async (event) => {
       if (event) {
-        console.log("Received StartMatchEvent:", event);
+        console.log("Received JoiningMatchEvent:", event);
         const matchId = event.match.matchId;
         this.router.navigate(['/match/' + matchId]);
       }
@@ -34,8 +33,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.startMatchSubscription) {
-      this.startMatchSubscription.unsubscribe();
+    if (this.joiningMatchSubscription) {
+      this.joiningMatchSubscription.unsubscribe();
     }
   }
 
