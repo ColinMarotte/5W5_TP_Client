@@ -45,21 +45,21 @@ export class MatchComponent implements OnInit, OnDestroy {
     this.startMatchSubscription = this.matchService.startMatch$.subscribe(async (event) => {
       if (event) {
         console.log("Received StartMatchEvent:", event);
-        const matchId = event.match.matchId;
+        const matchId = event.match.id;
         this.router.navigate(['/match/' + matchId]);
       }
     });
     this.endTurnSubscription = this.matchService.endTurn$.subscribe(async (event) => {
       if (event) {
         console.log("Received EndTurnEvent:", event);
-        const matchId = event.match.matchId;
+        const matchId = event.match.id;
         this.router.navigate(['/match/' + matchId]);
       }
     });
     this.surrenderSubscription = this.matchService.surrender$.subscribe(async (event) => {
       if (event) {
         console.log("Received SurrenderEvent:", event);
-        const matchId = event.match.matchId;
+        const matchId = event.match.id;
         this.router.navigate(['/match/' + matchId]);
       }
     });

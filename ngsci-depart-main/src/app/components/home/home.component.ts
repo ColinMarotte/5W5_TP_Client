@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.joiningMatchSubscription = this.match.joiningMatch$.subscribe(async (event) => {
       if (event) {
         console.log("Received JoiningMatchEvent:", event);
-        const matchId = event.match.matchId;
+        const matchId = event.match.id;
         this.router.navigate(['/match/' + matchId]);
       }
     });
