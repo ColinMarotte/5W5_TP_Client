@@ -18,14 +18,9 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
 })
-export class MatchComponent implements OnInit, OnDestroy {
+export class MatchComponent implements OnInit {
 
-  userId: string = "";
   matchId: number = 0;
-
-  private startMatchSubscription : Subscription | null = null;
-  private endTurnSubscription : Subscription | null = null;
-  private surrenderSubscription : Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,63 +28,26 @@ export class MatchComponent implements OnInit, OnDestroy {
     public matchService: MatchService,
     public apiService: ApiService,
     //public faker: FakerService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.matchId = parseInt(this.route.snapshot.params["id"], 10);
     let playerIdString: string | null = sessionStorage.getItem("playerId");
-    let playerId : number | null=null;
-    if(playerIdString){
-    playerId= parseInt(playerIdString); }
-        
-    this.startMatchSubscription = this.matchService.startMatch$.subscribe(async (event) => {
-      if (event) {
-        console.log("Received StartMatchEvent:", event);
-        const matchId = event.match.id;
-        this.router.navigate(['/match/' + matchId]);
-      }
-    });
-    this.endTurnSubscription = this.matchService.endTurn$.subscribe(async (event) => {
-      if (event) {
-        console.log("Received EndTurnEvent:", event);
-        const matchId = event.match.id;
-        this.router.navigate(['/match/' + matchId]);
-      }
-    });
-    this.surrenderSubscription = this.matchService.surrender$.subscribe(async (event) => {
-      if (event) {
-        console.log("Received SurrenderEvent:", event);
-        const matchId = event.match.id;
-        this.router.navigate(['/match/' + matchId]);
-      }
-    });
-        /*
-    let cards = await this.apiService.getPlayersCards();
-    this.matchService.playTestMatch(cards);
+    let playerId: number | null = null;
+    if (playerIdString) {
+      playerId = parseInt(playerIdString);
+    }
 
-    let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
-    this.matchService.applyEvent(fakeStartMatchEvent);
-    */
+    /*
+let cards = await this.apiService.getPlayersCards();
+this.matchService.playTestMatch(cards);
+
+let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
+this.matchService.applyEvent(fakeStartMatchEvent);
+*/
   }
 
-  ngOnDestroy() {
-    if (this.startMatchSubscription) {
-      this.startMatchSubscription.unsubscribe();
-    }
-    if (this.endTurnSubscription) {
-      this.endTurnSubscription.unsubscribe();
-    }
-    if (this.surrenderSubscription) {
-      this.surrenderSubscription.unsubscribe();
-    }
-  }
 
-  public async joinMatch(userId: string){
-    this.matchService.joinMatch(userId)
-      
-    this.userId=userId  
-    }
-  
   async endTurn() {
     this.matchService.endTurn();
     // this.fakeEndTurn();

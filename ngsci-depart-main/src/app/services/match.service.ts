@@ -13,101 +13,93 @@ const _hubUrl = "https://localhost:7179/matchHub";
   providedIn: 'root'
 })
 export class MatchService {
-  match:Match | null = null;
-  matchData:MatchData | null = null;
-  currentPlayerId:number = -1;
-  currentUserId:string="";
+  match: Match | null = null;
+  matchData: MatchData | null = null;
+  currentPlayerId: number = -1;
+  currentUserId: string = "";
 
   playerData: PlayerData | undefined;
   adversaryData: PlayerData | undefined;
 
-  opponentSurrendered:boolean = false;
-  isCurrentPlayerTurn:boolean = false;
+  opponentSurrendered: boolean = false;
+  isCurrentPlayerTurn: boolean = false;
 
   hubConnection: HubConnection | undefined;
-  private joiningMatchSubject = new BehaviorSubject<any>(null);
-  joiningMatch$ = this.joiningMatchSubject.asObservable();
-  private startMatchSubject = new BehaviorSubject<any>(null);
-  startMatch$ = this.startMatchSubject.asObservable();
-  private endTurnSubject = new BehaviorSubject<any>(null);
-  endTurn$ = this.joiningMatchSubject.asObservable();
-  private surrenderSubject = new BehaviorSubject<any>(null);
-  surrender$ = this.startMatchSubject.asObservable();
-  
+
+  private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
+  public joiningMatch$ = this.joiningMatchSubject.asObservable();
+
   constructor(/*public faker:FakerService*/) {
-     this.connectToHub();
-    }
+    this.connectToHub();
+  }
 
 
   private async connectToHub() {
     this.hubConnection = await new signalR.HubConnectionBuilder()
-                              .withUrl(_hubUrl)
-                              .build();
+      .withUrl(_hubUrl)
+      .build();
 
     this.hubConnection.on('JoiningMatchData', (data) => {
       console.log("JoiningMatchData", data);
-      this.joiningMatchSubject.next(data)
-      this.playMatch(data, this.currentPlayerId)     
+      this.joiningMatchSubject.next(data);
+      this.playMatch(data, this.currentPlayerId)
     })
 
     this.hubConnection.on('StartMatchEvent', (data) => {
-      console.log("startMatchEvent:",data);
-      this.startMatchSubject.next(data)
+      console.log("startMatchEvent:", data);
       this.applyEvent(data)
     })
 
     this.hubConnection.on('EndTurnEvent', (data) => {
       console.log("endturnevent:", data)
-      this.endTurnSubject.next(data)
       this.applyEvent(data)
     })
 
     this.hubConnection.on('SurrenderEvent', (data) => {
-      console.log("SurrenderEvent:",data);
-      this.surrenderSubject.next(data)
+      console.log("SurrenderEvent:", data);
       this.applyEvent(data)
     })
 
     this.hubConnection
-                      .start()
-                      .then(() => {
-                          console.log('La connexion est active!');
-                        })
-                      .catch(err => console.log('Error while starting connection: ' + err));
-}
-public async joinMatch(userId: string){
-  if (!this.hubConnection) {
-    console.error('La connexion SignalR n\'est pas établie.');
-    return ;
+      .start()
+      .then(() => {
+        console.log('La connexion est active!');
+      })
+      .catch(err => console.log('Error while starting connection: ' + err));
+  }
+  public async joinMatch(userId: string) {
+    if (!this.hubConnection) {
+      console.error('La connexion SignalR n\'est pas établie.');
+      return;
+    }
+
+    this.currentUserId = userId
+
+    await this.hubConnection.invoke('JoinMatch', userId);
+    console.log("invoked JoinMatch");
   }
 
-  this.currentUserId=userId
-
-  await this.hubConnection.invoke('JoinMatch', userId );
-  console.log("invoked JoinMatch");
-  }
-
-  public async endTurn(){
-      console.log("Ending Turn Event:", this.match?.id);
-      if (!this.hubConnection) {
-        console.error('La connexion SignalR n\'est pas établie.');
-        return ;
-      }
-      await this.hubConnection.invoke('EndTurn', this.currentUserId, this.match?.id);
-      console.log("invoked EndTurn")
-  }
-
-  public async surrender(){
+  public async endTurn() {
     console.log("Ending Turn Event:", this.match?.id);
-      if (!this.hubConnection) {
-        console.error('La connexion SignalR n\'est pas établie.');
-        return ;
-      }
-      console.log("Surrendering")
-    await this.hubConnection.invoke('Surrender', this.currentUserId, this.match?.id );
-    
+    if (!this.hubConnection) {
+      console.error('La connexion SignalR n\'est pas établie.');
+      return;
+    }
+    await this.hubConnection.invoke('EndTurn', this.currentUserId, this.match?.id);
+    console.log("invoked EndTurn")
   }
-  clearMatch(){
+
+  public async surrender() {
+    console.log("Ending Turn Event:", this.match?.id);
+    if (!this.hubConnection) {
+      console.error('La connexion SignalR n\'est pas établie.');
+      return;
+    }
+    console.log("Surrendering")
+    await this.hubConnection.invoke('Surrender', this.currentUserId, this.match?.id);
+
+  }
+  clearMatch() {
     this.match = null;
     this.matchData = null;
     this.playerData = undefined;
@@ -124,21 +116,19 @@ public async joinMatch(userId: string){
     return matchData;
   }*/
 
-  playMatch(matchData:MatchData, currentPlayerId:number) {
+  playMatch(matchData: MatchData, currentPlayerId: number) {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
 
-    if(this.match.playerDataA.playerId == this.currentPlayerId)
-    {
+    if (this.match.playerDataA.playerId == this.currentPlayerId) {
       this.playerData = this.match.playerDataA!;
       this.playerData.playerName = matchData.playerA.name;
       this.adversaryData = this.match.playerDataB!;
       this.adversaryData.playerName = matchData.playerB.name;
       this.isCurrentPlayerTurn = this.match.isPlayerATurn;
     }
-    else
-    {
+    else {
       this.playerData = this.match.playerDataB!;
       this.playerData.playerName = matchData.playerB.name;
       this.adversaryData = this.match.playerDataA!;
@@ -151,9 +141,9 @@ public async joinMatch(userId: string){
 
   // La méthode qui passe à travers l'arbre d'évènements reçu par le serveur
   // Utiliser pour mettre les données à jour et jouer les animations
-  async applyEvent(event:any){
+  async applyEvent(event: any) {
     console.log("ApplyingEvent: " + event.eventType);
-    switch(event.eventType){
+    switch (event.eventType) {
       case "StartMatch": {
         await new Promise(resolve => setTimeout(resolve, 1000));
         break;
@@ -168,8 +158,7 @@ public async joinMatch(userId: string){
       }
 
       case "PlayerEndTurn": {
-        if(this.match)
-        {
+        if (this.match) {
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
@@ -178,8 +167,7 @@ public async joinMatch(userId: string){
       }
       case "DrawCard": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData)
-        {
+        if (playerData) {
           this.moveCard(playerData.cardsPile, playerData.hand, event.playableCardId);
           await new Promise(resolve => setTimeout(resolve, 250));
         }
@@ -189,33 +177,33 @@ public async joinMatch(userId: string){
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
-        console.log("MatchEnded, winner: "+this.matchData?.winningPlayerId);
+        console.log("MatchEnded, winner: " + this.matchData?.winningPlayerId);
         break;
       }
     }
-    if(event.events){
-      for(let e of event.events){
+    if (event.events) {
+      for (let e of event.events) {
         await this.applyEvent(e);
       }
     }
   }
 
   // Obtenir le PlayerData d'un match à partir de l'Id du Player
-  getPlayerData(playerId:any) : PlayerData | null{
-    if(this.match){
-      if(playerId == this.match.playerDataA.playerId)
+  getPlayerData(playerId: any): PlayerData | null {
+    if (this.match) {
+      if (playerId == this.match.playerDataA.playerId)
         return this.match.playerDataA;
-      else if(playerId == this.match.playerDataB.playerId)
+      else if (playerId == this.match.playerDataB.playerId)
         return this.match.playerDataB;
     }
     return null;
   }
 
   // Déplace une carte d'un array à l'autre
-  moveCard(src:PlayableCard[], dst:PlayableCard[], playableCardId:any){
+  moveCard(src: PlayableCard[], dst: PlayableCard[], playableCardId: any) {
     let playableCard = src.find(c => c.id == playableCardId);
 
-    if(playableCard != undefined){
+    if (playableCard != undefined) {
       let index = src.findIndex(c => c.id == playableCardId);
       // Retire l'élément de l'array
       src.splice(index, 1);

@@ -20,14 +20,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     public match: MatchService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.joiningMatchSubscription = this.match.joiningMatch$.subscribe(async (event) => {
       if (event) {
         console.log("Received JoiningMatchEvent:", event);
         const matchId = event.match.id;
-        this.router.navigate(['/match/' + matchId]);
+        this.redirigerAuMatch(matchId);
       }
     });
   }
@@ -36,6 +36,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.joiningMatchSubscription) {
       this.joiningMatchSubscription.unsubscribe();
     }
+  }
+
+  async redirigerAuMatch(matchId: number) {
+    await this.router.navigateByUrl('/match/' + matchId);
   }
 
   async joinMatch() {
