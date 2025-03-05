@@ -12,10 +12,10 @@ import { LoginComponent } from './components/login/login.component';
 import { apiGuard } from './guard/api.guard';
 
 const routes: Routes = [
-  { path: 'match/:id', component: MatchComponent },
+  { path: 'match/:id', component: MatchComponent, canActivate: [apiGuard] },
   {
     path: '', component: HomeComponent, children: [
-      { path: '', component: WelcomeComponent },
+      { path: '', component: WelcomeComponent, canActivate: [apiGuard] },
       { path: 'mescartes', component: MescartesComponent, canActivate: [apiGuard] },
       { path: 'magasin', component: MagasinComponent, canActivate: [apiGuard] },
     ]

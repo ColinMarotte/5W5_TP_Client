@@ -9,18 +9,16 @@ import { Card } from '../models/models';
 export class ApiService {
 
   serverUrl = "https://localhost:7179/";
-  // serverUrl = "http://localhost:5276/";
-
 
   constructor(public http: HttpClient) { }
 
   async getAllCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards'));
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetAllCards'));
     return result;
   }
 
   async getPlayersCards(playerId: string): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards/' + playerId));
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetPlayersCards/' + playerId));
     return result;
   }
 }

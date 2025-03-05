@@ -30,11 +30,7 @@ export class AppComponent {
   constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   isLogged(): boolean {
-    if (sessionStorage.getItem("token") != null) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.httpService.isLogged();
   }
 
   getUsername() {
@@ -47,6 +43,7 @@ export class AppComponent {
     sessionStorage.removeItem("playerId");
     sessionStorage.removeItem("username");
     console.log('Déconnexion réussie!');
+    this.login();
     this.snackBar.open('Déconnexion réussie!', 'OK', { duration: 5000 });
   }
 

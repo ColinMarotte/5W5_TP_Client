@@ -12,8 +12,8 @@ export class HttpService {
 
   constructor(public http: HttpClient) { }
 
-  async isLogged(): Promise<boolean> {
-    const token = sessionStorage.getItem("token")
+  isLogged(): boolean {
+    let token = sessionStorage.getItem("token")
     if (token != null) {
       return true
     }
@@ -53,9 +53,11 @@ export class HttpService {
     }).then(response => {
       if (stringResponse == "") {
         console.log("Réponse: ", response);
-        console.log('Token: ' + response.token);
-        console.log('Player Id: ' + response.playerId);
+        console.log("Token: " + response.token);
+        console.log("User Id: " + response.userId);
+        console.log("Player Id: " + response.playerId);
         sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("userId", response.userId);
         sessionStorage.setItem("playerId", response.playerId);
         sessionStorage.setItem("username", email);
         stringResponse = "success";

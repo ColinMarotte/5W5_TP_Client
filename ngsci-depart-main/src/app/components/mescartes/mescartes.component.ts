@@ -17,18 +17,13 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class MescartesComponent implements OnInit {
 
-  apiUrl = "https://localhost:7179/api/";
+  listeMesCartes: Card[] | undefined;
+  constructor(public apiService: ApiService) { }
 
-
-  listemescartes: Card[] | undefined;
-  constructor(private apiservice: ApiService) { }
-
-
-  playerId = sessionStorage.getItem("playerId")
   async ngOnInit() {
-
-    this.apiservice.getPlayersCards(this.playerId!)
-    console.log(this.listemescartes)
+    let playerId = sessionStorage.getItem("playerId")
+    this.listeMesCartes = await this.apiService.getPlayersCards(playerId!)
+    console.log(this.listeMesCartes)
   }
 
 
