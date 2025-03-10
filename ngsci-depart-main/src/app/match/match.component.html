@@ -36,5 +36,5 @@
 
 <div class="loading-dialog" *ngIf="matchService.match?.isMatchCompleted" class="end">
   <h2>{{ matchService.victoire ? 'Victoire!' : 'Défaite' }}</h2>
-  <button (click)="endMatch()">Terminer la partie</button>
+  <button mat-raised-button color="warn" (click)="endMatch()">Terminer la partie</button>
 </div>
