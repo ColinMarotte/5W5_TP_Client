@@ -3,21 +3,24 @@ import { Router } from '@angular/router';
 import { HttpService } from 'src/app/services/http.service';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControlOptions, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { MatCard } from '@angular/material/card';
-import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatCard, MatCardModule } from '@angular/material/card';
+import { MatError, MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButton } from '@angular/material/button';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatCard, MatInput, MatButton, MatSnackBarModule]
+  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatFormFieldModule, MatCard, MatInput, MatButton, MatSnackBarModule, MatIconModule, MatCardModule]
 })
 export class RegisterComponent implements OnInit {
+
+  hide = true;
 
   form: FormGroup<any>
 
