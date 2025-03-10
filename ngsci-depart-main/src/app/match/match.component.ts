@@ -17,13 +17,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css'],
   standalone: true,
-  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
+  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule]
 })
 export class MatchComponent implements OnInit {
 
   matchId: number = 0;
 
-  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) { 
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) {
 
   }
 
@@ -33,8 +33,8 @@ export class MatchComponent implements OnInit {
     let playerId: number | null = null;
     if (playerIdString) {
       playerId = parseInt(playerIdString);
-    }    
-}
+    }
+  }
   async endTurn() {
     this.matchService.endTurn();
   }
@@ -45,7 +45,7 @@ export class MatchComponent implements OnInit {
 
   endMatch() {
     this.matchService.clearMatch();
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   isVictory(): boolean {

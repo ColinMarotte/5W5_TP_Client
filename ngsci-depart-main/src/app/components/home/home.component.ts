@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [MatProgressSpinner, MatButtonModule, RouterOutlet,CommonModule, FormsModule]
+  imports: [MatProgressSpinner, MatButtonModule, RouterOutlet, CommonModule, FormsModule]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {
@@ -48,15 +48,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async joinMatch() {
-    let userId = this.estJoueur1 ? "User1Id" : "User2Id";
-    if (this.estJoueur1)
-      sessionStorage.setItem("playerId", "1");
-    else
-      sessionStorage.setItem("playerId", "2");
+    let userId = sessionStorage.getItem("userId");
 
-    this.match.currentPlayerId = this.estJoueur1 ? 1 : 2;
-
-    await this.match.joinMatch(userId);
+    if (userId) {
+      await this.match.joinMatch(userId);
+    }
     this.recherche = true;
     console.log("Waiting for the match to start...");
   }

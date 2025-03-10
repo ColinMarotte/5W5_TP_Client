@@ -2,12 +2,11 @@ import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
-// import { FakerService } from './faker.service';
 import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
-const _hubUrl = "https://localhost:7179/matchHub";
+const hubUrl = "https://localhost:7179/matchHub";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ const _hubUrl = "https://localhost:7179/matchHub";
 export class MatchService {
   match: Match | null = null;
   matchData: MatchData | null = null;
-  currentPlayerId: number = -1;  
+  currentPlayerId: number = -1;
   currentUserId: string = "";
 
   playerData: PlayerData | undefined;
@@ -33,19 +32,26 @@ export class MatchService {
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
 
-  constructor(/*public faker:FakerService*/) {
+  constructor() {
     this.connectToHub();
   }
 
 
   private async connectToHub() {
     this.hubConnection = await new signalR.HubConnectionBuilder()
-      .withUrl(_hubUrl)
+      .withUrl(hubUrl,
+        // Ajout du code pour joindre le token aux requêtes SignalR (l'équivalent de l'interceptor pour les autres requêtes)
+        { accessTokenFactory: () => sessionStorage.getItem("token")! }
+      )
       .build();
 
     this.hubConnection.on('JoiningMatchData', (data) => {
       console.log("JoiningMatchData", data);
       this.joiningMatchSubject.next(data);
+      let playerIdStorage: string | null = sessionStorage.getItem("playerId")
+      if (playerIdStorage) {
+        this.currentPlayerId = parseInt(playerIdStorage)
+      }
       this.playMatch(data, this.currentPlayerId)
     })
 
