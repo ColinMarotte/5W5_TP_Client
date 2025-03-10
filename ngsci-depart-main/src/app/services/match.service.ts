@@ -15,7 +15,7 @@ const _hubUrl = "https://localhost:7179/matchHub";
 export class MatchService {
   match: Match | null = null;
   matchData: MatchData | null = null;
-  currentPlayerId: number = -1;
+  currentPlayerId: number = -1;  
   currentUserId: string = "";
 
   playerData: PlayerData | undefined;
@@ -23,6 +23,10 @@ export class MatchService {
 
   opponentSurrendered: boolean = false;
   isCurrentPlayerTurn: boolean = false;
+
+  matchfini: boolean = false;
+  victoire: boolean = false;
+  perdant: number = -1;
 
   hubConnection: HubConnection | undefined;
 
@@ -99,6 +103,7 @@ export class MatchService {
     await this.hubConnection.invoke('Surrender', this.currentUserId, this.match?.id);
 
   }
+
   clearMatch() {
     this.match = null;
     this.matchData = null;
@@ -106,15 +111,11 @@ export class MatchService {
     this.adversaryData = undefined;
     this.opponentSurrendered = false;
     this.isCurrentPlayerTurn = false;
+
+    this.matchfini = false;
+    this.victoire = false;
+    this.perdant = -1;
   }
-
-  /*playTestMatch(cards:Card[]){
-    let matchData:MatchData =this.faker.createFakeMatchData(cards);
-
-    Le joueur B est celui qui commence à jouer en premier. Pour le test, on est le joueur B.
-    this.playMatch(matchData, matchData.playerB.id);
-    return matchData;
-  }*/
 
   playMatch(matchData: MatchData, currentPlayerId: number) {
     this.matchData = matchData;
@@ -153,6 +154,7 @@ export class MatchService {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
           playerData.mana += event.mana;
+
         }
         break;
       }
@@ -178,6 +180,16 @@ export class MatchService {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
         console.log("MatchEnded, winner: " + this.matchData?.winningPlayerId);
+
+        if (event.winningPlayerId === this.currentPlayerId) {
+          this.victoire = true;
+          console.log("Victoire pour le joueur " + this.currentPlayerId);
+        } else {
+          this.victoire = false;
+          this.perdant = this.currentPlayerId;
+          console.log("Défaite pour le joueur " + this.currentPlayerId);
+        }
+
         break;
       }
     }

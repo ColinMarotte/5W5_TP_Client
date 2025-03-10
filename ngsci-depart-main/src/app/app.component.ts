@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { MatchService } from './services/match.service';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpService } from './services/http.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -18,23 +20,39 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     RouterOutlet,
     MatButtonModule,
+    MatSnackBarModule,
+    RouterLink
   ],
 })
 export class AppComponent {
   title = 'supercartesinfinies';
 
-  constructor(public router: Router, public matchService: MatchService) {}
+  constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
-  isLogged() {
-    // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
-    return true;
+  isLogged(): boolean {
+    return this.httpService.isLogged();
   }
 
   getUsername() {
-    return 'USERNAME';
+    let username: string | null = sessionStorage.getItem("username");
+    return username;
   }
 
-  async logout() {
-    // TODO: Gérer le logout
+  logout() {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("playerId");
+    sessionStorage.removeItem("username");
+    console.log('Déconnexion réussie!');
+    this.login();
+    this.snackBar.open('Déconnexion réussie!', 'OK', { duration: 5000 });
+  }
+
+  login() {
+    this.router.navigate(['/login']);
+  }
+
+  async test() {
+    let testData: string = (await this.httpService.test()).toString();
+    this.snackBar.open(testData, 'OK', { duration: 5000 });
   }
 }

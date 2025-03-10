@@ -3,5 +3,11 @@
   <h1>Ëtre joueur 1</h1>
   <input type="checkbox" [(ngModel)]="estJoueur1" />
 </div>
-<router-outlet></router-outlet>
 
+<div class="loading-dialog" *ngIf="recherche">
+  <h2>Recherche d'un adversaire...</h2>
+  <mat-spinner> ></mat-spinner>
+</div>
+
+
+<router-outlet></router-outlet>
