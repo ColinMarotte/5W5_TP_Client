@@ -4,13 +4,14 @@ import { MatchService } from '../../services/match.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [MatProgressSpinner, RouterOutlet, CommonModule, FormsModule]
+  imports: [MatProgressSpinner, MatButtonModule, RouterOutlet, CommonModule, FormsModule]
 })
 export class HomeComponent implements OnInit {
 
