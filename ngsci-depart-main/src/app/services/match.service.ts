@@ -29,15 +29,22 @@ export class MatchService {
 
   hubConnection: HubConnection | undefined;
 
+  stoppedJoiningMatch: boolean | undefined;
+
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
 
   constructor() {
-    this.connectToHub();
   }
 
+  public async seDeconnecterDuHub() {
+    await this.hubConnection?.stop().then(() => {
+      console.log('La connexion est arrêté!');
+    })
+      .catch(err => console.log('Error while stopping connection: ' + err));
+  }
 
-  private async connectToHub() {
+  public async connectToHub() {
     this.hubConnection = await new signalR.HubConnectionBuilder()
       .withUrl(hubUrl,
         // Ajout du code pour joindre le token aux requêtes SignalR (l'équivalent de l'interceptor pour les autres requêtes)
@@ -45,7 +52,7 @@ export class MatchService {
       )
       .build();
 
-    this.hubConnection.on('JoiningMatchData', (data) => {
+    await this.hubConnection.on('JoiningMatchData', (data) => {
       console.log("JoiningMatchData", data);
       this.joiningMatchSubject.next(data);
       let playerIdStorage: string | null = sessionStorage.getItem("playerId")
@@ -55,29 +62,47 @@ export class MatchService {
       this.playMatch(data, this.currentPlayerId)
     })
 
-    this.hubConnection.on('StartMatchEvent', (data) => {
+    await this.hubConnection.on('StartMatchEvent', (data) => {
       console.log("startMatchEvent:", data);
       this.applyEvent(data)
     })
 
-    this.hubConnection.on('EndTurnEvent', (data) => {
+    await this.hubConnection.on('EndTurnEvent', (data) => {
       console.log("endturnevent:", data)
       this.applyEvent(data)
     })
 
-    this.hubConnection.on('SurrenderEvent', (data) => {
+    await this.hubConnection.on('SurrenderEvent', (data) => {
       console.log("SurrenderEvent:", data);
       this.applyEvent(data)
     })
 
-    this.hubConnection
+    await this.hubConnection.on('StoppedJoiningStatus', (data) => {
+      console.log(data ? "Stopped joining the match" : "Failed to stop joining the match");
+      this.stoppedJoiningMatch = data;
+    })
+
+    await this.hubConnection
       .start()
       .then(() => {
         console.log('La connexion est active!');
       })
       .catch(err => console.log('Error while starting connection: ' + err));
   }
+
+  public async stopJoiningMatch(): Promise<boolean> {
+    await this.hubConnection?.invoke('StopJoiningMatch')
+
+    if (this.stoppedJoiningMatch) {
+      return this.stoppedJoiningMatch
+    }
+
+    return false
+  }
+
   public async joinMatch(userId: string) {
+    await this.connectToHub();
+
     if (!this.hubConnection) {
       console.error('La connexion SignalR n\'est pas établie.');
       return;

@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [MatProgressSpinner, MatButtonModule, RouterOutlet, CommonModule, FormsModule]
+  imports: [MatProgressSpinner, MatButtonModule, RouterOutlet, CommonModule, FormsModule, MatButtonModule]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {
@@ -20,15 +20,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   estJoueur1: boolean = true;
   private joiningMatchSubscription: Subscription | null = null;
 
-  constructor(
-    public router: Router,
-    public match: MatchService
-  ) { }
+  constructor(public router: Router, public matchService: MatchService) {
+
+  }
 
   recherche: boolean = false;
 
   ngOnInit() {
-    this.joiningMatchSubscription = this.match.joiningMatch$.subscribe(async (event) => {
+    this.joiningMatchSubscription = this.matchService.joiningMatch$.subscribe(async (event) => {
       if (event) {
         console.log("Received JoiningMatchEvent:", event);
         const matchId = event.match.id;
@@ -51,9 +50,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     let userId = sessionStorage.getItem("userId");
 
     if (userId) {
-      await this.match.joinMatch(userId);
+      await this.matchService.joinMatch(userId);
     }
     this.recherche = true;
     console.log("Waiting for the match to start...");
+  }
+
+  async stopJoiningMatch() {
+    let userId = sessionStorage.getItem("userId");
+    let stoppedJoiningMatch = false
+    if (userId) {
+      stoppedJoiningMatch = await this.matchService.stopJoiningMatch();
+    }
+
+    if (stoppedJoiningMatch) {
+      this.recherche = false
+      console.log('Réussi à arrêter de rejoindre le match')
+      await this.matchService.seDeconnecterDuHub();
+    }
+
   }
 }

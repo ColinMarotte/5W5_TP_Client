@@ -4,7 +4,8 @@
 
 <div class="loading-dialog" *ngIf="recherche">
   <h2>Recherche d'un adversaire...</h2>
-  <mat-spinner> ></mat-spinner>
+  <mat-spinner></mat-spinner>
+  <button mat-fab extended (click)="stopJoiningMatch()">Stop joining</button>
 </div>
 
 
