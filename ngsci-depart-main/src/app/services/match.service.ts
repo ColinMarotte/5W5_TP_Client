@@ -91,7 +91,7 @@ export class MatchService {
   }
 
   public async stopJoiningMatch(): Promise<boolean> {
-    await this.hubConnection?.invoke('StopJoiningMatch')
+    await this.hubConnection?.invoke('StopJoiningMatch', this.currentUserId)
 
     if (this.stoppedJoiningMatch) {
       return this.stoppedJoiningMatch
