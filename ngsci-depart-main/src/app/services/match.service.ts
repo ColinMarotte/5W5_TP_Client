@@ -100,15 +100,13 @@ export class MatchService {
     return false
   }
 
-  public async joinMatch(userId: string) {
+  public async joinMatch() {
     await this.connectToHub();
 
     if (!this.hubConnection) {
       console.error('La connexion SignalR n\'est pas établie.');
       return;
     }
-
-    this.currentUserId = userId
 
     await this.hubConnection.invoke('JoinMatch');
     console.log("invoked JoinMatch");

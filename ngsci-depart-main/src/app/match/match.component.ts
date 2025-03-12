@@ -34,6 +34,9 @@ export class MatchComponent implements OnInit {
     if (playerIdString) {
       playerId = parseInt(playerIdString);
     }
+    if (!this.matchService.match) {
+      this.matchService.joinMatch();
+    }
   }
   async endTurn() {
     await this.matchService.endTurn();

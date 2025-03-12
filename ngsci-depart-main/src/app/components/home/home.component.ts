@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     let userId = sessionStorage.getItem("userId");
 
     if (userId) {
-      await this.matchService.joinMatch(userId);
+      await this.matchService.joinMatch();
     }
     this.recherche = true;
     console.log("Waiting for the match to start...");
