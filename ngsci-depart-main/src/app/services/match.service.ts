@@ -91,7 +91,7 @@ export class MatchService {
   }
 
   public async stopJoiningMatch(): Promise<boolean> {
-    await this.hubConnection?.invoke('StopJoiningMatch', this.currentUserId)
+    await this.hubConnection?.invoke('StopJoiningMatch')
 
     if (this.stoppedJoiningMatch) {
       return this.stoppedJoiningMatch
@@ -110,7 +110,7 @@ export class MatchService {
 
     this.currentUserId = userId
 
-    await this.hubConnection.invoke('JoinMatch', userId);
+    await this.hubConnection.invoke('JoinMatch');
     console.log("invoked JoinMatch");
   }
 
@@ -120,7 +120,7 @@ export class MatchService {
       console.error('La connexion SignalR n\'est pas établie.');
       return;
     }
-    await this.hubConnection.invoke('EndTurn', this.currentUserId, this.match?.id);
+    await this.hubConnection.invoke('EndTurn', this.match?.id);
     console.log("invoked EndTurn")
   }
 
@@ -131,7 +131,7 @@ export class MatchService {
       return;
     }
     console.log("Surrendering")
-    await this.hubConnection.invoke('Surrender', this.currentUserId, this.match?.id);
+    await this.hubConnection.invoke('Surrender', this.match?.id);
 
   }
 
