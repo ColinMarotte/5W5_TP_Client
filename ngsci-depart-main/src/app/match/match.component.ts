@@ -36,16 +36,16 @@ export class MatchComponent implements OnInit {
     }
   }
   async endTurn() {
-    this.matchService.endTurn();
+    await this.matchService.endTurn();
   }
 
   async surrender() {
-    this.matchService.surrender()
+    await this.matchService.surrender()
   }
 
-  endMatch() {
+  async endMatch() {
     this.matchService.clearMatch();
-    this.router.navigate(['/home']);
+    await this.router.navigate(['/']);
   }
 
   isVictory(): boolean {
