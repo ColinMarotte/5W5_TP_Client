@@ -1,12 +1,13 @@
-<div style="display: flex; margin: 20px; justify-content: center;">
-  <button mat-raised-button color="accent" style="margin-right: 20px;" (click)="joinMatch()">Joindre une partie</button>
+<div style="margin-left: 20px; margin-right: 20px;">
+  <div style="display: flex; justify-content: center;">
+    <button mat-raised-button color="accent" (click)="joinMatch()">Joindre une partie</button>
+  </div>
+
+  <div class="loading-dialog" *ngIf="recherche">
+    <h2>Recherche d'un adversaire...</h2>
+    <mat-spinner></mat-spinner>
+    <button mat-fab extended (click)="stopJoiningMatch()">Stop joining</button>
+  </div>
+
+  <router-outlet></router-outlet>
 </div>
-
-<div class="loading-dialog" *ngIf="recherche">
-  <h2>Recherche d'un adversaire...</h2>
-  <mat-spinner></mat-spinner>
-  <button mat-fab extended (click)="stopJoiningMatch()">Stop joining</button>
-</div>
-
-
-<router-outlet></router-outlet>

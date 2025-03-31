@@ -10,7 +10,7 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Courriel</mat-label>
-          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" required/>
+          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" tabindex="1" required/>
           
           <mat-error *ngIf="form.get('email')?.errors?.['email'] && !form.get('email')?.hasError('required')">
             Entrer une adresse courriel valide.
@@ -22,9 +22,9 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Mot de passe</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password" name="password" required/>
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password" name="password" tabindex="2" required/>
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-icon >{{hide ? 'visibility_off' : 'visibility'}} </mat-icon>
           </button>
 
           <mat-error *ngIf="form.get('password')?.hasError('required')">
@@ -40,7 +40,7 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Confirmation du mot de passe</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordConfirmInput" formControlName="passwordConfirm" name="passwordConfirm" required/>
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordConfirmInput" formControlName="passwordConfirm" name="passwordConfirm" tabindex="3" required/>
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
@@ -63,14 +63,14 @@
         
         <br>
 
-        <button mat-raised-button color="accent" (click)="register()" [disabled]="!form.valid">
+        <button mat-raised-button color="accent" (click)="register()" [disabled]="!form.valid" tabindex="4">
           Créer un compte
         </button>
 
         <br>
         <br>
 
-        <button mat-raised-button color="primary" (click)="toLogin()">
+        <button mat-raised-button color="primary" (click)="toLogin()" tabindex="5">
           Se connecter
         </button>
 

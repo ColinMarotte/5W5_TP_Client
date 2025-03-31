@@ -10,6 +10,7 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+    rarity: number;
 }
 
 export interface MatchData {
