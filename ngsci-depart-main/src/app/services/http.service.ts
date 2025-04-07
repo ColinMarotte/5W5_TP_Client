@@ -56,10 +56,12 @@ export class HttpService {
         console.log("Token: " + response.token);
         console.log("User Id: " + response.userId);
         console.log("Player Id: " + response.playerId);
+        console.log("Solde: " + response.solde);
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("userId", response.userId);
         sessionStorage.setItem("playerId", response.playerId);
         sessionStorage.setItem("username", email);
+        sessionStorage.setItem("Solde", response.solde);
         stringResponse = "success";
       }
     })

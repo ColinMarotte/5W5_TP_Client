@@ -1,6 +1,7 @@
 export interface Player {
     id: number;
     name: string;
+    balance: number;
 }
 
 export interface Card {
@@ -11,6 +12,7 @@ export interface Card {
     cost: number;
     imageUrl: string;
     rarity: number;
+    price: number;
 }
 
 export interface MatchData {

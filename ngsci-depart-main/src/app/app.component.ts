@@ -26,7 +26,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class AppComponent {
   title = 'supercartesinfinies';
-
+  solde: number | undefined;
   constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   isLogged(): boolean {
@@ -36,6 +36,15 @@ export class AppComponent {
   getUsername() {
     let username: string | null = sessionStorage.getItem("username");
     return username;
+  }
+
+  getSolde() {
+    let soldeString: string | null = sessionStorage.getItem("Solde")
+    if (soldeString) {
+      let solde: number | null = parseInt(soldeString);
+      return solde
+    }
+    return
   }
 
   logout() {
@@ -50,6 +59,8 @@ export class AppComponent {
   login() {
     this.router.navigate(['/login']);
   }
+
+
 
   async test() {
     let testData: string = (await this.httpService.test()).toString();
