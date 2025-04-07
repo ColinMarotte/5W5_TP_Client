@@ -82,6 +82,10 @@ export class MatchService {
       this.stoppedJoiningMatch = data;
     })
 
+    await this.hubConnection.on('PlayCardEvent', (data) => {
+      console.log("PlayCardEvent:", data);
+      this.applyEvent(data);
+    })
     await this.hubConnection
       .start()
       .then(() => {
@@ -133,6 +137,19 @@ export class MatchService {
 
   }
 
+  public async playCard(playableCardId:any){
+    if (!this.hubConnection) {
+      console.error('La connexion SignalR n\'est pas établie.');
+      return;
+    }
+    try{
+      await this.hubConnection.invoke('PlayCard', this.match?.id, playableCardId)
+
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
   clearMatch() {
     this.match = null;
     this.matchData = null;
@@ -220,6 +237,15 @@ export class MatchService {
         }
 
         break;
+      }
+      case "PlayCard": {
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
+          this.moveCard(playerData.hand, playerData.battleField, event.playableCardId);
+          await new Promise(resolve => setTimeout(resolve, 250));
+        }
+
+        break;      
       }
     }
     if (event.events) {
