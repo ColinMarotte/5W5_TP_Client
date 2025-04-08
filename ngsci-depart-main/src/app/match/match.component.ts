@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, OutletContext, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatchService } from '../services/match.service';
 import { ApiService } from '../services/api.service';
@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
+
 @Component({
   selector: 'app-match',
   templateUrl: './match.component.html',
@@ -20,6 +21,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule]
 })
 export class MatchComponent implements OnInit {
+
+  @Output() addToSoldeEvent = new EventEmitter<number>();
 
   matchId: number = 0;
 
@@ -48,6 +51,7 @@ export class MatchComponent implements OnInit {
 
   async endMatch() {
     this.matchService.clearMatch();
+    this.addToSoldeEvent.emit(this.matchService.moneyWon)
     await this.router.navigate(['/']);
   }
 

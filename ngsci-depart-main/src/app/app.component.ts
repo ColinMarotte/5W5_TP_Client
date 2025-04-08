@@ -26,7 +26,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class AppComponent {
   title = 'supercartesinfinies';
-  solde: number | undefined;
+  solde: number = 0;
   constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   isLogged(): boolean {
@@ -42,7 +42,20 @@ export class AppComponent {
     let soldeString: string | null = sessionStorage.getItem("Solde")
     if (soldeString) {
       let solde: number | null = parseInt(soldeString);
+      this.solde = solde
       return solde
+    }
+    return
+  }
+
+  ajouterAuSolde(montantAAjouter: number) {
+    let soldeString: string | null = sessionStorage.getItem("Solde")
+    if (soldeString) {
+      let solde: number | null = parseInt(soldeString);
+      this.solde += solde + montantAAjouter
+
+      sessionStorage.setItem("Solde", this.solde.toString())
+      return
     }
     return
   }

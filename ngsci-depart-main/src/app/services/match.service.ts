@@ -1,3 +1,4 @@
+import { AppComponent } from './../app.component';
 import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
@@ -26,6 +27,7 @@ export class MatchService {
   matchfini: boolean = false;
   victoire: boolean = false;
   perdant: number = -1;
+  moneyWon: number | undefined;
 
   hubConnection: HubConnection | undefined;
 
@@ -212,10 +214,12 @@ export class MatchService {
 
         if (event.winningPlayerId === this.currentPlayerId) {
           this.victoire = true;
+          this.moneyWon = event.moneyreceivedbywinner
           console.log("Victoire pour le joueur " + this.currentPlayerId);
         } else {
           this.victoire = false;
           this.perdant = this.currentPlayerId;
+          this.moneyWon = event.moneyreceivedbyloser
           console.log("Défaite pour le joueur " + this.currentPlayerId);
         }
 
