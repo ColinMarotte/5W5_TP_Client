@@ -23,6 +23,9 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export class MatchComponent implements OnInit {
 
   matchId: number = 0;
+  montantRecu = 0;
+  private MoneyreceivedSubscription: Subscription | null = null;
+
 
   constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) {
 
@@ -38,6 +41,9 @@ export class MatchComponent implements OnInit {
     if (!this.matchService.match) {
       this.matchService.joinMatch();
     }
+    this.MoneyreceivedSubscription = this.matchService.MoneyReveiced$.subscribe(async (montantRecu) => {
+      this.montantRecu = montantRecu!
+    });
   }
   async endTurn() {
     await this.matchService.endTurn();
