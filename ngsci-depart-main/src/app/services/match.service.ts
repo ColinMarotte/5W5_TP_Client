@@ -27,7 +27,6 @@ export class MatchService {
   matchfini: boolean = false;
   victoire: boolean = false;
   perdant: number = -1;
-  moneyWon: number | undefined;
 
   hubConnection: HubConnection | undefined;
 
@@ -35,6 +34,9 @@ export class MatchService {
 
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
+
+  private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
+  public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
 
   constructor() {
   }
@@ -214,12 +216,12 @@ export class MatchService {
 
         if (event.winningPlayerId === this.currentPlayerId) {
           this.victoire = true;
-          this.moneyWon = event.moneyreceivedbywinner
+          this.MoneyReceivedSubject.next(event.moneyReceivedByWinner)
           console.log("Victoire pour le joueur " + this.currentPlayerId);
         } else {
           this.victoire = false;
           this.perdant = this.currentPlayerId;
-          this.moneyWon = event.moneyreceivedbyloser
+          this.MoneyReceivedSubject.next(event.moneyReceivedByLoser)
           console.log("Défaite pour le joueur " + this.currentPlayerId);
         }
 

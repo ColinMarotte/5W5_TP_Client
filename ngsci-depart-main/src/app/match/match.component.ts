@@ -22,8 +22,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 })
 export class MatchComponent implements OnInit {
 
-  @Output() addToSoldeEvent = new EventEmitter<number>();
-
   matchId: number = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) {
@@ -51,7 +49,6 @@ export class MatchComponent implements OnInit {
 
   async endMatch() {
     this.matchService.clearMatch();
-    this.addToSoldeEvent.emit(this.matchService.moneyWon)
     await this.router.navigate(['/']);
   }
 

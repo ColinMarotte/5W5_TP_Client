@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginDTO, RegisterDTO } from '../models/dtos';
-import { lastValueFrom } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 
 const domain = "https://localhost:7179/"
 
@@ -9,6 +9,10 @@ const domain = "https://localhost:7179/"
   providedIn: 'root'
 })
 export class HttpService {
+
+  private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
+  public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
+
 
   constructor(public http: HttpClient) { }
 
@@ -63,6 +67,7 @@ export class HttpService {
         sessionStorage.setItem("username", email);
         sessionStorage.setItem("Solde", response.solde);
         stringResponse = "success";
+        this.MoneyReceivedSubject.next(response.solde);
       }
     })
     return stringResponse;
