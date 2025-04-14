@@ -68,8 +68,8 @@ export class MatchService {
     })
 
     await this.hubConnection.on('EndTurnEvent', (data) => {
-      console.log("endturnevent:", data)
       this.applyEvent(data)
+      // console.log("endturnevent:", data)
     })
 
     await this.hubConnection.on('SurrenderEvent', (data) => {
@@ -85,6 +85,18 @@ export class MatchService {
     await this.hubConnection.on('PlayCardEvent', (data) => {
       console.log("PlayCardEvent:", data);
       this.applyEvent(data);
+    })
+    await this.hubConnection.on('CombatEvent', (data) => {
+      this.applyEvent(data)
+    })
+    await this.hubConnection.on('AttackEvent', (data) => {
+      this.applyEvent(data)
+    })
+    await this.hubConnection.on('PlayerDamageEvent', (data) => {
+      this.applyEvent(data)
+    })
+    await this.hubConnection.on('PlayerDeathEvent', (data) => {
+      this.applyEvent(data)
     })
     await this.hubConnection
       .start()
@@ -117,11 +129,11 @@ export class MatchService {
   }
 
   public async endTurn() {
-    console.log("Ending Turn Event:", this.match?.id);
     if (!this.hubConnection) {
       console.error('La connexion SignalR n\'est pas établie.');
       return;
     }
+    // console.log("Ending Turn Event:", this.currentPlayerId, this.match?.id);
     await this.hubConnection.invoke('EndTurn', this.match?.id);
     console.log("invoked EndTurn")
   }
@@ -150,6 +162,9 @@ export class MatchService {
       console.log(error);
     }
   }
+
+  // public async
+
   clearMatch() {
     this.match = null;
     this.matchData = null;
@@ -248,6 +263,38 @@ export class MatchService {
         }
 
         break;      
+      }
+      case "Combat":{
+        // let playerData = this.getPlayerData(event.playerId);
+        // if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+
+        // }
+        break;
+      }
+      case "Attack":{
+        // let playerData = this.getPlayerData(event.playerId);
+        // if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+
+        // }
+        break;
+      }
+      case "PlayerDamage":{
+        // let playerData = this.getPlayerData(event.playerId);
+        // if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          
+        // }
+        break;
+      }
+      case "PlayerDeath":{
+        // let playerData = this.getPlayerData(event.playerId);
+        // if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+
+        // }
+        break;
       }
     }
     if (event.events) {
