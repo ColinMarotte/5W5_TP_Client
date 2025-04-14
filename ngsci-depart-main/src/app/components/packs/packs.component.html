@@ -61,3 +61,8 @@
         </div>
     </div>
 </div>
+
+<div class="dialogue-box" *ngIf="showMessage">
+    <p class="dialogue-text">Montant insuffisant! 😿</p>
+    <button class="dialogue-btn" (click)="showMessage = false">OK 😿</button>
+</div>

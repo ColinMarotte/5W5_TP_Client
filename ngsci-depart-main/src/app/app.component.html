@@ -9,7 +9,7 @@
   <button mat-raised-button [routerLink]="['/magasin']" style="margin-left: 20px;">Magasin</button>
   }
   @if (isLogged()) {
-  <button mat-raised-button [routerLink]="['/packs']" style="margin-left: 20px;">Packs</button>
+  <button mat-raised-button [routerLink]="['/packs']" style="margin-left: 20px;">Paquets</button>
   }
   @if(isLogged()){
   <h2 style="margin-left: 20px;">Votre solde : {{solde ? solde : 0}} &#8377;</h2>

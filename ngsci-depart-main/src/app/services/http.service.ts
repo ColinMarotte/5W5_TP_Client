@@ -80,7 +80,9 @@ export class HttpService {
     return x;
   }
 
-  async acheterPaquet(paquetIndex: number) {
-    let x = await lastValueFrom(this.http.get<Card[]>(domain + "api/packs/AcheterPaquet"))
+  async acheterPaquet(paquetIndex: number): Promise<Card[] | null> {
+    let x = await lastValueFrom(this.http.get<Card[]>(domain + "api/Packs/AcheterPaquet/" + paquetIndex));
+    console.log(x);
+    return x;
   }
 }
