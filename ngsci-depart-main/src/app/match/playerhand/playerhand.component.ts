@@ -23,7 +23,7 @@ export class PlayerhandComponent implements OnInit {
     
   }
 
-  async click(playableCard:any){
+  async click(playableCard:PlayableCard){
     let player = this.matchService.playerData;
     if(!player) {
       console.log("Erreur: Impossible de trouver les données du joueur.");

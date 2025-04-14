@@ -30,6 +30,7 @@ export interface Match {
 export interface PlayableCard {
     id: number;
     card: Card;
+    index: number;
     health: number;
 }
 

@@ -167,6 +167,8 @@ export class MatchService {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
+    this.match.playerDataA.battleField.sort(a => a.index);
+    this.match.playerDataB.battleField.sort(a => a.index).reverse;
 
     if (this.match.playerDataA.playerId == this.currentPlayerId) {
       this.playerData = this.match.playerDataA!;
