@@ -1,0 +1,63 @@
+<div class="container py-5">
+    <div class="row justify-content-center g-4">
+        <!-- Paquet Chill -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center">
+                <img src="assets/paquet1_img.webp" class="card-img-top img-fluid imageMoyenne" alt="Chat Chill">
+                <div class="card-body">
+                    <h1 class="card-title fw-bold">Paquet Chill</h1>
+                    <p class="card-text small text-start">
+                        <span class="fw-semibold">Détails :</span><br>
+                        Contient <span class="fw-bold">3 cartes</span><br>
+                        <span style="color: rgb(76, 175, 80);">30% de chance</span> d’avoir une carte rare.
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-outline-primary w-100 fs-5" (click)="acheterPaquet(0)">40 &#8377;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paquet Très Chill -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center">
+                <img src="assets/paquet2_img.jpeg" class="card-img-top img-fluid imageMoyenne" alt="Paquet Très Chill">
+                <div class="card-body">
+                    <h1 class="card-title fw-bold">Paquet Très Chill</h1>
+                    <p class="card-text small text-start">
+                        <span class="fw-semibold">Détails :</span><br>
+                        <span style="color: rgb(76, 175, 80);" class="fw-bold">1 carte rare garantie</span><br>
+                        + 3 cartes avec chances :<br>
+                        <span style="color: rgb(76, 175, 80);">30% rare</span>,
+                        <span style="color: rgb(156, 39, 176);">10% épique</span>,
+                        <span style="color: rgb(255, 87, 34);">2% légendaire</span>.
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-outline-success w-100 fs-5" (click)="acheterPaquet(1)">75 &#8377;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paquet Hyper Chill -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center">
+                <img src="assets/paquet3_img.jpg" class="card-img-top img-fluid imageMoyenne" alt="Paquet Hyper Chill">
+                <div class="card-body">
+                    <h1 class="card-title fw-bold">Paquet Hyper Chill</h1>
+                    <p class="card-text small text-start">
+                        <span class="fw-semibold">Détails :</span><br>
+                        <span style="color: rgb(156, 39, 176);" class="fw-bold">1 carte épique garantie</span><br>
+                        + 4 cartes :
+                        <span style="color: rgb(156, 39, 176);">25% épique</span>,
+                        <span style="color: rgb(255, 87, 34);">10% légendaire</span><br>
+                        <span style="color: rgb(169, 169, 169);" class="fw-semibold">Aucune carte commune</span>.
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-outline-danger w-100 fs-5" (click)="acheterPaquet(2)">100 &#8377;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginDTO, RegisterDTO } from '../models/dtos';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Card } from '../models/models';
 
 const domain = "https://localhost:7179/"
 
@@ -77,5 +78,9 @@ export class HttpService {
     let x = await lastValueFrom(this.http.get<string[]>(domain + "api/Account/PrivateData"));
     console.log(x);
     return x;
+  }
+
+  async acheterPaquet(paquetIndex: number) {
+    let x = await lastValueFrom(this.http.get<Card[]>(domain + "api/packs/AcheterPaquet"))
   }
 }
