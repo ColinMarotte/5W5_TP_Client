@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { Deck } from '../models/models';
+import { NewDeckDTO } from '../models/dtos';
 
 const domain = "https://localhost:7179/"
 
@@ -11,4 +13,20 @@ export class DeckService {
 
   constructor(public http: HttpClient) { }
 
+  async getDecks(): Promise<Deck[]> {
+    let x = await lastValueFrom(this.http.get<Deck[]>(domain + "api/Decks/GetPlayersDecks"));
+    console.log(x);
+    return x;
+  }
+
+  async createDeck(deckName: string): Promise<Deck[]> {
+    let newDeckDTO = new NewDeckDTO(
+      deckName
+    );
+
+    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/CreateDeck", newDeckDTO));
+    console.log(x);
+
+    return await this.getDecks();
+  }
 }

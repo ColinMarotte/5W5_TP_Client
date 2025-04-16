@@ -2,23 +2,54 @@ import { CommonModule } from '@angular/common';
 import { DeckService } from './../../services/deck.service';
 import { Component, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { Deck } from 'src/app/models/models';
+import { DeckComponent } from "../deck/deck.component";
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
+import { CreatedeckdialogComponent } from '../createdeckdialog/createdeckdialog.component';
 
 @Component({
   selector: 'app-mesdecks',
   templateUrl: './mesdecks.component.html',
   styleUrls: ['./mesdecks.component.css'],
   standalone: true,
-  imports: [CommonModule, MatButton]
+  imports: [CommonModule, MatButton, DeckComponent, MatDialogModule, CreatedeckdialogComponent]
 })
 export class MesdecksComponent implements OnInit {
 
-  constructor(public deckService: DeckService) { }
+  mesDecks: Deck[] = [];
+
+  deckNameOutput: string | null = null;
+
+  constructor(public deckService: DeckService, private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.getDecks();
   }
 
-  getDecks() {
+  openDialog() {
 
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    const dialogRef = this.dialog.open(CreatedeckdialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(data => {
+      console.log("CreateDeck Dialog output:", data)
+      if (data != undefined) {
+        this.deckNameOutput = data;
+        this.createDeck(this.deckNameOutput!)
+      }
+    });
+  }
+
+  async getDecks() {
+    this.mesDecks = await this.deckService.getDecks();
+  }
+
+  async createDeck(name: string) {
+    this.mesDecks = await this.deckService.createDeck(name);
   }
 
 }

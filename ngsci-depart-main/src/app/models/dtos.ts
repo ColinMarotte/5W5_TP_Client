@@ -12,3 +12,9 @@ export class LoginDTO {
         public password: string
     ) { }
 }
+
+export class NewDeckDTO {
+    constructor(
+        public deckName: string
+    ) { }
+}

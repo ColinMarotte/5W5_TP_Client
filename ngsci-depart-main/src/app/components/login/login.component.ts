@@ -8,8 +8,8 @@ import { MatError, MatFormField, MatFormFieldModule } from '@angular/material/fo
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButton } from '@angular/material/button';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatIconModule} from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   hide = true;
 
-  form: FormGroup<any>
+  form: FormGroup<any>;
 
   formData?: Data;
 
@@ -47,16 +47,16 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
-    if(this.emailInput != null && this.passwordInput != null){
+    if (this.emailInput != null && this.passwordInput != null) {
       this.reponse = await this.httpService.login(this.emailInput, this.passwordInput);
-      if(this.reponse == "success"){
+      if (this.reponse == "success") {
         this.router.navigate(['/home']);
         this.snackBar.open('Connexion réussie!', 'OK', { duration: 5000 });
       }
     }
   }
 
-  toRegister(){
+  toRegister() {
     this.router.navigate(['/register']);
   }
 

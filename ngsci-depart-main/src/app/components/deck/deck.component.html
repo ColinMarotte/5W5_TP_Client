@@ -1,0 +1,17 @@
+<div class="row">
+  <h1 class="col-auto">{{deck?.name}}</h1>
+
+  <mat-chip class="col-auto" *ngIf="deck?.current">Deck courant</mat-chip>
+
+  <button class="col-auto icon-button" *ngIf="!deck?.current" mat-raised-button color="primary" matTooltip="Supprimer"
+    (click)="deleteDeck()"><mat-icon>delete</mat-icon></button>
+
+  <button class="col-auto icon-button ml-3" *ngIf="!deck?.current" mat-raised-button color="primary"
+    matTooltip="Définir comme deck courant" (click)="deleteDeck()"><mat-icon>check</mat-icon></button>
+</div>
+
+<div class="row">
+  <div class="col-auto" style="margin-bottom: 20px;" *ngFor="let carte of deck?.deckOwnedCards">
+    <app-card [card]="carte.ownedCard.card"></app-card>
+  </div>
+</div>

@@ -1,5 +1,15 @@
-<button mat-raised-button color="primary" style="padding: 30px; margin-left: 20px;" (click)="getDecks()">
-  Ajouter un deck
-</button>
+<div class="container-fluid">
 
-<br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button color="primary" style="padding: 30px;" (click)="openDialog()">
+        Ajouter un deck
+      </button>
+    </div>
+  </div>
+
+  <br>
+
+  <app-deck *ngFor="let deck of mesDecks" [deck]="deck"></app-deck>
+
+</div>
