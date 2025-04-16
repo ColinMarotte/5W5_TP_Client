@@ -13,14 +13,14 @@
         <td>{{card?.attack}}</td>
       </tr>
       <tr>
-        <td [class.wobble-hor-bottom]="css_wobbleBottom">
+        <td>
           <i class="fas fa-shield-alt"></i>
         </td>
         <td>{{card?.health}}</td>
       </tr>
       <tr *ngFor="let cp of card?.cardPowers; let i = index">
-        <td [ngClass]="animatedPowerIndex === i ? animationClass : ''" (click)="doubleCenterSpin(i)"
-          style="cursor: pointer;">{{cp.power.icone}}</td>
+        <td [ngClass]="animationClass" (click)="animation(i)" style="cursor: pointer;">
+          {{cp.power.icone}}</td>
 
         <td>{{ cp.value }}</td>
       </tr>

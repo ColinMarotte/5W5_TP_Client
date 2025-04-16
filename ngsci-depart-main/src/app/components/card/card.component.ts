@@ -3,8 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Card, CardPower } from 'src/app/models/models';
 import { MatCardModule } from '@angular/material/card';
 import { transition, trigger, useAnimation } from '@angular/animations';
-
-
+import { timer } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-card',
@@ -12,7 +12,6 @@ import { transition, trigger, useAnimation } from '@angular/animations';
   styleUrls: ['./card.component.css'],
   standalone: true,
   imports: [MatCardModule, CommonModule],
-
 })
 export class CardComponent implements OnInit {
 
@@ -23,13 +22,11 @@ export class CardComponent implements OnInit {
   animatedPowerIndex: number = -1;
   animationClass: string = '';
 
-  css_wobbleBottom = false;
+  css_classanimation = false;
 
   constructor() { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
   getAnimationClass(powerName: string): string {
     switch (powerName.toLowerCase()) {
@@ -42,44 +39,69 @@ export class CardComponent implements OnInit {
       case 'Shield':
         return 'rotate-in-center';
       default:
-        return '';
+        return 'rotate-in-center';
     }
   }
 
-  async animationsPouvoirs() {
-    if (!this.card?.cardPowers) return;
+  animation(i: number) {
+    if (!this.card?.cardPowers || !this.card.cardPowers[i]?.power?.name)
+      return;
 
-    for (let i = 0; i < this.card.cardPowers.length; i++) {
-      const powerName = this.card.cardPowers[i].power.name;
-      this.animationClass = this.getAnimationClass(powerName);
-      this.animatedPowerIndex = i;
+    const powerName = this.card.cardPowers[i].power.name;  // Récupérer le nom du pouvoir
+    this.animationClass = 'rotate-in-center';  // Déterminer la classe d'animation
+    console.log(this.getAnimationClass(powerName))
 
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
+    this.css_classanimation = true
 
     setTimeout(() => {
-      this.animatedPowerIndex = -1;
-      this.animationClass = '';
+      this.css_classanimation = false;
     }, 500);
+
+    let x = 5;
   }
 
-  doubleCenterSpin(index?: number) {
-    if (index !== undefined) {
-      this.animatedPowerIndex = index;
-      const powerName = this.card?.cardPowers?.[index].power.name || '';
-      this.animationClass = this.getAnimationClass(powerName);
-      console.log('Animation started for index:', index);
-      console.log('Animation class:', this.animationClass);
+  // Utilisation de async/await pour gérer l'attente des animations
+  // async animationsPouvoirs() {
+  //   if (!this.card?.cardPowers) return;
 
-      setTimeout(() => {
-        this.animatedPowerIndex = -1;
-        this.animationClass = '';
-      }, 2000);
-    } else {
-      this.css_wobbleBottom = true;
-      setTimeout(() => {
-        this.css_wobbleBottom = false;
-      }, 2000);
-    }
-  }
+  //   for (let i = 0; i < this.card.cardPowers.length; i++) {
+  //     const powerName = this.card.cardPowers[i].power.name;
+  //     this.animationClass = this.getAnimationClass(powerName);
+  //     this.animatedPowerIndex = i;
+
+  //     // Attente de 500 ms avant de passer à l'animation suivante
+  //     await this.waitFor(0.5);
+  //   }
+
+  //   // Réinitialisation après toutes les animations
+  //   await this.waitFor(0.5);  // Attente supplémentaire si nécessaire
+  //   this.animatedPowerIndex = -1;
+  //   this.animationClass = '';
+  // }
+
+  // // Fonction pour gérer les délais (en secondes)
+  // async waitFor(delayInSeconds: number) {
+  //   await lastValueFrom(timer(delayInSeconds * 1000));
+  // }
+
+
+  // async doubleCenterSpin(index?: number) {
+  //   if (index !== undefined) {
+
+  //     this.animatedPowerIndex = index;
+  //     const powerName = this.card?.cardPowers?.[index].power.name || '';
+  //     this.animationClass = this.getAnimationClass(powerName);
+  //     console.log(powerName + this.animatedPowerIndex)
+
+  //     // Attente de 2 secondes pour cette animation
+  //     await this.waitFor(2);  // Attente de 2 secondes avant de réinitialiser l'index
+  //     this.animatedPowerIndex = -1;
+  //     this.animationClass = '';
+  //   } else {
+  //     // Animation Wobble avec délai
+  //     this.css_wobbleBottom = true;
+  //     await this.waitFor(2);  // Attente de 2 secondes avant de réinitialiser
+  //     this.css_wobbleBottom = false;
+  //   }
+  // }
 }
