@@ -28,41 +28,7 @@ export class CardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // Si la carte existe, injecte-lui des CardPowers fake
-    if (this.card) {
-      const fakePowers: CardPower[] = [
-        {
-          id: 1,
-          cardId: this.card.id,
-          powerId: 1,
-          value: 5,
-          power: {
-            id: 1,
-            name: 'First Strike',
-            description: 'Attaque en premier.',
-            icone: 'fas fa-shield-alt',
-            CardPowers: [],
-          },
-          card: this.card
-        },
-        {
-          id: 2,
-          cardId: this.card.id,
-          powerId: 2,
-          value: 3,
-          power: {
-            id: 2,
-            name: 'Thorns',
-            description: 'Renvoie des dégâts.',
-            icone: '🌵',
-            CardPowers: [],
-          },
-          card: this.card
-        }
-      ];
 
-      this.card.CardPowers = fakePowers;
-    }
   }
 
   getAnimationClass(powerName: string): string {
@@ -80,10 +46,10 @@ export class CardComponent implements OnInit {
     }
   }
   async animationsPouvoirs() {
-    if (!this.card?.CardPowers) return;
+    if (!this.card?.cardPowers) return;
 
-    for (let i = 0; i < this.card.CardPowers.length; i++) {
-      const powerName = this.card.CardPowers[i].power.name;
+    for (let i = 0; i < this.card.cardPowers.length; i++) {
+      const powerName = this.card.cardPowers[i].power.name;
       this.animationClass = this.getAnimationClass(powerName);
       this.animatedPowerIndex = i;
 
@@ -99,7 +65,7 @@ export class CardComponent implements OnInit {
   doubleCenterSpin(index?: number) {
     if (index !== undefined) {
       this.animatedPowerIndex = index;
-      const powerName = this.card?.CardPowers?.[index].power.name || '';
+      const powerName = this.card?.cardPowers?.[index].power.name || '';
       this.animationClass = this.getAnimationClass(powerName);
       console.log('Animation started for index:', index);
       console.log(this.animationClass)

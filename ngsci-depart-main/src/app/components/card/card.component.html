@@ -18,16 +18,14 @@
         </td>
         <td>{{card?.health}}</td>
       </tr>
+      <tr *ngFor="let cp of card?.cardPowers; let i = index">
+        <td [ngClass]="animatedPowerIndex === i ? animationClass : ''" (click)="doubleCenterSpin(i)"
+          style="cursor: pointer;">{{cp.power.icone}}</td>
 
-      <ng-container *ngIf="card?.CardPowers?.length!! > 0">
-        <tr *ngFor="let cp of card?.CardPowers; let i = index">
-          <td>
-            <i class="{{ cp.power.icone }}" [ngClass]="animatedPowerIndex === i ? animationClass : ''"
-              (click)="doubleCenterSpin(i)" style="cursor: pointer;"></i>
-          </td>
-          <td>{{ cp.value }}</td>
-        </tr>
-      </ng-container>
+        <td>{{ cp.value }}</td>
+      </tr>
+
+
     </table>
   </mat-card-content>
 </mat-card>
