@@ -38,13 +38,14 @@ export class CardComponent implements OnInit {
       case 'Thorns':
         return 'rotate-scale-up-ver';
       case 'Heal':
-        return '';
+        return 'bounce-in-fwd';
       case 'Shield':
-        return '';
+        return 'rotate-in-center';
       default:
         return '';
     }
   }
+
   async animationsPouvoirs() {
     if (!this.card?.cardPowers) return;
 
@@ -68,7 +69,7 @@ export class CardComponent implements OnInit {
       const powerName = this.card?.cardPowers?.[index].power.name || '';
       this.animationClass = this.getAnimationClass(powerName);
       console.log('Animation started for index:', index);
-      console.log(this.animationClass)
+      console.log('Animation class:', this.animationClass);
 
       setTimeout(() => {
         this.animatedPowerIndex = -1;
