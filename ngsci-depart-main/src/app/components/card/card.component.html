@@ -7,27 +7,27 @@
     <mat-card-title>{{card?.name}}</mat-card-title>
   </mat-card-header>
   <mat-card-content class="infinite-card-content" style="background-image: url({{card?.imageUrl}});">
-    <table style="font-size: 2em; font-size: 2em; width: fit-content; text-shadow: 2px 2px 2px black;">
+    <table style="font-size: 2em; width: fit-content; text-shadow: 2px 2px 2px black;">
       <tr>
         <td><i class="fas fa-fist-raised"></i></td>
         <td>{{card?.attack}}</td>
       </tr>
       <tr>
-        <td [class.wobble-hor-bottom]="css_wobbleBottom"><i (click)="doubleCenterSpin()" class="fas fa-shield-alt"></i>
+        <td [class.wobble-hor-bottom]="css_wobbleBottom">
+          <i class="fas fa-shield-alt"></i>
         </td>
         <td>{{card?.health}}</td>
       </tr>
 
-      <div *ngIf="card?.CardPowers?.length!! >0">
-        <ul>
-          <li *ngFor="let cp of card?.CardPowers; let i = index"
-            [ngClass]="animatedPowerIndex === i ? currentAnimationClass : ''">
-            <i (click)="doubleCenterSpin()">{{cp.power.icone}}</i>
-            {{ cp.power.icone }} {{ cp.power.name }} {{ cp.value }}
-          </li>
-        </ul>
-
-      </div>
+      <ng-container *ngIf="card?.CardPowers?.length!! > 0">
+        <tr *ngFor="let cp of card?.CardPowers; let i = index">
+          <td>
+            <i class="{{ cp.power.icone }}" [ngClass]="animatedPowerIndex === i ? animationClass : ''"
+              (click)="doubleCenterSpin(i)" style="cursor: pointer;"></i>
+          </td>
+          <td>{{ cp.value }}</td>
+        </tr>
+      </ng-container>
     </table>
   </mat-card-content>
 </mat-card>
