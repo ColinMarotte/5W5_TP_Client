@@ -13,10 +13,10 @@ export interface Card {
 }
 
 export interface MatchData {
-    match:Match;
+    match: Match;
     playerA: Player;
     playerB: Player;
-    winningPlayerId:number;
+    winningPlayerId: number;
 }
 
 export interface Match {
@@ -34,8 +34,8 @@ export interface PlayableCard {
 }
 
 export interface PlayerData {
-    id:number;
-	  health: number;
+    id: number;
+    health: number;
     maxhealth: number;
     mana: number;
     playerId: number;
@@ -44,4 +44,24 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
+}
+
+export interface Deck {
+    id: number;
+    name: string;
+    current: boolean;
+    playerId: number;
+    deckOwnedCards: DeckOwnedCard[];
+}
+
+export interface DeckOwnedCard {
+    id: number;
+    deckId: number;
+    ownedCardId: number;
+    ownedCard: OwnedCard;
+}
+
+export interface OwnedCard {
+    id: number;
+    card: Card;
 }
