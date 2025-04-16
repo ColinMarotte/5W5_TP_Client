@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
   constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.getSolde();
     this.ConnectionReceivedMoeny = this.httpService.MoneyReveiced$.subscribe(async (montantInital) => {
       if (montantInital) {
         this.solde = montantInital!;
@@ -59,6 +60,10 @@ export class AppComponent implements OnInit {
   getUsername() {
     let username: string | null = sessionStorage.getItem("username");
     return username;
+  }
+
+  async getSolde() {
+    this.solde = await this.httpService.getSolde();
   }
 
   logout() {

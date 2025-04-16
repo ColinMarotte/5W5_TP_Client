@@ -62,7 +62,19 @@
     </div>
 </div>
 
-<div class="dialogue-box" *ngIf="showMessage">
-    <p class="dialogue-text">Montant insuffisant! 😿</p>
-    <button class="dialogue-btn" (click)="showMessage = false">OK 😿</button>
+<div class="dialogue-box dialogue-center" *ngIf="montantInsuffisant">
+    <p class="dialogue-text alert">Montant insuffisant! 😿</p>
+    <button class="dialogue-btn" (click)="montantInsuffisant = false">OK 😿</button>
+</div>
+
+<div class="dialogue-box dialogue-center" *ngIf="dialogueNouvellesCartes">
+    <h1>Vos nouvelles cartes</h1>
+
+    <div class="row gx-3 gy-3">
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let card of newCards">
+            <app-card [card]="card"></app-card>
+        </div>
+    </div>
+
+    <button class="dialogue-btn" (click)="dialogueNouvellesCartes = false">YOUPI !!! 😸</button>
 </div>

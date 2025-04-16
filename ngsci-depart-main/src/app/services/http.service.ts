@@ -85,4 +85,10 @@ export class HttpService {
     console.log(x);
     return x;
   }
+
+  async getSolde(): Promise<number> {
+    let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/Solde"));
+    console.log("solde", x);
+    return x;
+  }
 }

@@ -8,7 +8,7 @@
 
 .dialogue-box {
     max-width: 300px;
-    background-color: #f1f1f1;
+    background-color: #ffb8f4;
     border-radius: 10px;
     padding: 10px 15px;
     margin-bottom: 20px;
@@ -16,28 +16,42 @@
     font-size: 0.95rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.dialogue-box::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 20px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: #f1f1f1 transparent transparent transparent;
+.dialogue-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.dialogue-box .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.dialogue-box .col {
+    flex: 1 1 100px;
+    max-width: 120px;
+}
+
+
+.dialogue-text.alert {
+    color: #d32f2f;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 .dialogue-btn {
