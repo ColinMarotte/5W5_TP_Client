@@ -24,12 +24,23 @@
 
         <td>{{ cp.value }}</td>
       </tr> -->
-      <tr *ngFor="let cp of card?.cardPowers; let i = index">
+      <!-- <tr *ngFor="let cp of card?.cardPowers; let i = index">
         <td style="cursor: pointer;" (click)="triggerPowerAnimation(i)"
           [@firstStrike]="cp.power.name === 'First Strike' && animatedIndex === i ? count : 0"
           [@thorns]="cp.power.name === 'Thorns' && animatedIndex === i ? count : 0"
           [@heal]="cp.power.name === 'Heal' && animatedIndex === i ? count : 0"
           [@shield]="cp.power.name === 'Shield' && animatedIndex === i ? count : 0">
+          {{ cp.power.icone }}
+        </td>
+        <td>{{ cp.value }}</td>
+      </tr> -->
+
+      <tr *ngFor="let cp of card?.cardPowers; let i = index"> <!-- 👈 ici -->
+        <td title="{{ cp.power.name }}" [@firstStrike]="cp.power.name === 'First Strike' ? animationCounters[i] : 0"
+          [@thorns]="cp.power.name === 'Thorns' ? animationCounters[i] : 0"
+          [@heal]="cp.power.name === 'Heal' ? animationCounters[i] : 0"
+          [@shield]="cp.power.name === 'Shield' ? animationCounters[i] : 0" (click)="animations(i)"
+          style="cursor: pointer;">
           {{ cp.power.icone }}
         </td>
         <td>{{ cp.value }}</td>
