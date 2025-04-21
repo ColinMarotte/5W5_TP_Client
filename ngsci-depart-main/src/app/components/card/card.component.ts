@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Card, CardPower } from 'src/app/models/models';
 import { MatCardModule } from '@angular/material/card';
-import { transition, trigger, useAnimation } from '@angular/animations';
+import { animate, keyframes, style, transition, trigger, useAnimation } from '@angular/animations';
 import { timer } from 'rxjs';
 import { lastValueFrom } from 'rxjs';
+import { pulse, shakeX, jello, flip, bounce, rubberBand, swing, tada, wobble, flash, heartBeat } from 'ng-animate';
 
 @Component({
   selector: 'app-card',
@@ -12,6 +13,28 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./card.component.css'],
   standalone: true,
   imports: [MatCardModule, CommonModule],
+  animations: [
+    trigger('firstStrike', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2, scale: 1000 }  // 2 secondes
+      }))
+    ]),
+    trigger('thorns', [
+      transition(':increment', useAnimation(tada, {
+        params: { timing: 2, scale: 2.5 }  // 2 secondes
+      }))
+    ]),
+    trigger('heal', [
+      transition(':increment', useAnimation(heartBeat, {
+        params: { timing: 2, scale: 3 }  // 2 secondes
+      }))
+    ]),
+    trigger('shield', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2, scale: 1000 }  // 2 secondes
+      }))
+    ])
+  ]
 })
 export class CardComponent implements OnInit {
 
@@ -28,8 +51,15 @@ export class CardComponent implements OnInit {
 
   ngOnInit() { }
 
+  count = 0;
+  animatedIndex = -1;
+
+  triggerPowerAnimation(i: number) {
+    this.animatedIndex = i;
+    this.count++; // Déclenche la transition ':increment'
+  }
   getAnimationClass(powerName: string): string {
-    switch (powerName.toLowerCase()) {
+    switch (powerName) {
       case 'First Strike':
         return 'wobble-hor-bottom';
       case 'Thorns':
@@ -47,18 +77,26 @@ export class CardComponent implements OnInit {
     if (!this.card?.cardPowers || !this.card.cardPowers[i]?.power?.name)
       return;
 
-    const powerName = this.card.cardPowers[i].power.name;  // Récupérer le nom du pouvoir
-    this.animationClass = 'rotate-in-center';  // Déterminer la classe d'animation
-    console.log(this.getAnimationClass(powerName))
+    const powerName = this.card.cardPowers[i].power.name;
+    const className = this.getAnimationClass(powerName);
 
-    this.css_classanimation = true
+    // On retire la classe
+    this.css_classanimation = false;
+    this.animationClass = '';
+
 
     setTimeout(() => {
-      this.css_classanimation = false;
-    }, 500);
+      this.animationClass = className;
+      this.css_classanimation = true;
 
-    let x = 5;
+
+      setTimeout(() => {
+        this.css_classanimation = false;
+        this.animationClass = '';
+      }, 2000); // Durée de ton animation en ms
+    });
   }
+
 
   // Utilisation de async/await pour gérer l'attente des animations
   // async animationsPouvoirs() {
