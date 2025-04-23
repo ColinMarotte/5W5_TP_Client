@@ -51,7 +51,12 @@ export class DeckService {
   async addCardsToDeck(deck: Deck, cards: OwnedCard[]): Promise<Deck[]> {
     let deckId: number = deck.id;
 
-    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/AddCardsToDeck/" + deckId, cards));
+    let ownedCardsIds: number[] = [];
+    cards.forEach(card => {
+      ownedCardsIds.push(card.id);
+    });
+
+    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/AddCardsToDeck/" + deckId, ownedCardsIds));
     console.log(x);
 
     return await this.getDecks();

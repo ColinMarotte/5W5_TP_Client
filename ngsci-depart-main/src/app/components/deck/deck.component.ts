@@ -60,7 +60,7 @@ export class DeckComponent implements OnInit {
       if (data != undefined) {
         this.cardsOutput = data;
         this.deckService.addCardsToDeck(this.deck!!, this.cardsOutput);
-        //location.reload();
+        location.reload();
       }
     });
   }
