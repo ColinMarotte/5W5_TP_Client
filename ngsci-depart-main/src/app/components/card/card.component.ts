@@ -16,22 +16,22 @@ import { pulse, shakeX, jello, flip, bounce, rubberBand, swing, tada, wobble, fl
   animations: [
     trigger('firstStrike', [
       transition(':increment', useAnimation(flip, {
-        params: { timing: 2, scale: 1000 }  // 2 secondes
+        params: { timing: 2, scale: 1000 } 
       }))
     ]),
     trigger('thorns', [
       transition(':increment', useAnimation(tada, {
-        params: { timing: 2, scale: 2.5 }  // 2 secondes
+        params: { timing: 2, scale: 2.5 }  
       }))
     ]),
     trigger('heal', [
       transition(':increment', useAnimation(heartBeat, {
-        params: { timing: 2, scale: 3 }  // 2 secondes
+        params: { timing: 2, scale: 3 }  
       }))
     ]),
     trigger('shield', [
       transition(':increment', useAnimation(flip, {
-        params: { timing: 2, scale: 1000 }  // 2 secondes
+        params: { timing: 2, scale: 1000 }  
       }))
     ])
   ]
