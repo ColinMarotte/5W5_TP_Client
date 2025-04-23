@@ -3,6 +3,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { CardComponent } from '../card/card.component';
+import { AppComponent } from 'src/app/app.component';
 @Component({
   selector: 'app-packs',
   standalone: true,
@@ -16,7 +17,7 @@ export class PacksComponent {
   dialogueNouvellesCartes: boolean = false;
 
   newCards: Card[] | undefined = undefined;
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService, private appComponent: AppComponent) {
 
   }
 
@@ -29,6 +30,7 @@ export class PacksComponent {
     else {
       this.newCards = result;
       this.dialogueNouvellesCartes = true;
+      this.appComponent.getSolde();
     }
   }
 
