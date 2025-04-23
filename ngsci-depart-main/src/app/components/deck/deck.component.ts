@@ -29,7 +29,8 @@ export class DeckComponent implements OnInit {
   }
 
   async deleteDeck() {
-
+    await this.deckService.deleteDeck(this.deck!!);
+    location.reload();
   }
 
   async currentDeck() {

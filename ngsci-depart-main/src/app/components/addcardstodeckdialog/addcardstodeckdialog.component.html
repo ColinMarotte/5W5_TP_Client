@@ -6,6 +6,9 @@
       [class.selected]="isSelected(carte)">
       <app-card [card]="carte.card"></app-card>
     </div>
+    <div class="col" *ngIf="cards.length == 0">
+      Toutes vos cartes sont déjà dans ce deck.
+    </div>
   </div>
 </mat-dialog-content>
 

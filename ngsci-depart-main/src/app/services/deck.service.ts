@@ -61,4 +61,13 @@ export class DeckService {
 
     return await this.getDecks();
   }
+
+  async deleteDeck(deck: Deck): Promise<Deck[]> {
+    let deckId: number = deck.id;
+
+    let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/DeleteDeck/" + deckId));
+    console.log(x);
+
+    return await this.getDecks();
+  }
 }
