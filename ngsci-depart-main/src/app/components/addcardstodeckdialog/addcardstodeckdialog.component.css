@@ -1,0 +1,10 @@
+.carte {
+    margin: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.carte.selected {
+    border: 10px solid white;
+}

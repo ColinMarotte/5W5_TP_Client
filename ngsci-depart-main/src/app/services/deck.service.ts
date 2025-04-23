@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Deck } from '../models/models';
+import { Deck, OwnedCard } from '../models/models';
 import { NewDeckDTO } from '../models/dtos';
 
 const domain = "https://localhost:7179/"
@@ -34,6 +34,24 @@ export class DeckService {
     let deckId: number = deck.id;
 
     let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/MakeDeckCurrent/" + deckId));
+    console.log(x);
+
+    return await this.getDecks();
+  }
+
+  async getCardsNotInDeck(deck: Deck): Promise<OwnedCard[]> {
+    let deckId: number = deck.id;
+
+    let x = await lastValueFrom(this.http.get<OwnedCard[]>(domain + "api/Decks/GetCardsNotInDeck/" + deckId));
+    console.log(x);
+
+    return x;
+  }
+
+  async addCardsToDeck(deck: Deck, cards: OwnedCard[]): Promise<Deck[]> {
+    let deckId: number = deck.id;
+
+    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/AddCardsToDeck/" + deckId, cards));
     console.log(x);
 
     return await this.getDecks();
