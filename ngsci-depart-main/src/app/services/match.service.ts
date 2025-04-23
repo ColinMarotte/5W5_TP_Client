@@ -69,7 +69,7 @@ export class MatchService {
 
     await this.hubConnection.on('EndTurnEvent', (data) => {
       this.applyEvent(data)
-      // console.log("endturnevent:", data)
+      console.log("endturnevent:", data)
     })
 
     await this.hubConnection.on('SurrenderEvent', (data) => {
@@ -96,6 +96,12 @@ export class MatchService {
       this.applyEvent(data)
     })
     await this.hubConnection.on('PlayerDeathEvent', (data) => {
+      this.applyEvent(data)
+    })
+    await this.hubConnection.on('CardDamageEvent', (data) => {
+      this.applyEvent(data)
+    })
+    await this.hubConnection.on('CardDeathEvent', (data) => {
       this.applyEvent(data)
     })
     await this.hubConnection
@@ -199,8 +205,8 @@ export class MatchService {
       this.adversaryData.playerName = matchData.playerA.name;
       this.isCurrentPlayerTurn = !this.match.isPlayerATurn;
     }
-    this.playerData.maxhealth = this.playerData.health;
-    this.adversaryData.maxhealth = this.adversaryData.health;
+    this.playerData.maxhealth = 20;
+    this.adversaryData.maxhealth = 20;
   }
 
   // La méthode qui passe à travers l'arbre d'évènements reçu par le serveur
@@ -224,10 +230,14 @@ export class MatchService {
 
       case "PlayerEndTurn": {
         if (this.match) {
+          
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
 
+        }
         break;
       }
       case "DrawCard": {
@@ -280,12 +290,36 @@ export class MatchService {
         // }
         break;
       }
-      case "PlayerDamage":{
-        // let playerData = this.getPlayerData(event.playerId);
-        // if(playerData){
+      case "CardDamage":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
           // await new Promise(resolve => setTimeout(resolve, 250));
-          
-        // }
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          playableCard.health -= event.value;
+          // playableCard.
+        }
+
+        break;
+      }      
+      case "CardDeath":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          this.moveCard(playerData.battleField, playerData.graveyard, event.CardId);
+          // playableCard.
+        }
+
+        break;
+      }
+      case "PlayerDamage":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          playerData.health -= event.value;
+
+        }
+
         break;
       }
       case "PlayerDeath":{
@@ -326,4 +360,5 @@ export class MatchService {
       dst.push(playableCard);
     }
   }
+
 }
