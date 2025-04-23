@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { Card, Deck, OwnedCard } from 'src/app/models/models';
+import { Card, Deck, DeckOwnedCard, OwnedCard } from 'src/app/models/models';
 import { DeckService } from 'src/app/services/deck.service';
 import { CardComponent } from "../card/card.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -23,9 +23,17 @@ export class DeckComponent implements OnInit {
 
   cardsOutput: OwnedCard[] = [];
 
+  cardToDelete?: DeckOwnedCard;
+
   constructor(public deckService: DeckService, private dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  async deleteCard(card: DeckOwnedCard) {
+    this.cardToDelete = card;
+    await this.deckService.removeCardFromDeck(this.deck!!, this.cardToDelete);
+    location.reload();
   }
 
   async deleteDeck() {

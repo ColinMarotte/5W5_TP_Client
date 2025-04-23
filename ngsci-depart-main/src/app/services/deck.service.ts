@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Deck, OwnedCard } from '../models/models';
+import { Deck, DeckOwnedCard, OwnedCard } from '../models/models';
 import { NewDeckDTO } from '../models/dtos';
 
 const domain = "https://localhost:7179/"
@@ -66,6 +66,16 @@ export class DeckService {
     let deckId: number = deck.id;
 
     let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/DeleteDeck/" + deckId));
+    console.log(x);
+
+    return await this.getDecks();
+  }
+
+  async removeCardFromDeck(deck: Deck, card: DeckOwnedCard): Promise<Deck[]> {
+    let deckId: number = deck.id;
+    let deckOwnedCardId: number = card.id
+
+    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/RemoveCardFromDeck/" + deckId, deckOwnedCardId));
     console.log(x);
 
     return await this.getDecks();

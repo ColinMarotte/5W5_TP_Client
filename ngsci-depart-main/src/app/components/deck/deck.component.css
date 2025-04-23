@@ -15,3 +15,7 @@ h1 {
 .bouton-ajout {
     height: 200px;
 }
+
+.remove-card-button {
+    padding-left: 25px;
+}
