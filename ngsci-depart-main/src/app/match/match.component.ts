@@ -51,9 +51,6 @@ export class MatchComponent implements OnInit {
     await this.router.navigate(['/']);
   }
 
-  async playCard(playableCardId:any){
-
-  }
   isVictory(): boolean {
     return this.matchService.matchData?.winningPlayerId === this.matchService.playerData?.playerId ?? false;
   }

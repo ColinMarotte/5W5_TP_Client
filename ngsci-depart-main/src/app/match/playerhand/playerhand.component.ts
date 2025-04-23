@@ -34,6 +34,11 @@ export class PlayerhandComponent implements OnInit {
       return;
     }
     // TODO: Utiliser seulement une fois que l'on peut jouer des cartes (TP2)
-    await this.matchService.playCard(playableCard.id);
+    if(this.matchService.isCurrentPlayerTurn){
+      await this.matchService.playCard(playableCard.id);
+    }
+    else{
+      console.log("Ce n'est pas ton tour!");
+    }
   }
 }

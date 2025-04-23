@@ -86,24 +86,7 @@ export class MatchService {
       console.log("PlayCardEvent:", data);
       this.applyEvent(data);
     })
-    await this.hubConnection.on('CombatEvent', (data) => {
-      this.applyEvent(data)
-    })
-    await this.hubConnection.on('AttackEvent', (data) => {
-      this.applyEvent(data)
-    })
-    await this.hubConnection.on('PlayerDamageEvent', (data) => {
-      this.applyEvent(data)
-    })
-    await this.hubConnection.on('PlayerDeathEvent', (data) => {
-      this.applyEvent(data)
-    })
-    await this.hubConnection.on('CardDamageEvent', (data) => {
-      this.applyEvent(data)
-    })
-    await this.hubConnection.on('CardDeathEvent', (data) => {
-      this.applyEvent(data)
-    })
+
     await this.hubConnection
       .start()
       .then(() => {
@@ -269,26 +252,10 @@ export class MatchService {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
           this.moveCard(playerData.hand, playerData.battleField, event.playableCardId);
-          await new Promise(resolve => setTimeout(resolve, 250));
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         break;      
-      }
-      case "Combat":{
-        // let playerData = this.getPlayerData(event.playerId);
-        // if(playerData){
-          // await new Promise(resolve => setTimeout(resolve, 250));
-
-        // }
-        break;
-      }
-      case "Attack":{
-        // let playerData = this.getPlayerData(event.playerId);
-        // if(playerData){
-          // await new Promise(resolve => setTimeout(resolve, 250));
-
-        // }
-        break;
       }
       case "CardDamage":{
         let playerData = this.getPlayerData(event.playerId);
@@ -306,8 +273,7 @@ export class MatchService {
         if(playerData){
           // await new Promise(resolve => setTimeout(resolve, 250));
           let playableCard = playerData.battleField[event.battlefieldIndex];
-          this.moveCard(playerData.battleField, playerData.graveyard, event.CardId);
-          // playableCard.
+          this.moveCard(playerData.battleField, playerData.graveyard, playableCard.id);
         }
 
         break;
@@ -322,14 +288,7 @@ export class MatchService {
 
         break;
       }
-      case "PlayerDeath":{
-        // let playerData = this.getPlayerData(event.playerId);
-        // if(playerData){
-          // await new Promise(resolve => setTimeout(resolve, 250));
 
-        // }
-        break;
-      }
     }
     if (event.events) {
       for (let e of event.events) {
