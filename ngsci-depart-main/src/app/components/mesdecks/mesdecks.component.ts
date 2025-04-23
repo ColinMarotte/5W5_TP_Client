@@ -6,13 +6,14 @@ import { Deck } from 'src/app/models/models';
 import { DeckComponent } from "../deck/deck.component";
 import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { CreatedeckdialogComponent } from '../createdeckdialog/createdeckdialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-mesdecks',
   templateUrl: './mesdecks.component.html',
   styleUrls: ['./mesdecks.component.css'],
   standalone: true,
-  imports: [CommonModule, MatButton, DeckComponent, MatDialogModule, CreatedeckdialogComponent]
+  imports: [CommonModule, MatButton, DeckComponent, MatDialogModule, CreatedeckdialogComponent, MatIconModule]
 })
 export class MesdecksComponent implements OnInit {
 

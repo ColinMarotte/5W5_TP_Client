@@ -29,4 +29,13 @@ export class DeckService {
 
     return await this.getDecks();
   }
+
+  async currentDeck(deck: Deck): Promise<Deck[]> {
+    let deckId: number = deck.id;
+
+    let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/MakeDeckCurrent/" + deckId));
+    console.log(x);
+
+    return await this.getDecks();
+  }
 }

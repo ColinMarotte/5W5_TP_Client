@@ -28,4 +28,8 @@ export class DeckComponent implements OnInit {
 
   }
 
+  async currentDeck() {
+    await this.deckService.currentDeck(this.deck!!);
+  }
+
 }
