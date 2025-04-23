@@ -1,3 +1,4 @@
+import { AppComponent } from 'src/app/app.component';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, OutletContext, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +28,7 @@ export class MatchComponent implements OnInit {
   private MoneyreceivedSubscription: Subscription | null = null;
 
 
-  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) {
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, private appComponent: AppComponent) {
 
   }
 
@@ -55,6 +56,7 @@ export class MatchComponent implements OnInit {
 
   async endMatch() {
     this.matchService.clearMatch();
+    this.appComponent.getSolde();
     await this.router.navigate(['/']);
   }
 
