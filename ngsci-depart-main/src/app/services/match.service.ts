@@ -68,8 +68,8 @@ export class MatchService {
     })
 
     await this.hubConnection.on('EndTurnEvent', (data) => {
-      console.log("endturnevent:", data)
       this.applyEvent(data)
+      console.log("endturnevent:", data)
     })
 
     await this.hubConnection.on('SurrenderEvent', (data) => {
@@ -80,6 +80,11 @@ export class MatchService {
     await this.hubConnection.on('StoppedJoiningStatus', (data) => {
       console.log(data ? "Stopped joining the match" : "Failed to stop joining the match");
       this.stoppedJoiningMatch = data;
+    })
+
+    await this.hubConnection.on('PlayCardEvent', (data) => {
+      console.log("PlayCardEvent:", data);
+      this.applyEvent(data);
     })
 
     await this.hubConnection
@@ -113,11 +118,11 @@ export class MatchService {
   }
 
   public async endTurn() {
-    console.log("Ending Turn Event:", this.match?.id);
     if (!this.hubConnection) {
       console.error('La connexion SignalR n\'est pas établie.');
       return;
     }
+    // console.log("Ending Turn Event:", this.currentPlayerId, this.match?.id);
     await this.hubConnection.invoke('EndTurn', this.match?.id);
     console.log("invoked EndTurn")
   }
@@ -132,6 +137,22 @@ export class MatchService {
     await this.hubConnection.invoke('Surrender', this.match?.id);
 
   }
+
+  public async playCard(playableCardId:any){
+    if (!this.hubConnection) {
+      console.error('La connexion SignalR n\'est pas établie.');
+      return;
+    }
+    try{
+      await this.hubConnection.invoke('PlayCard', this.match?.id, playableCardId)
+
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  // public async
 
   clearMatch() {
     this.match = null;
@@ -150,6 +171,8 @@ export class MatchService {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
+    this.match.playerDataA.battleField.sort(a => a.index);
+    this.match.playerDataB.battleField.sort(a => a.index).reverse;
 
     if (this.match.playerDataA.playerId == this.currentPlayerId) {
       this.playerData = this.match.playerDataA!;
@@ -165,8 +188,8 @@ export class MatchService {
       this.adversaryData.playerName = matchData.playerA.name;
       this.isCurrentPlayerTurn = !this.match.isPlayerATurn;
     }
-    this.playerData.maxhealth = this.playerData.health;
-    this.adversaryData.maxhealth = this.adversaryData.health;
+    this.playerData.maxhealth = 20;
+    this.adversaryData.maxhealth = 20;
   }
 
   // La méthode qui passe à travers l'arbre d'évènements reçu par le serveur
@@ -190,10 +213,14 @@ export class MatchService {
 
       case "PlayerEndTurn": {
         if (this.match) {
+          
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
 
+        }
         break;
       }
       case "DrawCard": {
@@ -221,6 +248,47 @@ export class MatchService {
 
         break;
       }
+      case "PlayCard": {
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
+          this.moveCard(playerData.hand, playerData.battleField, event.playableCardId);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        break;      
+      }
+      case "CardDamage":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          playableCard.health -= event.value;
+          // playableCard.
+        }
+
+        break;
+      }      
+      case "CardDeath":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          this.moveCard(playerData.battleField, playerData.graveyard, playableCard.id);
+        }
+
+        break;
+      }
+      case "PlayerDamage":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // await new Promise(resolve => setTimeout(resolve, 250));
+          playerData.health -= event.value;
+
+        }
+
+        break;
+      }
+
     }
     if (event.events) {
       for (let e of event.events) {
@@ -251,4 +319,5 @@ export class MatchService {
       dst.push(playableCard);
     }
   }
+
 }

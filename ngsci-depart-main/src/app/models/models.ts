@@ -30,12 +30,13 @@ export interface Match {
 export interface PlayableCard {
     id: number;
     card: Card;
+    index: number;
     health: number;
 }
 
 export interface PlayerData {
     id:number;
-	  health: number;
+    health: number;
     maxhealth: number;
     mana: number;
     playerId: number;
