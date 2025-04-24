@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Card, CardPower } from 'src/app/models/models';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,29 @@ import { NgStyle } from '@angular/common';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
   standalone: true,
-  imports: [MatCardModule, NgStyle]
+  imports: [MatCardModule, NgStyle, NgFor],
+  animations: [
+    trigger('firstStrike', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2, scale: 1000 } 
+      }))
+    ]),
+    trigger('thorns', [
+      transition(':increment', useAnimation(tada, {
+        params: { timing: 2, scale: 2.5 }  
+      }))
+    ]),
+    trigger('heal', [
+      transition(':increment', useAnimation(heartBeat, {
+        params: { timing: 2, scale: 3 }  
+      }))
+    ]),
+    trigger('shield', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2, scale: 1000 }  
+      }))
+    ])
+  ]
 })
 export class CardComponent implements OnInit, OnChanges {
 

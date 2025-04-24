@@ -266,14 +266,19 @@ export class MatchService {
       case "CardDamage":{
         let playerData = this.getPlayerData(event.playerId);
         if(playerData){
-          // await new Promise(resolve => setTimeout(resolve, 250));
           let playableCard = playerData.battleField[event.battlefieldIndex];
           playableCard.health -= event.value;
-          // playableCard.
         }
-
         break;
-      }      
+      }   
+      case "CardHeal":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          playableCard.health += event.value;
+        }
+        break;
+      }        
       case "CardDeath":{
         let playerData = this.getPlayerData(event.playerId);
         if(playerData){
@@ -291,7 +296,6 @@ export class MatchService {
           playerData.health -= event.value;
 
         }
-
         break;
       }
 

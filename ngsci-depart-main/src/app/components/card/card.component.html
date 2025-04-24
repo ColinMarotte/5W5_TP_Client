@@ -5,7 +5,7 @@
         {{card?.cost}} <i class="fas fa-gem"></i>
       </div>
       <mat-card-title>{{card?.name}}</mat-card-title>
-        <mat-card-subtitle>{{getRarityName(card?.rarity)}}</mat-card-subtitle>
+      <mat-card-subtitle>{{getRarityName(card?.rarity)}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="infinite-card-content" style="background-image: url({{card?.imageUrl}});">
       <table style="font-size: 2em; font-size: 2em; width: fit-content; text-shadow: 2px 2px 2px black;">
@@ -15,7 +15,17 @@
         </tr>
         <tr>
           <td><i class="fas fa-shield-alt"></i></td>
-          <td>{{card?.health}}</td>
+          <td>{{oldHealth}}</td>
+        </tr>
+        <tr *ngFor="let cp of card?.cardPowers; let i = index">
+          <td title="{{ cp.power.name }}" [@firstStrike]="cp.power.name === 'First Strike' ? animationCounters[i] : 0"
+            [@thorns]="cp.power.name === 'Thorns' ? animationCounters[i] : 0"
+            [@heal]="cp.power.name === 'Heal' ? animationCounters[i] : 0"
+            [@shield]="cp.power.name === 'Shield' ? animationCounters[i] : 0" (click)="animations(i)"
+            style="cursor: pointer;">
+            {{ cp.power.icone }}
+          </td>
+          <td>{{ cp.value }}</td>
         </tr>
       </table>
     </mat-card-content>
