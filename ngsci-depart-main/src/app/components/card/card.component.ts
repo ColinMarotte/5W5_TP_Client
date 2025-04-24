@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Card, CardPower } from 'src/app/models/models';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Card } from 'src/app/models/models';
 import { MatCardModule } from '@angular/material/card';
 import { animate, keyframes, style, transition, trigger, useAnimation } from '@angular/animations';
 import { timer } from 'rxjs';
@@ -36,7 +38,7 @@ import { pulse, shakeX, jello, flip, bounce, rubberBand, swing, tada, wobble, fl
     ])
   ]
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit, OnChanges {
 
   @Input() card?: Card;
   @Input() show: string = "front";
@@ -48,9 +50,13 @@ export class CardComponent implements OnInit {
 
   hoveredPowerIndex: number = -1;
 
+  oldHealth:number = 0;
+  animate: boolean = false;
+
   constructor() { }
 
   ngOnInit() {
+    this.oldHealth = this.health;
     if (this.card?.cardPowers) {
       this.animationCounters = new Array(this.card.cardPowers.length).fill(0);
     }
@@ -71,4 +77,11 @@ export class CardComponent implements OnInit {
     this.playAllPowerAnimations();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.animate = true;
+    setTimeout(() => {
+      this.animate = false;
+      this.oldHealth = this.health;
+    },1000)
+  }
 }
