@@ -16,12 +16,23 @@
           <td><i class="fas fa-shield-alt"></i></td>
           <td>{{oldHealth}}</td>
         </tr>
+              <tr *ngFor="let cp of card?.cardPowers; let i = index">
+        <td title="{{ cp.power.name }}" [@firstStrike]="cp.power.name === 'First Strike' ? animationCounters[i] : 0"
+          [@thorns]="cp.power.name === 'Thorns' ? animationCounters[i] : 0"
+          [@heal]="cp.power.name === 'Heal' ? animationCounters[i] : 0"
+          [@shield]="cp.power.name === 'Shield' ? animationCounters[i] : 0" (click)="animations(i)"
+          style="cursor: pointer;">
+          {{ cp.power.icone }}
+        </td>
+        <td>{{ cp.value }}</td>
+      </tr>
       </table>
     </mat-card-content>
   </mat-card>
+
 }
 
 @if (show=='back') {
-  <mat-card  class="infinite-card" style="background-image: url({{beautifulBackUrl}});">
-  </mat-card>
+<mat-card class="infinite-card" style="background-image: url({{beautifulBackUrl}});">
+</mat-card>
 }

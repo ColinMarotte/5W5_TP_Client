@@ -13,7 +13,7 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: './mescartes.component.html',
   styleUrls: ['./mescartes.component.css'],
   standalone: true,
-  imports: [CardComponent, FormsModule, CommonModule, TriComponent]
+  imports: [FormsModule, CommonModule, TriComponent]
 })
 export class MescartesComponent implements OnInit {
 

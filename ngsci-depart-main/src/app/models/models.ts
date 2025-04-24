@@ -10,13 +10,14 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+    cardPowers: CardPower[];
 }
 
 export interface MatchData {
-    match:Match;
+    match: Match;
     playerA: Player;
     playerB: Player;
-    winningPlayerId:number;
+    winningPlayerId: number;
 }
 
 export interface Match {
@@ -45,4 +46,21 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
+}
+
+export interface Power {
+    id: number;
+    name: string;
+    description: string;
+    icone: string;
+    CardPowers: CardPower[];
+}
+
+export interface CardPower {
+    id: number;
+    cardId: number;
+    card: Card;
+    powerId: number;
+    value: number;
+    power: Power;
 }
