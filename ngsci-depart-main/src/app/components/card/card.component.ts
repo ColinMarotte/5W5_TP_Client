@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
 import { Card, CardPower } from 'src/app/models/models';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Card } from 'src/app/models/models';
 import { MatCardModule } from '@angular/material/card';
 import { animate, keyframes, style, transition, trigger, useAnimation } from '@angular/animations';
 import { timer } from 'rxjs';
