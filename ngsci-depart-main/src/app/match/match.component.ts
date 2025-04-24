@@ -67,4 +67,5 @@ export class MatchComponent implements OnInit {
   isMatchCompleted(): boolean {
     return this.matchService.matchData?.match.isMatchCompleted ?? false;
   }
+  
 }

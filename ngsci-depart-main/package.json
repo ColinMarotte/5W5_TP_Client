@@ -21,7 +21,9 @@
     "@angular/platform-browser-dynamic": "^18.2.13",
     "@angular/router": "^18.2.13",
     "@microsoft/signalr": "^8.0.0",
+    "angular-animations": "^0.11.0",
     "bootstrap": "^5.3.3",
+    "ng-animate": "^2.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

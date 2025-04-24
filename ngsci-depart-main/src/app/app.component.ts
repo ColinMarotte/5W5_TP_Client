@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { HttpService } from './services/http.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
