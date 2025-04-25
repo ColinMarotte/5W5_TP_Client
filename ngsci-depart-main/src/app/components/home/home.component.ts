@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async joinMatch() {
+    await this.router.navigateByUrl('/home')
     let userId = sessionStorage.getItem("userId");
 
     if (userId) {
