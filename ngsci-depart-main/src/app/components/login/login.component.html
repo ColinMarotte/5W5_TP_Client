@@ -10,7 +10,7 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Courriel</mat-label>
-          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" required/>
+          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" required />
 
           <mat-error *ngIf="form.get('email')?.hasError('required')">
             Le courriel est <strong>requis</strong>.
@@ -19,11 +19,13 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Mot de passe</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password" name="password" required/>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password"
+            name="password" required />
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide" type="button">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-            
+
           <mat-error *ngIf="form.get('password')?.hasError('required')">
             Le mot de passe est <strong>requis</strong>.
           </mat-error>
@@ -36,10 +38,10 @@
         <div style="color: #db3f23;">
           {{reponse}}
         </div>
-          
+
         <br>
 
-        <button mat-raised-button color="accent" (click)="login()" [disabled]="!form.valid">
+        <button mat-raised-button color="accent" (click)="login()" [disabled]="!form.valid" type="submit">
           Se connecter
         </button>
         <br>

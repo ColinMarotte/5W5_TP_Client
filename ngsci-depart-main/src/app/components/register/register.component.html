@@ -1,17 +1,17 @@
 <div
   style="width: 100%;height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column">
   <mat-card class="artist-card" style="margin: 16px; padding: 16px;">
-    
+
     <mat-card-header><mat-icon>person</mat-icon>Inscription</mat-card-header>
-    
+
     <form [formGroup]="form">
 
       <mat-card-content>
 
         <mat-form-field style="width: 100%">
           <mat-label>Courriel</mat-label>
-          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" required/>
-          
+          <input matInput [(ngModel)]="emailInput" type="email" formControlName="email" name="email" required />
+
           <mat-error *ngIf="form.get('email')?.errors?.['email'] && !form.get('email')?.hasError('required')">
             Entrer une adresse courriel valide.
           </mat-error>
@@ -22,8 +22,10 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Mot de passe</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password" name="password" required/>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordInput" formControlName="password"
+            name="password" required />
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide" type="button">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
 
@@ -40,8 +42,10 @@
 
         <mat-form-field style="width: 100%">
           <mat-label>Confirmation du mot de passe</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordConfirmInput" formControlName="passwordConfirm" name="passwordConfirm" required/>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="passwordConfirmInput"
+            formControlName="passwordConfirm" name="passwordConfirm" required />
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide" type="button">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
 
@@ -60,10 +64,10 @@
         <div style="color: #db3f23;">
           {{reponse}}
         </div>
-        
+
         <br>
 
-        <button mat-raised-button color="accent" (click)="register()" [disabled]="!form.valid">
+        <button mat-raised-button color="accent" (click)="register()" [disabled]="!form.valid" type="submit">
           Créer un compte
         </button>
 

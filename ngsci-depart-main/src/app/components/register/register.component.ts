@@ -7,7 +7,7 @@ import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatError, MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatFormFieldModule, MatCard, MatInput, MatButton, MatSnackBarModule, MatIconModule, MatCardModule]
+  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatFormFieldModule, MatCard, MatInput, MatButton, MatButtonModule, MatSnackBarModule, MatIconModule, MatCardModule]
 })
 export class RegisterComponent implements OnInit {
 
