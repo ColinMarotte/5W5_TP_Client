@@ -1,4 +1,4 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Card, CardPower } from 'src/app/models/models';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -13,26 +13,26 @@ import { NgStyle } from '@angular/common';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
   standalone: true,
-  imports: [MatCardModule, NgStyle, NgFor],
+  imports: [MatCardModule, NgStyle, NgFor, NgIf],
   animations: [
     trigger('firstStrike', [
       transition(':increment', useAnimation(flip, {
-        params: { timing: 2, scale: 1000 } 
+        params: { timing: 2, scale: 1000 }
       }))
     ]),
     trigger('thorns', [
       transition(':increment', useAnimation(tada, {
-        params: { timing: 2, scale: 2.5 }  
+        params: { timing: 2, scale: 2.5 }
       }))
     ]),
     trigger('heal', [
       transition(':increment', useAnimation(heartBeat, {
-        params: { timing: 2, scale: 3 }  
+        params: { timing: 2, scale: 3 }
       }))
     ]),
     trigger('shield', [
       transition(':increment', useAnimation(flip, {
-        params: { timing: 2, scale: 1000 }  
+        params: { timing: 2, scale: 1000 }
       }))
     ])
   ]
@@ -49,7 +49,7 @@ export class CardComponent implements OnInit, OnChanges {
 
   hoveredPowerIndex: number = -1;
 
-  oldHealth:number = 0;
+  oldHealth: number = 0;
   animate: boolean = false;
 
   constructor() { }
@@ -117,6 +117,6 @@ export class CardComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.animate = false;
       this.oldHealth = this.health;
-    },1000)
+    }, 1000)
   }
 }
