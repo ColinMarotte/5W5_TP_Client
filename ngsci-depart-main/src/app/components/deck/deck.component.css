@@ -16,6 +16,13 @@ h1 {
     height: 200px;
 }
 
+.carte-col {
+    position: relative;
+}
+
 .remove-card-button {
     padding-left: 25px;
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
 }

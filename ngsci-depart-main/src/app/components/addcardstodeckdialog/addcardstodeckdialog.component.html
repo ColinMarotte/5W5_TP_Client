@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>Ajouter des cartes au deck {{deckName}}</h2>
 
 <mat-dialog-content>
-  <div class="row">
-    <div class="col carte" *ngFor="let carte of cards" (click)="toggleSelection(carte)"
+  <div class="row justify-content-around">
+    <div class="col-auto carte" *ngFor="let carte of cards" (click)="toggleSelection(carte)"
       [class.selected]="isSelected(carte)">
       <app-card [card]="carte.card"></app-card>
     </div>
