@@ -15,7 +15,7 @@
         </tr>
         <tr>
           <td><i class="fas fa-shield-alt"></i></td>
-          <td>{{oldHealth}}</td>
+          <td>{{oldHealth != 0 ? oldHealth : card?.health}}</td>
         </tr>
         <tr *ngFor="let cp of card?.cardPowers; let i = index">
           <td title="{{ cp.power.name }}" [@firstStrike]="cp.power.name === 'First Strike' ? animationCounters[i] : 0"

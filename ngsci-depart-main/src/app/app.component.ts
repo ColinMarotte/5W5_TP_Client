@@ -64,7 +64,9 @@ export class AppComponent implements OnInit {
   }
 
   async getSolde() {
-    this.solde = await this.httpService.getSolde();
+    if(this.isLogged()){
+      this.solde = await this.httpService.getSolde();
+    }
   }
 
   logout() {
