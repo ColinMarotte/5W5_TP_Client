@@ -1,15 +1,36 @@
-<div class="row">
-  <h1 class="col">Trier :</h1>
-  <select class="col" name="champ" id="1" [(ngModel)]="champ" (change)="trier()">
-    <option value="attaque">Attaque</option>
-    <option value="points">Points de vie</option>
-    <option value="cout">Coût en Mana</option>
-  </select>
-  <select class="col" name="ordre" id="2" [(ngModel)]="order" (change)="trier()">
-    <option value="croissant">Croissant</option>
-    <option value="decroissant">Décroissant</option>
-  </select>
+<div class="container py-5 px-3">
+  <div class="row mb-3">
+    <h1 class="col-12 col-md-2">Trier :</h1>
 
+    <div class="col-12 col-md-4">
+      <div class="form-group">
+        <label for="champ">Choisir un critère de tri</label>
+        <select class="form-control" name="champ" [(ngModel)]="champ" (change)="trier()" id="champ"
+          aria-label="Choisir un critère de tri">
+          <option value="attaque">Attaque</option>
+          <option value="points">Points de vie</option>
+          <option value="cout" selected>Coût en Mana</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="form-group">
+        <label for="ordre">Choisir l'ordre de tri</label>
+        <select class="form-control" name="ordre" [(ngModel)]="order" (change)="trier()" id="ordre"
+          aria-label="Choisir l'ordre de tri">
+          <option value="croissant" selected>Croissant</option>
+          <option value="decroissant">Décroissant</option>
+        </select>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let carte of listecartes">
+        <app-card [card]="carte"></app-card>
+      </div>
+    </div>
+  </div>
 </div>
-
-<app-card class="col-md" *ngFor="let carte of listecartes" [card]="carte"></app-card>

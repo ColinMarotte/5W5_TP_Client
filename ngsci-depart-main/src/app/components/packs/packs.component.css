@@ -1,0 +1,78 @@
+.imageMoyenne {
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+.announcementTitle {
+    color: rgb(0, 61, 71);
+}
+
+.dialogue-box {
+    background-color: #ffb8f4;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    position: relative;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    width: 90%;
+}
+
+.dialogue-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: max-content;
+}
+
+.cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+app-card {
+    width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-wrap: inherit;
+}
+
+.dialogue-text.alert {
+    color: #d32f2f;
+    font-weight: bold;
+    font-size: 2.0rem;
+}
+
+.dialogue-btn {
+    background-color: #ff7043;
+    color: white;
+    font-size: large;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    margin-top: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dialogue-btn:hover {
+    background-color: #f4511e;
+    transform: scale(1.05);
+}
