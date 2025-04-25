@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Card, CardPower } from 'src/app/models/models';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -6,13 +6,14 @@ import { animate, keyframes, style, transition, trigger, useAnimation } from '@a
 import { timer } from 'rxjs';
 import { lastValueFrom } from 'rxjs';
 import { pulse, shakeX, jello, flip, bounce, rubberBand, swing, tada, wobble, flash, heartBeat } from 'ng-animate';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
   standalone: true,
-  imports: [MatCardModule, CommonModule],
+  imports: [MatCardModule, NgStyle, NgFor],
   animations: [
     trigger('firstStrike', [
       transition(':increment', useAnimation(flip, {
@@ -52,6 +53,42 @@ export class CardComponent implements OnInit, OnChanges {
   animate: boolean = false;
 
   constructor() { }
+
+  getRarityName(rarityValue: number | undefined): string {
+    switch (rarityValue) {
+      case 0: {
+        return "Commun";
+      }
+      case 1: {
+        return "Rare";
+      }
+      case 2: {
+        return "Épique";
+      }
+      case 3: {
+        return "Légendaire";
+      }
+      default: {
+        return "";
+      }
+    }
+  }
+
+  getRarityColor(rarityValue: number | undefined): string {
+    switch (rarityValue) {
+      case 0:
+        return "rgb(169, 169, 169)";
+      case 1:
+        return "rgb(76, 175, 80)";
+      case 2:
+        return "rgb(156, 39, 176)";
+      case 3:
+        return "rgb(255, 87, 34)";
+      default:
+        return "rgb(169, 169, 169)";
+    }
+  }
+
 
   ngOnInit() {
     this.oldHealth = this.health;

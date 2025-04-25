@@ -1,3 +1,4 @@
+import { AppComponent } from './../app.component';
 import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
@@ -33,6 +34,9 @@ export class MatchService {
 
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
+
+  private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
+  public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
 
   constructor() {
   }
@@ -239,10 +243,12 @@ export class MatchService {
 
         if (event.winningPlayerId === this.currentPlayerId) {
           this.victoire = true;
+          this.MoneyReceivedSubject.next(event.moneyReceivedByWinner)
           console.log("Victoire pour le joueur " + this.currentPlayerId);
         } else {
           this.victoire = false;
           this.perdant = this.currentPlayerId;
+          this.MoneyReceivedSubject.next(event.moneyReceivedByLoser)
           console.log("Défaite pour le joueur " + this.currentPlayerId);
         }
 
@@ -260,14 +266,19 @@ export class MatchService {
       case "CardDamage":{
         let playerData = this.getPlayerData(event.playerId);
         if(playerData){
-          // await new Promise(resolve => setTimeout(resolve, 250));
           let playableCard = playerData.battleField[event.battlefieldIndex];
           playableCard.health -= event.value;
-          // playableCard.
         }
-
         break;
-      }      
+      }   
+      case "CardHeal":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          playableCard.health += event.value;
+        }
+        break;
+      }        
       case "CardDeath":{
         let playerData = this.getPlayerData(event.playerId);
         if(playerData){
@@ -285,7 +296,6 @@ export class MatchService {
           playerData.health -= event.value;
 
         }
-
         break;
       }
 

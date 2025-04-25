@@ -10,6 +10,7 @@ import { authInterceptor } from './auth.interceptor';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { apiGuard } from './guard/api.guard';
+import { PacksComponent } from './components/packs/packs.component';
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent, canActivate: [apiGuard] },
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: '', component: WelcomeComponent, canActivate: [apiGuard] },
       { path: 'mescartes', component: MescartesComponent, canActivate: [apiGuard] },
       { path: 'magasin', component: MagasinComponent, canActivate: [apiGuard] },
+      { path: 'packs', component: PacksComponent, canActivate: [apiGuard] }
     ]
   },
   { path: 'register', component: RegisterComponent },
