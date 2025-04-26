@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginDTO, RegisterDTO } from '../models/dtos';
-import { lastValueFrom } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Card } from '../models/models';
 
 const domain = "https://localhost:7179/"
 
@@ -9,6 +10,10 @@ const domain = "https://localhost:7179/"
   providedIn: 'root'
 })
 export class HttpService {
+
+  private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
+  public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
+
 
   constructor(public http: HttpClient) { }
 
@@ -56,11 +61,14 @@ export class HttpService {
         console.log("Token: " + response.token);
         console.log("User Id: " + response.userId);
         console.log("Player Id: " + response.playerId);
+        console.log("Solde: " + response.solde);
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("userId", response.userId);
         sessionStorage.setItem("playerId", response.playerId);
         sessionStorage.setItem("username", email);
+        sessionStorage.setItem("Solde", response.solde);
         stringResponse = "success";
+        this.MoneyReceivedSubject.next(response.solde);
       }
     })
     return stringResponse;
@@ -69,6 +77,18 @@ export class HttpService {
   async test(): Promise<string[]> {
     let x = await lastValueFrom(this.http.get<string[]>(domain + "api/Account/PrivateData"));
     console.log(x);
+    return x;
+  }
+
+  async acheterPaquet(paquetIndex: number): Promise<Card[] | null> {
+    let x = await lastValueFrom(this.http.get<Card[]>(domain + "api/Packs/AcheterPaquet/" + paquetIndex));
+    console.log(x);
+    return x;
+  }
+
+  async getSolde(): Promise<number> {
+    let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/Solde"));
+    console.log("solde", x);
     return x;
   }
 }

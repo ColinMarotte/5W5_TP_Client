@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card } from '../models/models';
+import { Card, CardPower } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,15 @@ export class ApiService {
     return result;
   }
 
-  async getPlayersCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetPlayersCards'));
+  async getPlayersCards(playerId: string): Promise<Card[]> {
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetPlayersCards/' + playerId));
+    console.log("result1")
+    if (result[0].cardPowers) {
+      let x: CardPower[] = result[0].cardPowers;
+      console.log(x)
+    }
+
+    console.log("result2")
     return result;
   }
 }

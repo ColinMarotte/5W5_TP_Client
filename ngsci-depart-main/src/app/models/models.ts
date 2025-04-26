@@ -1,6 +1,7 @@
 export interface Player {
     id: number;
     name: string;
+    balance: number;
 }
 
 export interface Card {
@@ -10,6 +11,9 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+    cardPowers: CardPower[];
+    rarity: number;
+    price: number;
 }
 
 export interface MatchData {
@@ -30,6 +34,7 @@ export interface Match {
 export interface PlayableCard {
     id: number;
     card: Card;
+    index: number;
     health: number;
 }
 
@@ -64,4 +69,21 @@ export interface DeckOwnedCard {
 export interface OwnedCard {
     id: number;
     card: Card;
+}
+
+export interface Power {
+    id: number;
+    name: string;
+    description: string;
+    icone: string;
+    CardPowers: CardPower[];
+}
+
+export interface CardPower {
+    id: number;
+    cardId: number;
+    card: Card;
+    powerId: number;
+    value: number;
+    power: Power;
 }

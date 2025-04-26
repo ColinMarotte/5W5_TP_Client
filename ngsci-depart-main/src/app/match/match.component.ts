@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, OutletContext, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatchService } from '../services/match.service';
 import { ApiService } from '../services/api.service';
@@ -12,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
+
 @Component({
   selector: 'app-match',
   templateUrl: './match.component.html',
@@ -22,8 +24,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export class MatchComponent implements OnInit {
 
   matchId: number = 0;
+  montantRecu = 0;
+  private MoneyreceivedSubscription: Subscription | null = null;
 
-  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService) {
+
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, private appComponent: AppComponent) {
 
   }
 
@@ -37,6 +42,9 @@ export class MatchComponent implements OnInit {
     if (!this.matchService.match) {
       this.matchService.joinMatch();
     }
+    this.MoneyreceivedSubscription = this.matchService.MoneyReveiced$.subscribe(async (montantRecu) => {
+      this.montantRecu = montantRecu!
+    });
   }
   async endTurn() {
     await this.matchService.endTurn();
@@ -48,6 +56,7 @@ export class MatchComponent implements OnInit {
 
   async endMatch() {
     this.matchService.clearMatch();
+    this.appComponent.getSolde();
     await this.router.navigate(['/']);
   }
 
@@ -58,4 +67,5 @@ export class MatchComponent implements OnInit {
   isMatchCompleted(): boolean {
     return this.matchService.matchData?.match.isMatchCompleted ?? false;
   }
+  
 }
