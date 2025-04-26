@@ -1,3 +1,7 @@
 .mat-icon {
     transform: scale(2);
 }
+
+.info {
+    transform: scale(1);
+}

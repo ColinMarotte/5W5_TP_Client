@@ -7,6 +7,7 @@ import { DeckComponent } from "../deck/deck.component";
 import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { CreatedeckdialogComponent } from '../createdeckdialog/createdeckdialog.component';
 import { MatIconModule } from '@angular/material/icon';
+import { DeckConfigDTO } from 'src/app/models/dtos';
 
 @Component({
   selector: 'app-mesdecks',
@@ -21,10 +22,13 @@ export class MesdecksComponent implements OnInit {
 
   deckNameOutput: string | null = null;
 
+  deckConfig: DeckConfigDTO | null = null;
+
   constructor(public deckService: DeckService, private dialog: MatDialog) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getDecks();
+    this.deckConfig = await this.deckService.getDeckConfig();
   }
 
   openDialog() {
@@ -53,4 +57,15 @@ export class MesdecksComponent implements OnInit {
     this.mesDecks = await this.deckService.createDeck(name);
   }
 
+  isNbDeckMaxReached(): boolean {
+    if(this.deckConfig == null){
+      return true;
+    }
+
+    if(this.mesDecks.length >= this.deckConfig.nbDecksMax) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

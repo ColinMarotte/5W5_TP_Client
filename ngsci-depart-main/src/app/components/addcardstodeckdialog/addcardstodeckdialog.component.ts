@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../card/card.component';
+import { DeckService } from 'src/app/services/deck.service';
 
 @Component({
   selector: 'app-addcardstodeckdialog',
@@ -22,14 +23,24 @@ export class AddcardstodeckdialogComponent implements OnInit {
 
   selectedCards: OwnedCard[] = [];
 
-  constructor(private dialogRef: MatDialogRef<AddcardstodeckdialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { ownedCards: OwnedCard[]; name: string }) { }
+  nbCardsMax: number = 0;
 
-  ngOnInit() {
+  nbCardsInDeck: number = 0;
+
+  constructor(public deckService: DeckService, private dialogRef: MatDialogRef<AddcardstodeckdialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { ownedCards: OwnedCard[]; name: string; nbCardsInDeck: number }) { }
+
+  async ngOnInit() {
     this.cards = this.data.ownedCards;
     console.log('Cartes reçues: ' + this.data.ownedCards);
 
     this.deckName = this.data.name;
     console.log('Nom du deck: ' + this.data.name);
+
+    this.nbCardsInDeck = this.data.nbCardsInDeck;
+    console.log('Nombre de cartes déjà dans le deck: ' + this.data.nbCardsInDeck);
+
+    this.nbCardsMax = (await this.deckService.getDeckConfig()).nbCardsMaxInDeck;
   }
 
   save() {
@@ -52,6 +63,14 @@ export class AddcardstodeckdialogComponent implements OnInit {
 
   isSelected(carte: any): boolean {
     return this.selectedCards.some(c => c.id === carte.id);
+  }
+
+  isNbCardsMaxReached(): boolean {
+    if(this.nbCardsInDeck >= this.nbCardsMax || this.nbCardsInDeck + this.selectedCards.length > this.nbCardsMax) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Deck, DeckOwnedCard, OwnedCard } from '../models/models';
-import { NewDeckDTO } from '../models/dtos';
+import { DeckConfigDTO, NewDeckDTO } from '../models/dtos';
 
 const domain = "https://localhost:7179/"
 
@@ -79,5 +79,12 @@ export class DeckService {
     console.log(x);
 
     return await this.getDecks();
+  }
+
+  async getDeckConfig(): Promise<DeckConfigDTO> {
+    let x = await lastValueFrom(this.http.get<DeckConfigDTO>(domain + "api/Decks/GetDeckConfig"));
+    console.log(x);
+
+    return x;
   }
 }

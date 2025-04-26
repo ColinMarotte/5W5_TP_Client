@@ -25,9 +25,12 @@ export class DeckComponent implements OnInit {
 
   cardToDelete?: DeckOwnedCard;
 
+  nbCardsMax: number = 0;
+
   constructor(public deckService: DeckService, private dialog: MatDialog) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.nbCardsMax = (await this.deckService.getDeckConfig()).nbCardsMaxInDeck;
   }
 
   async deleteCard(card: DeckOwnedCard) {
@@ -59,7 +62,8 @@ export class DeckComponent implements OnInit {
 
     dialogConfig.data = {
       ownedCards: await this.getCardsNotInDeck(),
-      name: this.deck?.name
+      name: this.deck?.name,
+      nbCardsInDeck: this.deck?.deckOwnedCards.length
     }
 
     const dialogRef = this.dialog.open(AddcardstodeckdialogComponent, dialogConfig);
@@ -74,4 +78,11 @@ export class DeckComponent implements OnInit {
     });
   }
 
+  isDeckFull(): boolean {
+    if(this.deck?.deckOwnedCards.length!! >= this.nbCardsMax) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

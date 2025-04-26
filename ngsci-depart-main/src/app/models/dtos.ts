@@ -18,3 +18,10 @@ export class NewDeckDTO {
         public deckName: string
     ) { }
 }
+
+export class DeckConfigDTO {
+    constructor(
+        public nbDecksMax: number,
+        public nbCardsMaxInDeck: number
+    ) { }
+}

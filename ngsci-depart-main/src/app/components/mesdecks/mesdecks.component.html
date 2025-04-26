@@ -2,10 +2,15 @@
 
   <div class="row">
     <div class="col">
-      <button mat-raised-button color="primary" style="padding: 30px;" (click)="openDialog()">
+      <button mat-raised-button color="primary" style="padding: 30px;" (click)="openDialog()" [disabled]="isNbDeckMaxReached()">
         <mat-icon>add</mat-icon> Ajouter un deck
       </button>
     </div>
+  </div>
+
+  <div class="row align-items-center" *ngIf="isNbDeckMaxReached()">
+    <mat-icon class="info">info</mat-icon>
+    Vous possédez le nombre maximal de decks!
   </div>
 
   <br>
