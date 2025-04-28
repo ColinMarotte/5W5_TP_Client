@@ -20,6 +20,17 @@
         <td *ngIf="cp.power.name != 'First Strike'">{{ cp.value }}</td>
       </tr>
     </table>
+
+  <table class="infinite-card-stats">
+      <tr>
+        <td><i class="fas fa-fist-raised"></i></td>
+        <td>{{card?.attack}}</td>
+      </tr>
+      <tr>
+        <td><i class="fas fa-shield-alt"></i></td>
+        <td>{{oldHealth != 0 ? oldHealth : card?.health}}</td>
+      </tr>
+    </table>
   </mat-card-content>
 </mat-card>
 }
