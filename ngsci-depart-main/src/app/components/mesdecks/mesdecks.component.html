@@ -9,12 +9,17 @@
   </div>
 
   <div class="row align-items-center" *ngIf="isNbDeckMaxReached()">
-    <mat-icon class="info">info</mat-icon>
-    Vous possédez le nombre maximal de decks!
+    <div class="col-auto no-padding-right">
+      <mat-icon class="info">info</mat-icon>
+    </div>
+    <div class="col-auto">
+      Vous possédez le nombre maximal de decks!
+    </div>
   </div>
 
   <br>
 
-  <app-deck *ngFor="let deck of mesDecks" [deck]="deck"></app-deck>
+  <app-deck *ngFor="let deck of mesDecks" [deck]="deck" [nbCardsMax]="deckConfig?.nbCardsMaxInDeck"
+  (refreshParent)="getDecks()"></app-deck>
 
 </div>

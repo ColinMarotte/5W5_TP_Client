@@ -9,7 +9,7 @@
   <button class="col-auto icon-button ml-3" *ngIf="!deck?.current" mat-raised-button color="accent"
     matTooltip="Définir comme deck courant" (click)="currentDeck()"><mat-icon>check</mat-icon></button>
   
-  <mat-chip class="col-auto ml-3" *ngIf="isDeckFull()">Deck complet</mat-chip>
+  <mat-chip class="col-auto ml-3" *ngIf="isDeckFull()">Complet</mat-chip>
 </div>
 
 <div class="row align-items-center">
@@ -18,7 +18,7 @@
     <button class="remove-card-button" mat-raised-button color="primary" matTooltip="Retirer du deck"
       (click)="deleteCard(carte)"><mat-icon>delete</mat-icon></button>
   </div>
-  <button class="bouton-ajout ml-3" mat-raised-button color="primary" (click)="openDialog()" *ngIf="!isDeckFull()">
+  <button class="bouton-ajout ml-3 col-auto" mat-raised-button color="primary" (click)="openDialog()" *ngIf="!isDeckFull()">
     <mat-icon>add</mat-icon>Ajouter des cartes
   </button>
 </div>

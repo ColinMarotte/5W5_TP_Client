@@ -17,8 +17,8 @@ export class ApiService {
     return result;
   }
 
-  async getPlayersCards(playerId: string): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetPlayersCards/' + playerId));
+  async getPlayersCards(): Promise<Card[]> {
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/Card/GetPlayersCards'));
     console.log("result1")
     if (result[0].cardPowers) {
       let x: CardPower[] = result[0].cardPowers;

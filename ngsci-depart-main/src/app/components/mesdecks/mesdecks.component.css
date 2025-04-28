@@ -5,3 +5,7 @@
 .info {
     transform: scale(1);
 }
+
+.no-padding-right {
+    padding-right: 0;
+  }

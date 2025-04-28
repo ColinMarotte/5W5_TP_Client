@@ -30,13 +30,11 @@ export class DeckService {
     return await this.getDecks();
   }
 
-  async currentDeck(deck: Deck): Promise<Deck[]> {
+  async currentDeck(deck: Deck): Promise<void> {
     let deckId: number = deck.id;
 
     let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/MakeDeckCurrent/" + deckId));
     console.log(x);
-
-    return await this.getDecks();
   }
 
   async getCardsNotInDeck(deck: Deck): Promise<OwnedCard[]> {
@@ -48,7 +46,7 @@ export class DeckService {
     return x;
   }
 
-  async addCardsToDeck(deck: Deck, cards: OwnedCard[]): Promise<Deck[]> {
+  async addCardsToDeck(deck: Deck, cards: OwnedCard[]): Promise<DeckOwnedCard[]> {
     let deckId: number = deck.id;
 
     let ownedCardsIds: number[] = [];
@@ -56,29 +54,25 @@ export class DeckService {
       ownedCardsIds.push(card.id);
     });
 
-    let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/AddCardsToDeck/" + deckId, ownedCardsIds));
+    let x = await lastValueFrom(this.http.post<DeckOwnedCard[]>(domain + "api/Decks/AddCardsToDeck/" + deckId, ownedCardsIds));
     console.log(x);
 
-    return await this.getDecks();
+    return x;
   }
 
-  async deleteDeck(deck: Deck): Promise<Deck[]> {
+  async deleteDeck(deck: Deck): Promise<void> {
     let deckId: number = deck.id;
 
     let x = await lastValueFrom(this.http.get<any>(domain + "api/Decks/DeleteDeck/" + deckId));
     console.log(x);
-
-    return await this.getDecks();
   }
 
-  async removeCardFromDeck(deck: Deck, card: DeckOwnedCard): Promise<Deck[]> {
+  async removeCardFromDeck(deck: Deck, card: DeckOwnedCard): Promise<void> {
     let deckId: number = deck.id;
     let deckOwnedCardId: number = card.id
 
     let x = await lastValueFrom(this.http.post<any>(domain + "api/Decks/RemoveCardFromDeck/" + deckId, deckOwnedCardId));
     console.log(x);
-
-    return await this.getDecks();
   }
 
   async getDeckConfig(): Promise<DeckConfigDTO> {

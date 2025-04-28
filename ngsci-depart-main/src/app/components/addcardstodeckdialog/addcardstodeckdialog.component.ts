@@ -28,9 +28,9 @@ export class AddcardstodeckdialogComponent implements OnInit {
   nbCardsInDeck: number = 0;
 
   constructor(public deckService: DeckService, private dialogRef: MatDialogRef<AddcardstodeckdialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { ownedCards: OwnedCard[]; name: string; nbCardsInDeck: number }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { ownedCards: OwnedCard[]; name: string; nbCardsInDeck: number; nbCardsMax: number }) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.cards = this.data.ownedCards;
     console.log('Cartes reçues: ' + this.data.ownedCards);
 
@@ -40,7 +40,8 @@ export class AddcardstodeckdialogComponent implements OnInit {
     this.nbCardsInDeck = this.data.nbCardsInDeck;
     console.log('Nombre de cartes déjà dans le deck: ' + this.data.nbCardsInDeck);
 
-    this.nbCardsMax = (await this.deckService.getDeckConfig()).nbCardsMaxInDeck;
+    this.nbCardsMax = this.data.nbCardsMax;
+    console.log('Nombre de cartes maximum: ' + this.data.nbCardsMax);
   }
 
   save() {
