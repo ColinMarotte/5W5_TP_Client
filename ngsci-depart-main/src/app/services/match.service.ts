@@ -6,6 +6,7 @@ import { Match } from '../models/models';
 import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs';
 
 const hubUrl = "https://localhost:7179/matchHub";
 
@@ -38,6 +39,12 @@ export class MatchService {
   private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
   public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
 
+  private powerAnimateSource = new Subject<number>();
+  powerAnimate$ = this.powerAnimateSource.asObservable();
+  // private powerAnimateSource = new BehaviorSubject<number | null>(null);
+  // powerAnimate$ = this.powerAnimateSource.asObservable();
+  private cardAnimateSource = new BehaviorSubject<number | null>(null);
+  cardAnimate$ = this.cardAnimateSource.asObservable();
   constructor() {
   }
 
@@ -199,7 +206,7 @@ export class MatchService {
   // La méthode qui passe à travers l'arbre d'évènements reçu par le serveur
   // Utiliser pour mettre les données à jour et jouer les animations
   async applyEvent(event: any) {
-    console.log("ApplyingEvent: " + event.eventType);
+    // console.log("ApplyingEvent: " + event.eventType);
     switch (event.eventType) {
       case "StartMatch": {
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -271,6 +278,60 @@ export class MatchService {
         }
         break;
       }   
+      case "Heal":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // let playableCard = playerData.battleField.find(c => c.card.id = event.playableCardId);
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          let powerIndex = playableCard!.card.cardPowers.findIndex(c => c.power.name == 'Heal');
+          this.animatePower(powerIndex, event.playableCardId);
+          // this.cardAnimateSource.next(event.playableCardId);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        break;
+      }
+      case "Thorns":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // let playableCard = playerData.battleField.find(c => c.card.id = event.playableCardId);
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          let powerIndex = playableCard!.card.cardPowers.findIndex(c => c.power.name == 'Thorns');
+          this.animatePower(powerIndex, event.playableCardId);
+          // this.cardAnimateSource.next(event.playableCardId);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        break;
+      }
+      case "Shield":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // let playableCard = playerData.battleField.find(c => c.card.id = event.playableCardId);
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+          let powerIndex = playableCard!.card.cardPowers.findIndex(c => c.power.name == 'Shield');
+          this.animatePower(powerIndex, event.playableCardId);
+          // this.cardAnimateSource.next(event.playableCardId);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        break;
+      }
+      
+      case "FirstStrike":{
+        let playerData = this.getPlayerData(event.playerId);
+        if(playerData){
+          // let playableCard = playerData.battleField.find(c => c.card.id = event.playableCardId);
+          let playableCard = playerData.battleField.find(c => c.id == event.playableCardId);
+          let powerIndex = playableCard!.card.cardPowers.findIndex(c => c.power.name == 'First Strike');
+          await this.animatePower(powerIndex, event.playableCardId);
+          // this.cardAnimateSource.next(event.playableCardId);
+          
+        }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+        break;
+      }
       case "CardHeal":{
         let playerData = this.getPlayerData(event.playerId);
         if(playerData){
@@ -303,6 +364,8 @@ export class MatchService {
     if (event.events) {
       for (let e of event.events) {
         await this.applyEvent(e);
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+        
       }
     }
   }
@@ -330,4 +393,13 @@ export class MatchService {
     }
   }
 
+  async animatePower(powerIndex: number, playableCardId:number){
+    // console.log(powerIndex)
+    // console.log(playableCardId)
+
+    await this.cardAnimateSource.next(playableCardId);
+    await this.powerAnimateSource.next(powerIndex);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+  }
 }
