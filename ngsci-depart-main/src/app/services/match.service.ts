@@ -38,6 +38,12 @@ export class MatchService {
   private MoneyReceivedSubject = new BehaviorSubject<number | null>(null);
   public MoneyReveiced$ = this.MoneyReceivedSubject.asObservable();
 
+  public lastPlayedCardId: number | null = null;
+
+  private animationSubject = new BehaviorSubject<number | null>(null);
+  public cardAnimation$ = this.animationSubject.asObservable();
+
+
   constructor() {
   }
 
@@ -142,16 +148,18 @@ export class MatchService {
 
   }
 
-  public async playCard(playableCardId:any){
+  public async playCard(playableCardId: any) {
+
     if (!this.hubConnection) {
       console.error('La connexion SignalR n\'est pas établie.');
       return;
     }
-    try{
+    try {
+      this.lastPlayedCardId = playableCardId;
       await this.hubConnection.invoke('PlayCard', this.match?.id, playableCardId)
 
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
   }
@@ -217,14 +225,23 @@ export class MatchService {
 
       case "PlayerEndTurn": {
         if (this.match) {
-          
+          console.log("oui ici")
+
+          // this.animationSubject.next(this.lastPlayedCardId);
+
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
+
+
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
 
         }
+
+        setTimeout(() => {
+          this.lastPlayedCardId = null;
+        }, 1000);
         break;
       }
       case "DrawCard": {
@@ -261,27 +278,27 @@ export class MatchService {
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        break;      
+        break;
       }
-      case "CardDamage":{
+      case "CardDamage": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData){
+        if (playerData) {
           let playableCard = playerData.battleField[event.battlefieldIndex];
           playableCard.health -= event.value;
         }
         break;
-      }   
-      case "CardHeal":{
+      }
+      case "CardHeal": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData){
+        if (playerData) {
           let playableCard = playerData.battleField[event.battlefieldIndex];
           playableCard.health += event.value;
         }
         break;
-      }        
-      case "CardDeath":{
+      }
+      case "CardDeath": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData){
+        if (playerData) {
           // await new Promise(resolve => setTimeout(resolve, 250));
           let playableCard = playerData.battleField[event.battlefieldIndex];
           this.moveCard(playerData.battleField, playerData.graveyard, playableCard.id);
@@ -289,9 +306,9 @@ export class MatchService {
 
         break;
       }
-      case "PlayerDamage":{
+      case "PlayerDamage": {
         let playerData = this.getPlayerData(event.playerId);
-        if(playerData){
+        if (playerData) {
           // await new Promise(resolve => setTimeout(resolve, 250));
           playerData.health -= event.value;
 

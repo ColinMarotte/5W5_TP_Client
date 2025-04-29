@@ -13,11 +13,11 @@ import { flip } from 'ng-animate';
   standalone: true,
   imports: [CardComponent],
   animations: [
-    trigger('trigger', [
-      transition(':increment', useAnimation(flip, {
-        params: { timing: 2 }
+    trigger('playCardAnimation', [
+      transition('0 => 1', useAnimation(flip, {
+        params: { timing: 1 }
       }))
-    ]),
+    ])
   ]
 })
 export class PlayerhandComponent implements OnInit {
@@ -26,11 +26,20 @@ export class PlayerhandComponent implements OnInit {
   @Input() cards: PlayableCard[] = [];
   mavar = 0;
   trigger = false;
+  cardToAnimate: number | null = null;
+
   constructor(public matchService: MatchService) { }
 
   ngOnInit() {
-    this.playerMana = this.matchService.playerData?.mana ?? 0; // Récupérer la mana du joueur
+    this.playerMana = this.matchService.playerData?.mana ?? 0;
 
+    this.matchService.cardAnimation$.subscribe((cardId) => {
+      this.cardToAnimate = cardId;
+
+      setTimeout(() => {
+        this.cardToAnimate = null;
+      }, 1000);
+    });
   }
 
   async click(playableCard: PlayableCard) {
@@ -46,7 +55,7 @@ export class PlayerhandComponent implements OnInit {
     // TODO: Utiliser seulement une fois que l'on peut jouer des cartes (TP2)
     if (this.matchService.isCurrentPlayerTurn) {
       await this.matchService.playCard(playableCard.id);
-      this.playAnimation();
+      // this.playAnimation();
 
     }
     else {
