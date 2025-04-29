@@ -56,7 +56,15 @@ export class PlayerhandComponent implements OnInit {
     if (this.matchService.isCurrentPlayerTurn) {
       await this.matchService.playCard(playableCard.id);
       // this.playAnimation();
-
+      const element = document.getElementById("PC" + playableCard.id);
+      if (element) {
+        element.classList.remove("fadeIn"); // Important sinon l'animation sera bloquée
+        element.classList.add("attack");
+  
+        setTimeout(() => {
+          element.classList.remove("attack");
+        }, 1000); // Animation de 1 seconde
+      }
     }
     else {
       console.log("Ce n'est pas ton tour!");
