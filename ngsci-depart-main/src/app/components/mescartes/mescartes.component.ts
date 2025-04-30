@@ -13,7 +13,7 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: './mescartes.component.html',
   styleUrls: ['./mescartes.component.css'],
   standalone: true,
-  imports: [CardComponent, FormsModule, CommonModule, TriComponent]
+  imports: [FormsModule, CommonModule, TriComponent]
 })
 export class MescartesComponent implements OnInit {
 
@@ -21,9 +21,8 @@ export class MescartesComponent implements OnInit {
   constructor(public apiService: ApiService) { }
 
   async ngOnInit() {
-    let playerId = sessionStorage.getItem("playerId")
-    this.listeMesCartes = await this.apiService.getPlayersCards(playerId!)
-    console.log(this.listeMesCartes)
+    this.listeMesCartes = await this.apiService.getPlayersCards();
+    console.log(this.listeMesCartes);
   }
 
 

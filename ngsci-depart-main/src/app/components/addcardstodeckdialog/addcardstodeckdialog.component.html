@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Ajouter des cartes au deck {{deckName}}</h2>
+
+<mat-dialog-content>
+  <div class="row justify-content-around">
+    <div class="col-auto carte" *ngFor="let carte of cards" (click)="toggleSelection(carte)"
+      [class.selected]="isSelected(carte)">
+      <app-card [card]="carte.card"></app-card>
+    </div>
+    <div class="col" *ngIf="cards.length == 0">
+      Toutes vos cartes sont déjà dans ce deck.
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="d-flex justify-content-end">
+  <div class="px-2" *ngIf="isNbCardsMaxReached()">Le nombre maximal de cartes dans ce deck est dépassé!</div>
+  <button mat-raised-button color="primary" (click)="close()">Annuler</button>
+  <button mat-raised-button color="accent" (click)="save()" [disabled]="isNbCardsMaxReached()">Confirmer</button>
+</mat-dialog-actions>

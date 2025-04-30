@@ -1,0 +1,25 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button color="primary" style="padding: 30px;" (click)="openDialog()" [disabled]="isNbDeckMaxReached()">
+        <mat-icon>add</mat-icon> Ajouter un deck
+      </button>
+    </div>
+  </div>
+
+  <div class="row align-items-center" *ngIf="isNbDeckMaxReached()">
+    <div class="col-auto no-padding-right">
+      <mat-icon class="info">info</mat-icon>
+    </div>
+    <div class="col-auto">
+      Vous possédez le nombre maximal de decks!
+    </div>
+  </div>
+
+  <br>
+
+  <app-deck *ngFor="let deck of mesDecks" [deck]="deck" [nbCardsMax]="deckConfig?.nbCardsMaxInDeck"
+  (refreshParent)="getDecks()"></app-deck>
+
+</div>

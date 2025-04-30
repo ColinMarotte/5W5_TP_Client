@@ -1,0 +1,28 @@
+.mat-icon {
+    transform: scale(2);
+}
+
+.icon-button {
+    padding-left: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+h1 {
+    font-size: 35px;
+}
+
+.bouton-ajout {
+    height: 200px;
+}
+
+.carte-col {
+    position: relative;
+}
+
+.remove-card-button {
+    padding-left: 25px;
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+}

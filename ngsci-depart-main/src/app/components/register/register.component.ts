@@ -7,22 +7,22 @@ import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatError, MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatButton } from '@angular/material/button';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatIconModule} from '@angular/material/icon';
+import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatFormFieldModule, MatCard, MatInput, MatButton, MatSnackBarModule, MatIconModule, MatCardModule]
+  imports: [ReactiveFormsModule, MatTabsModule, CommonModule, MatError, MatFormField, MatFormFieldModule, MatCard, MatInput, MatButton, MatButtonModule, MatSnackBarModule, MatIconModule, MatCardModule]
 })
 export class RegisterComponent implements OnInit {
 
   hide = true;
 
-  form: FormGroup<any>
+  form: FormGroup<any>;
 
   formData?: Data;
 
@@ -90,16 +90,16 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
-    if(this.emailInput != null && this.passwordInput != null && this.passwordConfirmInput != null){
+    if (this.emailInput != null && this.passwordInput != null && this.passwordConfirmInput != null) {
       this.reponse = await this.httpService.register(this.emailInput, this.passwordInput, this.passwordConfirmInput);
-      if(this.reponse == "success"){
+      if (this.reponse == "success") {
         this.router.navigate(['/home']);
         this.snackBar.open('Inscription réussie!', 'OK', { duration: 5000 });
       }
     }
   }
 
-  toLogin(){
+  toLogin() {
     this.router.navigate(['/login']);
   }
 
