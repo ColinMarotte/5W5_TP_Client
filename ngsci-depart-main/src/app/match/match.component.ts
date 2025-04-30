@@ -78,8 +78,7 @@ export class MatchComponent implements OnInit {
 
   isVictory(): boolean {
     return (
-      this.matchService.matchData?.winningPlayerId ===
-        this.matchService.playerData?.playerId ?? false
+      this.matchService.matchData?.winningPlayerId === this.matchService.playerData?.playerId ?? false
     );
   }
 

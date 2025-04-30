@@ -120,7 +120,7 @@ export class CardComponent implements OnInit, OnChanges, OnDestroy {
       this.cardId = cardId;
       if(this.id == cardId){
         this.animatedIndex++;
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // await new Promise((resolve) => setTimeout(resolve, 1500));
 
       }
     });

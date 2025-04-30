@@ -3,8 +3,8 @@
     <h1 style="position: absolute;">Adversaire</h1>
     @if (matchService.adversaryData) {
     <div>
-      <app-battlefield [cards]="matchService.adversaryData.battleField"></app-battlefield>
-      <app-enemyhand [cards]="matchService.adversaryData.hand"></app-enemyhand>
+      <app-battlefield [cards]="matchService.adversaryData.battleField" [playerId]="matchService.adversaryData.playerId"></app-battlefield>
+      <app-enemyhand [cards]="matchService.adversaryData.hand" ></app-enemyhand>
     </div>
     }
   </div>
@@ -12,7 +12,7 @@
     <h1 style="position: absolute;">Mon jeu</h1>
     @if (matchService.playerData) {
     <div>
-      <app-battlefield [cards]="matchService.playerData.battleField"></app-battlefield>
+      <app-battlefield [cards]="matchService.playerData.battleField" [playerId]="matchService.playerData.playerId"></app-battlefield>
     </div>
     }
 

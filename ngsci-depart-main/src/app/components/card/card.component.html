@@ -34,7 +34,7 @@
 } -->
 @if (show=='front') {
       
-      <mat-card class="infinite-card" [@trigger] = "animatedIndex" >
+      <mat-card class="infinite-card" >
     <mat-card-header [ngStyle]="{'background-color': getRarityColor(card.rarity)}">
       <div mat-card-avatar class="infinite-card-mana-cost">
         {{card.cost}} <i class="fas fa-gem"></i>
