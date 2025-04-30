@@ -229,6 +229,7 @@ export class MatchService {
 
       case 'PlayerEndTurn': {
         if (this.match) {
+
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }

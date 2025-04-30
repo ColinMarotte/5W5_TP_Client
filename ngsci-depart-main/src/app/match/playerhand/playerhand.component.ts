@@ -11,13 +11,13 @@ import { flip } from 'ng-animate';
   styleUrls: ['./playerhand.component.css'],
   standalone: true,
   imports: [CardComponent],
-  // animations: [
-  //   trigger('trigger', [
-  //     transition(':increment', useAnimation(flip, {
-  //       params: { timing: 2 }
-  //     }))
-  //   ]),
-  // ]
+  animations: [
+    trigger('trigger', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2 }
+      }))
+    ]),
+  ]
 })
 export class PlayerhandComponent implements OnInit {
   public playerMana: number = 0; // Mana du joueur
@@ -25,10 +25,11 @@ export class PlayerhandComponent implements OnInit {
   @Input() cards: PlayableCard[] = [];
   mavar = 0;
   trigger = false;
-  constructor(public matchService: MatchService) {}
+  constructor(public matchService: MatchService) { }
 
   ngOnInit() {
     this.playerMana = this.matchService.playerData?.mana ?? 0; // Récupérer la mana du joueur
+
   }
 
   async click(playableCard: PlayableCard) {
@@ -45,7 +46,9 @@ export class PlayerhandComponent implements OnInit {
     if (this.matchService.isCurrentPlayerTurn) {
       await this.matchService.playCard(playableCard.id);
       this.playAnimation();
-    } else {
+
+    }
+    else {
       console.log("Ce n'est pas ton tour!");
     }
   }

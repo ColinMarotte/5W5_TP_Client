@@ -35,7 +35,6 @@ import {
   heartBeat,
 } from 'ng-animate';
 import { NgStyle } from '@angular/common';
-import { PowerComponent } from 'src/app/power/power.component';
 import { MatchService } from 'src/app/services/match.service';
 
 @Component({
