@@ -1,7 +1,33 @@
-<div style="display: flex;position: relative; width: fit-content; margin: auto;">
+<div
+  style="display: flex; position: relative; width: fit-content; margin: auto"
+>
   <div class="container">
-    @for (card of cards; track card) {
-      <app-card [id]="card.id" class="card fadeIn" [card]="card.card" [health]="card.health" style="margin: 5px;"></app-card>
-    }
+    <app-card *ngFor="let card of cards; let i = index"
+      [id]="card.id"
+      class="card fadeIn"
+      [card]="card.card"
+      [health]="card.health"
+      [@test]="animationCounters[i]"
+      style="margin: 5px"
+    ></app-card>
+    <!-- @for (card of cards; track card; let i = $index) {
+    <app-card
+      [id]="card.id"
+      class="card fadeIn"
+      [card]="card.card"
+      [health]="card.health"
+      [@test]="animationCounters[i]"
+      style="margin: 5px"
+    ></app-card>
+    } -->
+    <!-- @for (card of cards; track card) {
+    <app-card
+      [id]="card.id"
+      class="card fadeIn"
+      [card]="card.card"
+      [health]="card.health"
+      style="margin: 5px"
+    ></app-card>
+    } -->
   </div>
 </div>

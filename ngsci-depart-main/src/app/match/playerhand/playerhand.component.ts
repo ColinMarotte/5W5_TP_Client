@@ -5,7 +5,6 @@ import { MatchService } from 'src/app/services/match.service';
 import { transition, trigger, useAnimation } from '@angular/animations';
 import { flip } from 'ng-animate';
 
-
 @Component({
   selector: 'app-playerhand',
   templateUrl: './playerhand.component.html',
@@ -13,11 +12,11 @@ import { flip } from 'ng-animate';
   standalone: true,
   imports: [CardComponent],
   animations: [
-    trigger('playCardAnimation', [
-      transition('0 => 1', useAnimation(flip, {
-        params: { timing: 1 }
+    trigger('trigger', [
+      transition(':increment', useAnimation(flip, {
+        params: { timing: 2 }
       }))
-    ])
+    ]),
   ]
 })
 export class PlayerhandComponent implements OnInit {
@@ -26,58 +25,38 @@ export class PlayerhandComponent implements OnInit {
   @Input() cards: PlayableCard[] = [];
   mavar = 0;
   trigger = false;
-  cardToAnimate: number | null = null;
-
   constructor(public matchService: MatchService) { }
 
   ngOnInit() {
-    this.playerMana = this.matchService.playerData?.mana ?? 0;
+    this.playerMana = this.matchService.playerData?.mana ?? 0; // Récupérer la mana du joueur
 
-    this.matchService.cardAnimation$.subscribe((cardId) => {
-      this.cardToAnimate = cardId;
-
-      setTimeout(() => {
-        this.cardToAnimate = null;
-      }, 1000);
-    });
   }
 
   async click(playableCard: PlayableCard) {
     let player = this.matchService.playerData;
     if (!player) {
-      console.log("Erreur: Impossible de trouver les données du joueur.");
+      console.log('Erreur: Impossible de trouver les données du joueur.');
       return;
     }
     if (player.mana < playableCard.card.cost) {
-      console.log("Pas assez de mana pour jouer cette carte !");
+      console.log('Pas assez de mana pour jouer cette carte !');
       return;
     }
     // TODO: Utiliser seulement une fois que l'on peut jouer des cartes (TP2)
     if (this.matchService.isCurrentPlayerTurn) {
       await this.matchService.playCard(playableCard.id);
-      // this.playAnimation();
-      const element = document.getElementById("PC" + playableCard.id);
-      if (element) {
-        element.classList.remove("fadeIn"); // Important sinon l'animation sera bloquée
-        element.classList.add("attack");
-  
-        setTimeout(() => {
-          element.classList.remove("attack");
-        }, 1000); // Animation de 1 seconde
-      }
+      this.playAnimation();
+
     }
     else {
       console.log("Ce n'est pas ton tour!");
     }
-
-
   }
 
   playAnimation() {
-    this.mavar++;  // Change la variable pour déclencher l'animation
+    this.mavar++; // Change la variable pour déclencher l'animation
     setTimeout(() => {
-      this.mavar++;  // Incrémente encore une fois après un délai pour la finir
+      this.mavar++; // Incrémente encore une fois après un délai pour la finir
     }, 1000);
   }
-
 }

@@ -1,0 +1,8 @@
+<td title="{{ Power!.power.name }}" [@firstStrike]="Power!.power.name === 'First Strike' ? animationCounters : 0"
+    [@thorns]="Power!.power.name === 'Thorns' ? animationCounters : 0"
+    [@heal]="Power!.power.name === 'Heal' ? animationCounters : 0"
+    [@shield]="Power!.power.name === 'Shield' ? animationCounters : 0" 
+    style="cursor: pointer;" (click)="animate()">
+    {{ Power!.power.icone }}
+</td>
+<td *ngIf="Power!.power.name != 'First Strike'">{{ Power!.value }}</td>
