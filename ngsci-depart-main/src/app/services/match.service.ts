@@ -235,32 +235,34 @@ export class MatchService {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
         }
-        break;
-      }
-      case 'CardActivation': {
-        let playerData = this.getPlayerData(event.playerId);
-        if (playerData) {
-          let playableCard = playerData.battleField[event.battlefieldIndex];
-
-          this.cardActivateSource.next(event.battlefieldIndex);
-          // await this.cardAnimateSource.next(event.playableCardId);
-        }
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         break;
       }
-      // case 'Attack':{
+      // case 'CardActivation': {
       //   let playerData = this.getPlayerData(event.playerId);
       //   if (playerData) {
       //     let playableCard = playerData.battleField[event.battlefieldIndex];
 
-      //     await this.cardActivateSource.next(event.battlefieldIndex);
+      //     this.cardActivateSource.next(event.battlefieldIndex);
       //     // await this.cardAnimateSource.next(event.playableCardId);
       //   }
       //   await new Promise((resolve) => setTimeout(resolve, 3000));
 
       //   break;
       // }
+      case 'Attack':{
+        let playerData = this.getPlayerData(event.playerId);
+        if (playerData) {
+          let playableCard = playerData.battleField[event.battlefieldIndex];
+
+          await this.cardActivateSource.next(event.battlefieldIndex);
+          // await this.cardAnimateSource.next(event.playableCardId);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        break;
+      }
       case 'DrawCard': {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {

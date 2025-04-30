@@ -12,7 +12,7 @@
     <h1 style="position: absolute;">Mon jeu</h1>
     @if (matchService.playerData) {
     <div>
-      <app-battlefield [cards]="matchService.playerData.battleField" [playerId]="matchService.playerData.playerId"></app-battlefield>
+      <app-battlefield [cards]="matchService.playerData.battleField" [playerId]="matchService.currentPlayerId"></app-battlefield>
     </div>
     }
 

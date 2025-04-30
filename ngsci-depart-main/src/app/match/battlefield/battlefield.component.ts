@@ -4,7 +4,8 @@ import { CardComponent } from '../../components/card/card.component';
 import { MatchService } from 'src/app/services/match.service';
 import { transition, trigger, useAnimation } from '@angular/animations';
 import { flip, shakeY } from 'ng-animate';
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { NgFor } from '@angular/common';
     templateUrl: './battlefield.component.html',
     styleUrls: ['./battlefield.component.css'],
     standalone: true,
-    imports: [CardComponent, NgFor],
+    imports: [CardComponent,  CommonModule],
     animations: [trigger('test', [
           transition(
             ':increment',
@@ -28,47 +29,40 @@ export class BattlefieldComponent implements OnInit, OnChanges {
   @Input() align: string = 'top';
   @Input() playerId: number = -1;
   isCurrentPlayer:boolean = false
-  animationCounters: number[] = [];
+  animationCounters: number[] = [0,0,0,0,0,0,0,0,0,0];
   constructor(matchService : MatchService) { 
-    if(matchService.isCurrentPlayerTurn){
-      this.isCurrentPlayer = true;
-    }
     matchService.cardActivate$.subscribe( (activate) => {
-      if(this.cards.length > 0 ){
-        if (this.cards.length > 0 && this.cards != undefined) {
-          // this.animationCounters = new Array(this.cards.length).fill(0);
-        }
-        console.log("Before")
-        console.log(this.cards);
-        console.log("ActivateCard:" ,this.cards[activate])
-        console.log('animationsCounter: ', this.animationCounters)
-        // this.bool = activate;
+
+        // console.log("Before")
+        // console.log(this.cards);
+        // console.log("ActivateCard:" ,this.cards[activate])
+        // console.log('animationsCounter: ', this.animationCounters)
+        // // this.bool = activate;
         if(Number.isNaN(this.animationCounters[activate])){
+
           this.animationCounters[activate]= 0;
         }
-        if(activate >=0 && matchService.currentPlayerId == this.playerId){
+        if(activate >=0 ){
           this.animationCounters[activate]++;
-          console.log("After")
+          // console.log("After")
           console.log("ActivateCard:" ,this.cards[activate])
-          console.log('animationsCounter: ', this.animationCounters)
+          // console.log('animationsCounter: ', this.animationCounters)
+          setTimeout(() => {
+          this.animationCounters[activate]--;
+
+          }, 1000);
         }
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        
-      }
-
-      
     });
   }
   ngOnChanges(changes: SimpleChanges): void { 
     if (this.cards.length > 0 && this.cards != undefined) {
-      this.animationCounters = new Array(this.cards.length).fill(0);
+      // this.animationCounters = new Array(this.cards.length).fill(0);
     }
   }
 
   ngOnInit() {
     if (this.cards.length > 0 && this.cards != undefined) {
-      this.animationCounters = new Array(this.cards.length).fill(0);
+      // this.animationCounters = new Array(this.cards.length).fill(0);
     }
   }
 

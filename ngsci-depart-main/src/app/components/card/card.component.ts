@@ -49,7 +49,7 @@ import { MatchService } from 'src/app/services/match.service';
       transition(
         ':increment',
         useAnimation(flip, {
-          params: { timing: 2, scale: 1000 },
+          params: { timing: 2, scale: 10 },
         })
       ),
     ]),
@@ -77,14 +77,14 @@ import { MatchService } from 'src/app/services/match.service';
         })
       ),
     ]),
-    trigger('trigger', [
-      transition(
-        ':increment',
-        useAnimation(flip, {
-          params: { timing: 2 },
-        })
-      ),
-    ]),
+    // trigger('trigger', [
+    //   transition(
+    //     ':increment',
+    //     useAnimation(flip, {
+    //       params: { timing: 2 },
+    //     })
+    //   ),
+    // ]),
   ],
 })
 export class CardComponent implements OnInit, OnChanges, OnDestroy {
@@ -199,10 +199,12 @@ export class CardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   animatePower() {
+    this.animate = true;
     this.animationCounters[this.animatedPowerIndex]++;
     setTimeout(() => {
       this.animatedPowerIndex = -1;
       this.cardId = -1;
+      this.animate = false;
       // this.PowerAnimateSub.unsubscribe();
     }, 3000);
   }
