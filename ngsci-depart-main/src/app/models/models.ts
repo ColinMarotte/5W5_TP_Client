@@ -7,6 +7,7 @@ export interface Player {
 export interface Card {
     id: number;
     name: string;
+    isASpell: boolean;
     attack: number;
     health: number;
     cost: number;
