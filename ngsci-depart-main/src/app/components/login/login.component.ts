@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
     if (this.emailInput != null && this.passwordInput != null) {
       this.reponse = await this.httpService.login(this.emailInput, this.passwordInput);
       if (this.reponse == "success") {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
         this.snackBar.open('Connexion réussie!', 'OK', { duration: 5000 });
       }
     }

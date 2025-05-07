@@ -67,6 +67,7 @@ export class HttpService {
         sessionStorage.setItem("playerId", response.playerId);
         sessionStorage.setItem("username", email);
         sessionStorage.setItem("Solde", response.solde);
+        // sessionStorage.setItem("ELO", response.ELO);
         stringResponse = "success";
         this.MoneyReceivedSubject.next(response.solde);
       }
@@ -89,6 +90,11 @@ export class HttpService {
   async getSolde(): Promise<number> {
     let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/Solde"));
     console.log("solde", x);
+    return x;
+  }
+  async getELO(): Promise<number>{
+    let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/ELO"));
+    console.log("ELO: ", x);
     return x;
   }
 }
