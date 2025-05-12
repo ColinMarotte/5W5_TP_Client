@@ -1,23 +1,34 @@
-<div class="board" style="height: 100%;background-image: url('/assets/nouveauBoard.png'); background-size: cover;">
-  <div style="height: 45%;">
-    <h1 style="position: absolute;">Adversaire</h1>
-    @if (matchService.adversaryData) {
-    <div>
-      <app-battlefield [cards]="matchService.adversaryData.battleField" [playerId]="matchService.adversaryData.playerId"></app-battlefield>
-      <app-enemyhand [cards]="matchService.adversaryData.hand" ></app-enemyhand>
-    </div>
-    }
-  </div>
-  <div style="height: 45%;">
-    <h1 style="position: absolute;">Mon jeu</h1>
-    @if (matchService.playerData) {
-    <div>
-      <app-battlefield [cards]="matchService.playerData.battleField" [playerId]="matchService.currentPlayerId"></app-battlefield>
-    </div>
-    }
+<div class="row" style="height: 100%;">
+  <div class="col-10">
+    <div class="board" style="height: 100%;background-image: url('/assets/nouveauBoard.png'); background-size: cover;">
+      <div style="height: 45%;">
+        <h1 style="position: absolute;">Adversaire</h1>
+        @if (matchService.adversaryData) {
+        <div>
+          <app-battlefield [cards]="matchService.adversaryData.battleField"
+            [playerId]="matchService.adversaryData.playerId"></app-battlefield>
+          <app-enemyhand [cards]="matchService.adversaryData.hand"></app-enemyhand>
+        </div>
+        }
+      </div>
+      <div style="height: 45%;">
+        <h1 style="position: absolute;">Mon jeu</h1>
+        @if (matchService.playerData) {
+        <div>
+          <app-battlefield [cards]="matchService.playerData.battleField"
+            [playerId]="matchService.currentPlayerId"></app-battlefield>
+        </div>
+        }
 
+      </div>
+    </div>
+  </div>
+
+  <div class="col chat">
+    <app-chat></app-chat>
   </div>
 </div>
+
 @if (matchService.playerData) {
 <div>
   <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>

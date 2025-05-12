@@ -12,6 +12,7 @@ import { HealthComponent } from './health/health.component';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ChatComponent } from "../components/chat/chat.component";
 
 
 @Component({
@@ -19,7 +20,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css'],
   standalone: true,
-  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule]
+  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule, ChatComponent]
 })
 export class MatchComponent implements OnInit {
 

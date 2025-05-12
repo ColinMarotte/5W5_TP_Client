@@ -1,0 +1,23 @@
+.chat {
+    height: 80%;
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages {
+    height: 85%;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.users {
+    background-color: bisque;
+    padding: 5px;
+}
+
+.form {
+    margin-top: auto;
+    padding: 5px;
+}
