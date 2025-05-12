@@ -52,7 +52,11 @@ export class AppComponent implements OnInit {
       }
     });
     this.solde = parseInt(sessionStorage.getItem("Solde")!);
-    // this.getELO();
+    // (async () => {
+    //   this.getELO();
+      
+    // } );
+    this.getELO();
   }
 
   isLogged(): boolean {

@@ -29,6 +29,9 @@ export class MatchService {
   victoire: boolean = false;
   perdant: number = -1;
 
+  ELO : number = 0;
+  ELOChanged : number = 0;
+
   hubConnection: HubConnection | undefined;
 
   stoppedJoiningMatch: boolean | undefined;
@@ -281,16 +284,22 @@ export class MatchService {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
         console.log('MatchEnded, winner: ' + this.matchData?.winningPlayerId);
-
+        
         if (event.winningPlayerId === this.currentPlayerId) {
           this.victoire = true;
           this.MoneyReceivedSubject.next(event.moneyReceivedByWinner);
           console.log('Victoire pour le joueur ' + this.currentPlayerId);
+
+          this.ELO = event.winningPlayerELO;
+          this.ELOChanged = event.winningPlayerELOGain;
         } else {
           this.victoire = false;
           this.perdant = this.currentPlayerId;
           this.MoneyReceivedSubject.next(event.moneyReceivedByLoser);
           console.log('Défaite pour le joueur ' + this.currentPlayerId);
+
+          this.ELO = event.losingPlayerELO;
+          this.ELOChanged = event.losingPlayerELOLost;
         }
 
         break;

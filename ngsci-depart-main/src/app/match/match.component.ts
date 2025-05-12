@@ -25,6 +25,8 @@ export class MatchComponent implements OnInit {
 
   matchId: number = 0;
   montantRecu = 0;
+
+
   private MoneyreceivedSubscription: Subscription | null = null;
 
 
@@ -57,6 +59,7 @@ export class MatchComponent implements OnInit {
   async endMatch() {
     this.matchService.clearMatch();
     this.appComponent.getSolde();
+    this.appComponent.getELO();
     await this.router.navigate(['/']);
   }
 

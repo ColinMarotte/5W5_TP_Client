@@ -22,6 +22,8 @@ export interface MatchData {
     playerA: Player;
     playerB: Player;
     winningPlayerId: number;
+    elo : number;
+    eloChanged: number;
 }
 
 export interface Match {
