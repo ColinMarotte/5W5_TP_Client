@@ -93,7 +93,9 @@
               "@angular/material/prebuilt-themes/purple-green.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/canvasjs/dist/canvasjs.min.js"
+            ]
           }
         }
       }

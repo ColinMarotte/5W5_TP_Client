@@ -28,4 +28,11 @@ export class ApiService {
     console.log("result2")
     return result;
   }
+
+  async getPlayerStats(playerId: string): Promise<any> {
+    let result = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Statistiques/GetPlayerStatistiques" + playerId));
+
+    return result
+  }
+
 }
