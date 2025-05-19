@@ -6,20 +6,20 @@
     <option value="mercedes">Mercedes</option>
     <option value="audi">Audi</option>
 </select>
-
+<br><br>
 <p>Nombre de victoires : {{nbrVictoires}}</p>
 <p>Nombre de défaites : {{nbrDefaites}}</p>
 
 <div class="row">
     <div class="col">
-        <canvasjs-chart [options]="chartOptions3" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+        <canvasjs-chart [options]="chartOptions3" [styles]="{width: '100%', height:'360px' }"></canvasjs-chart>
     </div>
 
     <div class="col">
         <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
     </div>
 </div>
-
+<br>
 
 <div>
     <canvasjs-chart [options]="chartOptions2" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
