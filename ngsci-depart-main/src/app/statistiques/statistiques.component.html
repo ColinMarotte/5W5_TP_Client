@@ -1,1 +1,26 @@
-<p>statistiques works!</p>
+<label for="cars">Choose a car:</label>
+
+<select name="cars" id="cars" class="custom-select">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+</select>
+
+<p>Nombre de victoires : {{nbrVictoires}}</p>
+<p>Nombre de défaites : {{nbrDefaites}}</p>
+
+<div class="row">
+    <div class="col">
+        <canvasjs-chart [options]="chartOptions3" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+    </div>
+
+    <div class="col">
+        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+    </div>
+</div>
+
+
+<div>
+    <canvasjs-chart [options]="chartOptions2" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+</div>
