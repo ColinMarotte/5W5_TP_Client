@@ -4,16 +4,19 @@ import { Component } from '@angular/core';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { DeckService } from '../services/deck.service';
+import { RouterModule } from '@angular/router';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-statistiques',
   standalone: true,
-  imports: [CanvasJSAngularChartsModule],
+  imports: [CanvasJSAngularChartsModule, RouterModule, NgFor],
   templateUrl: './statistiques.component.html',
   styleUrl: './statistiques.component.css'
 })
 export class StatistiquesComponent {
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private deckservice: DeckService) { }
 
   stats: any = null;
   deckStats: any = null;
@@ -21,15 +24,80 @@ export class StatistiquesComponent {
   nbrVictoires: any;
   nbrDefaites: any;
 
+  decks: any[] = [];
+  selectedDeckId: string = "starting";
+
+
   async ngOnInit() {
     const playerId = sessionStorage.getItem("playerId");
 
     if (playerId) {
 
       this.stats = await this.apiService.getPlayerStats(playerId);
+      this.decks = await this.deckservice.getDecks();
+
+      this.nbrVictoires = this.stats.totalWins;
+      this.nbrDefaites = this.stats.totalLosses;
+      this.updateCharts(this.stats.cards);
       // this.getChartInstance(this.stats);
     }
   }
+
+  async onDeckChange(event: any) {
+    this.selectedDeckId = event.target.value;
+    const playerId = sessionStorage.getItem("playerId");
+
+    if (!playerId) return;
+
+    if (this.selectedDeckId === "Toutes les cartes") {
+      const stats = await this.apiService.getPlayerStats(playerId);
+      this.nbrVictoires = stats.totalWins;
+      this.nbrDefaites = stats.totalLosses;
+      this.updateCharts(stats.cards);
+    } else {
+      const deckStats = await this.apiService.getdeckStats(this.selectedDeckId);
+
+      this.nbrVictoires = deckStats.Wins;
+      this.nbrDefaites = deckStats.losses;
+      const cards = deckStats.cards.map((ownedCard: any) => ownedCard.card); // extraire les Card des OwnedCard
+      this.updateCharts(cards);
+    }
+  }
+
+  updateCharts(cards: any[]) {
+    // ---- Graphique coût en mana ----
+    const manaMap: { [key: number]: number } = {};
+    cards.forEach(card => {
+      manaMap[card.cost] = (manaMap[card.cost] || 0) + 1;
+    });
+    this.chartOptions3.data[0].dataPoints = Object.entries(manaMap).map(([mana, count]) => ({
+      label: mana,
+      y: count
+    }));
+
+    // ---- Graphique rareté ----
+    const rareteMap: { [key: string]: number } = {};
+    cards.forEach(card => {
+      rareteMap[card.rarity] = (rareteMap[card.rarity] || 0) + 1;
+    });
+    this.chartOptions.data[0].dataPoints = Object.entries(rareteMap).map(([rarity, count]) => ({
+      name: rarity,
+      y: count
+    }));
+
+    // ---- Graphique attaque / défense ----
+    this.chartOptions2.data[0].dataPoints = cards.map(card => ({
+      label: card.name,
+      y: card.attack
+    }));
+    this.chartOptions2.data[1].dataPoints = cards.map(card => ({
+      label: card.name,
+      y: card.health
+    }));
+  }
+
+
+
   chartOptions = {
     animationEnabled: true,
     theme: "dark2",

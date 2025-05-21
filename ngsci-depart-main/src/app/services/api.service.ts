@@ -35,4 +35,8 @@ export class ApiService {
     return result
   }
 
+  async getdeckStats(deckid: string): Promise<any> {
+    let result = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Statistiques/GetDeckStatistiques/" + deckid));
+    return result
+  }
 }

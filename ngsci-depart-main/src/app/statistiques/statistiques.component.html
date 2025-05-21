@@ -1,10 +1,8 @@
-<label for="cars">Choose a car:</label>
+<label for="deckSelect">Choisissez un Deck</label>
 
-<select name="cars" id="cars" class="custom-select">
-    <option value="volvo">Volvo</option>
-    <option value="saab">Saab</option>
-    <option value="mercedes">Mercedes</option>
-    <option value="audi">Audi</option>
+<select id="deckSelect" class="custom-select" (change)="onDeckChange($event)">
+    <option value="all">Toutes les cartes</option>
+    <option *ngFor="let deck of decks" [value]="deck.id">{{ deck.name }}</option>
 </select>
 <br><br>
 <p>Nombre de victoires : {{nbrVictoires}}</p>
