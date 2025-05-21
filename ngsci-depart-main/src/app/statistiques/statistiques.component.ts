@@ -59,44 +59,10 @@ export class StatistiquesComponent {
 
       this.nbrVictoires = deckStats.Wins;
       this.nbrDefaites = deckStats.losses;
-      const cards = deckStats.cards.map((ownedCard: any) => ownedCard.card); // extraire les Card des OwnedCard
+      const cards = deckStats.cards.map((ownedCard: any) => ownedCard.card);
       this.updateCharts(cards);
     }
   }
-
-  updateCharts(cards: any[]) {
-    // ---- Graphique coût en mana ----
-    const manaMap: { [key: number]: number } = {};
-    cards.forEach(card => {
-      manaMap[card.cost] = (manaMap[card.cost] || 0) + 1;
-    });
-    this.chartOptions3.data[0].dataPoints = Object.entries(manaMap).map(([mana, count]) => ({
-      label: mana,
-      y: count
-    }));
-
-    // ---- Graphique rareté ----
-    const rareteMap: { [key: string]: number } = {};
-    cards.forEach(card => {
-      rareteMap[card.rarity] = (rareteMap[card.rarity] || 0) + 1;
-    });
-    this.chartOptions.data[0].dataPoints = Object.entries(rareteMap).map(([rarity, count]) => ({
-      name: rarity,
-      y: count
-    }));
-
-    // ---- Graphique attaque / défense ----
-    this.chartOptions2.data[0].dataPoints = cards.map(card => ({
-      label: card.name,
-      y: card.attack
-    }));
-    this.chartOptions2.data[1].dataPoints = cards.map(card => ({
-      label: card.name,
-      y: card.health
-    }));
-  }
-
-
 
   chartOptions = {
     animationEnabled: true,
@@ -110,13 +76,16 @@ export class StatistiquesComponent {
       indexLabel: "{name}: {y}",
       indexLabelPlacement: "inside",
       // yValueFormatString: "#,###.##'%'",
-      dataPoints: [
-        { y: 21.3, name: "Facebook" },
-        { y: 27.7, name: "Instagram" },
-      ]
+      // dataPoints: [
+      //   { y: 21.3, name: this.decks },
+      //   { y: 27.7, name: "Instagram" },
+      // ]
+      dataPoints: [cards.map(card => ({
+        name: card.name,
+        y: card.attack
+      })]
     }]
   }
-
   chartOptions2 = {
     animationEnabled: true,
     title: {
@@ -199,4 +168,43 @@ export class StatistiquesComponent {
       ]
     }]
   }
+
+  //chatgpt
+  updateCharts(cards: any[]) {
+    // ---- Graphique coût en mana ----
+    const manaMap: { [key: number]: number } = {};
+    cards.forEach(card => {
+      manaMap[card.cost] = (manaMap[card.cost] || 0) + 1;
+    });
+    this.chartOptions3.data[0].dataPoints = Object.entries(manaMap).map(([mana, count]) => ({
+      label: mana,
+      y: count
+    }));
+
+    // ---- Graphique rareté ----
+    const rareteMap: { [key: string]: number } = {};
+    cards.forEach(card => {
+      rareteMap[card.rarity] = (rareteMap[card.rarity] || 0) + 1;
+    });
+    this.chartOptions.data[0].dataPoints = Object.entries(rareteMap).map(([rarity, count]) => ({
+      name: rarity,
+      y: count
+    }));
+
+    // ---- Graphique attaque / défense ----
+    this.chartOptions2.data[0].dataPoints = cards.map(card => ({
+      label: card.name,
+      y: card.attack
+    }));
+    this.chartOptions2.data[1].dataPoints = cards.map(card => ({
+      label: card.name,
+      y: card.health
+    }));
+  }
+
+
+
+
+
+
 }
