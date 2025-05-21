@@ -75,15 +75,15 @@ export class StatistiquesComponent {
       startAngle: 45,
       indexLabel: "{name}: {y}",
       indexLabelPlacement: "inside",
-      // yValueFormatString: "#,###.##'%'",
-      // dataPoints: [
-      //   { y: 21.3, name: this.decks },
-      //   { y: 27.7, name: "Instagram" },
-      // ]
-      dataPoints: [cards.map(card => ({
-        name: card.name,
-        y: card.attack
-      })]
+      yValueFormatString: "#,###.##'%'",
+      dataPoints: [
+        { y: 21.3, name: this.decks },
+        { y: 27.7, name: "Instagram" },
+      ]
+      // dataPoints: [cards.map(card => ({
+      //   name: card.name,
+      //   y: card.attack
+      // })]
     }]
   }
   chartOptions2 = {
