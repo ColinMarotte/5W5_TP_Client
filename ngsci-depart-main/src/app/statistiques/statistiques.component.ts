@@ -18,13 +18,14 @@ import { NgFor } from '@angular/common';
 export class StatistiquesComponent {
   constructor(private apiService: ApiService, private deckservice: DeckService) { }
 
-  stats: any = null;
+  cartes: any = null;
+  statsdeckswl: any = null;
   deckStats: any = null;
   dataPoints: any = null;
   nbrVictoires: any;
   nbrDefaites: any;
 
-  decks: any[] = [];
+  decks: any  ;
   selectedDeckId: string = "starting";
 
 
@@ -33,13 +34,18 @@ export class StatistiquesComponent {
 
     if (playerId) {
 
-      this.stats = await this.apiService.getPlayerStats(playerId);
-      this.decks = await this.deckservice.getDecks();
-
-      this.nbrVictoires = this.stats.totalWins;
-      this.nbrDefaites = this.stats.totalLosses;
-      this.updateCharts(this.stats.cards);
-      // this.getChartInstance(this.stats);
+      console.log("here")
+      // this.stats = await this.apiService.getPlayerStats(playerId);
+      this.cartes = await this.apiService.getPlayersCards();
+      this.decks = await this.apiService.getDecksStatistiques(playerId);
+      console.log("here1")
+      console.log("decks", this.decks)
+      console.log("cartes" , this.cartes)
+      this.nbrVictoires = this.decks[0].wins;
+      this.nbrDefaites = this.decks[0].losses;
+      console.log("victoires",this.nbrVictoires)
+      console.log("victoires",this.nbrDefaites)
+      
     }
   }
 
@@ -50,6 +56,7 @@ export class StatistiquesComponent {
     if (!playerId) return;
 
     if (this.selectedDeckId === "Toutes les cartes") {
+      console.log("here")
       const stats = await this.apiService.getPlayerStats(playerId);
       this.nbrVictoires = stats.totalWins;
       this.nbrDefaites = stats.totalLosses;
@@ -77,7 +84,7 @@ export class StatistiquesComponent {
       indexLabelPlacement: "inside",
       yValueFormatString: "#,###.##'%'",
       dataPoints: [
-        { y: 21.3, name: this.decks },
+        { y: 21.3, name: "this.decks" },
         { y: 27.7, name: "Instagram" },
       ]
       // dataPoints: [cards.map(card => ({
