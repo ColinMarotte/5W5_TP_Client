@@ -10,15 +10,19 @@
 
 <div class="row">
     <div class="col">
-        <canvasjs-chart [options]="chartOptions3" [styles]="{width: '100%', height:'360px' }"></canvasjs-chart>
+        <canvasjs-chart [options]="chartOptions3" (chartInstance)="getChart3Instance($event)"
+            [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
     </div>
 
     <div class="col">
-        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+        <canvasjs-chart [options]="chartOptions" (chartInstance)="getChart1Instance($event)"
+            [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
     </div>
 </div>
+
 <br>
 
 <div>
-    <canvasjs-chart [options]="chartOptions2" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+    <canvasjs-chart [options]="chartOptions2" (chartInstance)="getChart2Instance($event)"
+        [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
 </div>

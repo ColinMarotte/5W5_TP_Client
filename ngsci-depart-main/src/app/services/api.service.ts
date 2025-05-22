@@ -40,7 +40,7 @@ export class ApiService {
     return result
   }
 
-  async getDecksStatistiques(userId : string): Promise<any> {
+  async getDecksStatistiques(userId: string): Promise<any> {
     let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Decks/GetPlayersDecksStatistiques/" + userId));
     console.log(x);
     return x;

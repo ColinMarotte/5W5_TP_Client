@@ -1,3 +1,5 @@
+
+import { Card, Rarity } from './../models/models';
 import { HttpService } from 'src/app/services/http.service';
 import { ApiService } from 'src/app/services/api.service';
 import { Component } from '@angular/core';
@@ -7,6 +9,7 @@ import { Title } from '@angular/platform-browser';
 import { DeckService } from '../services/deck.service';
 import { RouterModule } from '@angular/router';
 import { NgFor } from '@angular/common';
+import { Deck } from '../models/models';
 
 @Component({
   selector: 'app-statistiques',
@@ -18,14 +21,19 @@ import { NgFor } from '@angular/common';
 export class StatistiquesComponent {
   constructor(private apiService: ApiService, private deckservice: DeckService) { }
 
+  chart1: any;
+  chart2: any;
+  chart3: any;
+
   cartes: any = null;
   statsdeckswl: any = null;
   deckStats: any = null;
   dataPoints: any = null;
   nbrVictoires: any;
   nbrDefaites: any;
+  selectedDeck: Deck | null = null;
 
-  decks: any  ;
+  decks: any;
   selectedDeckId: string = "starting";
 
 
@@ -40,12 +48,15 @@ export class StatistiquesComponent {
       this.decks = await this.apiService.getDecksStatistiques(playerId);
       console.log("here1")
       console.log("decks", this.decks)
-      console.log("cartes" , this.cartes)
+      console.log("cartes", this.cartes)
       this.nbrVictoires = this.decks[0].wins;
       this.nbrDefaites = this.decks[0].losses;
-      console.log("victoires",this.nbrVictoires)
-      console.log("victoires",this.nbrDefaites)
-      
+      console.log("victoires", this.nbrVictoires)
+      console.log("victoires", this.nbrDefaites)
+      this.updateChart(this.cartes);
+      this.updateCharts(this.cartes);
+
+
     }
   }
 
@@ -55,21 +66,21 @@ export class StatistiquesComponent {
 
     if (!playerId) return;
 
-    if (this.selectedDeckId === "Toutes les cartes") {
-      console.log("here")
-      const stats = await this.apiService.getPlayerStats(playerId);
-      this.nbrVictoires = stats.totalWins;
-      this.nbrDefaites = stats.totalLosses;
-      this.updateCharts(stats.cards);
+    if (this.selectedDeckId === "all") {
+      this.nbrVictoires = this.decks.reduce((sum: number, d: any) => sum + d.wins, 0);
+      this.nbrDefaites = this.decks.reduce((sum: number, d: any) => sum + d.losses, 0);
+      this.updateChart(this.cartes);
+      this.updateCharts(this.cartes);
     } else {
       const deckStats = await this.apiService.getdeckStats(this.selectedDeckId);
-
-      this.nbrVictoires = deckStats.Wins;
+      this.nbrVictoires = deckStats.wins;
       this.nbrDefaites = deckStats.losses;
       const cards = deckStats.cards.map((ownedCard: any) => ownedCard.card);
+      this.updateChart(cards);
       this.updateCharts(cards);
     }
   }
+
 
   chartOptions = {
     animationEnabled: true,
@@ -82,136 +93,178 @@ export class StatistiquesComponent {
       startAngle: 45,
       indexLabel: "{name}: {y}",
       indexLabelPlacement: "inside",
-      yValueFormatString: "#,###.##'%'",
+      yValueFormatString: "#,###.##''",
+
       dataPoints: [
-        { y: 21.3, name: "this.decks" },
-        { y: 27.7, name: "Instagram" },
+        { y: 0, name: "Commune" },
+        { y: 0, name: "Rare" },
+        { y: 0, name: "Épique" },
+        { y: 0, name: "Légendaire" }
       ]
-      // dataPoints: [cards.map(card => ({
-      //   name: card.name,
-      //   y: card.attack
-      // })]
     }]
   }
+
   chartOptions2 = {
     animationEnabled: true,
-    title: {
-      text: "Attaque et Défense"
-    },
-    axisX: {
-      labelAngle: -90
-    },
-    axisY: {
-      title: "Nombre de cartes"
-    },
-    axisY2: {
-      // title: "million barrels/day"
-    },
-    toolTip: {
-      shared: true
-    },
+    title: { text: "Attaque et Défense" },
+    axisX: { labelAngle: -90 },
+    axisY: { title: "Valeur" },
+    toolTip: { shared: true },
     legend: {
       cursor: "pointer",
       itemclick: function (e: any) {
-        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-          e.dataSeries.visible = false;
-        }
-        else {
-          e.dataSeries.visible = true;
-        }
+        e.dataSeries.visible = !(e.dataSeries.visible ?? true);
         e.chart.render();
       }
     },
-    data: [{
-      type: "column",
-      // name: "Proven Oil Reserves (bn)",
-      legendText: "Attaque",
-      showInLegend: true,
-      dataPoints: [
-        { label: "Saudi", y: 262 },
-        { label: "Venezuela", y: 211 },
-        { label: "Canada", y: 175 },
-        { label: "Iran", y: 137 },
-        { label: "Iraq", y: 115 },
-      ]
-    }, {
-      type: "column",
-      // name: "Oil Production (million/day)",
-      legendText: "Défense",
-      axisYType: "secondary",
-      showInLegend: true,
-      dataPoints: [
-        { label: "Saudi", y: 11.15 },
-        { label: "Venezuela", y: 2.5 },
-        { label: "Canada", y: 3.6 },
-        { label: "Iran", y: 4.2 },
-        { label: "Iraq", y: 2.6 },
-      ]
-    }]
-
-  }
+    data: [
+      { type: "column", legendText: "Attaque", showInLegend: true, dataPoints: [] },
+      { type: "column", legendText: "Défense", showInLegend: true, axisYType: "secondary", dataPoints: [] }
+    ]
+  };
 
   chartOptions3 = {
-    // backgroundColor: "#fffff",
-    title: {
-      text: "Coût en mana"
-    },
     animationEnabled: true,
-    axisY: {
-      includeZero: true,
-      // suffix: "K",
-      title: "Nombre de cartes"
-    },
-    axisX: {
-      title: "Mana"
-    },
-    data: [{
-      type: "bar",
-      indexLabel: "{y}",
-      yValueFormatString: "#,###K",
-      dataPoints: [
-        { label: "Twitter", y: 1 },
-        { label: "Facebook", y: 1 }
-      ]
-    }]
+    title: { text: "Coût en mana" },
+    axisY: { includeZero: true, title: "Nombre de cartes" },
+    axisX: { title: "Mana" },
+    data: [
+      { type: "bar", indexLabel: "{y}", dataPoints: [] }
+    ]
+  };
+
+  getChart1Instance(chart: any) {
+    this.chart1 = chart;
   }
 
-  //chatgpt
-  updateCharts(cards: any[]) {
-    // ---- Graphique coût en mana ----
+  getChart2Instance(chart: any) {
+    this.chart2 = chart;
+  }
+
+  getChart3Instance(chart: any) {
+    this.chart3 = chart;
+  }
+
+
+  updateCharts(cards: any[]): void {
+    // --- Graphique coût en mana ---
     const manaMap: { [key: number]: number } = {};
     cards.forEach(card => {
       manaMap[card.cost] = (manaMap[card.cost] || 0) + 1;
     });
-    this.chartOptions3.data[0].dataPoints = Object.entries(manaMap).map(([mana, count]) => ({
-      label: mana,
-      y: count
-    }));
 
-    // ---- Graphique rareté ----
-    const rareteMap: { [key: string]: number } = {};
-    cards.forEach(card => {
-      rareteMap[card.rarity] = (rareteMap[card.rarity] || 0) + 1;
-    });
-    this.chartOptions.data[0].dataPoints = Object.entries(rareteMap).map(([rarity, count]) => ({
-      name: rarity,
-      y: count
-    }));
+    if (this.chart3) {
+      this.chart3.options.data[0].dataPoints = Object.entries(manaMap).map(([mana, count]) => ({
+        label: mana,
+        y: count
+      }));
+      this.chart3.render();
+    }
 
-    // ---- Graphique attaque / défense ----
-    this.chartOptions2.data[0].dataPoints = cards.map(card => ({
-      label: card.name,
-      y: card.attack
-    }));
-    this.chartOptions2.data[1].dataPoints = cards.map(card => ({
-      label: card.name,
-      y: card.health
-    }));
+    // --- Graphique attaque / défense ---
+    if (this.chart2) {
+      this.chart2.options.data[0].dataPoints = cards.map(card => ({
+        label: card.name,
+        y: card.attack
+      }));
+      this.chart2.options.data[1].dataPoints = cards.map(card => ({
+        label: card.name,
+        y: card.health
+      }));
+      this.chart2.render();
+    }
   }
 
 
+  updateChart(cards: any[]): void {
+    if (!this.chart1) return;
 
+    const rarityGroups: Record<string, number> = {
+      Commune: 0,
+      Rare: 0,
+      Épique: 0,
+      Légendaire: 0
+    };
 
+    cards.forEach(card => {
+      switch (card.rarity) {
+        case Rarity.Commmon:
+          rarityGroups["Commune"]++; break;
+        case Rarity.Rare:
+          rarityGroups["Rare"]++; break;
+        case Rarity.Epic:
+          rarityGroups["Épique"]++; break;
+        case Rarity.Legendary:
+          rarityGroups["Légendaire"]++; break;
+      }
+    });
 
+    const newDataPoints = Object.entries(rarityGroups)
+      .filter(([_, count]) => count > 0)
+      .map(([name, y]) => ({
+        name,
+        y
+      }));
 
+    this.chart1.options.data[0].dataPoints = newDataPoints;
+
+    this.chart1.render();
+  }
+
+  updateRarityChart(): void {
+    if (!this.chart1) return;
+
+    const cardsToDisplay = this.selectedDeck
+      ? this.selectedDeck.deckOwnedCards
+      : this.cartes;
+
+    const rarityGroups: Record<string, { count: number, names: string[] }> = {
+      Commune: { count: 0, names: [] },
+      Rare: { count: 0, names: [] },
+      Épique: { count: 0, names: [] },
+      Légendaire: { count: 0, names: [] }
+    };
+
+    cardsToDisplay.forEach((card: any) => {
+      let rarityLabel = "";
+      switch (card.rarity) {
+        case Rarity.Commmon: rarityLabel = "Commune"; break;
+        case Rarity.Rare: rarityLabel = "Rare"; break;
+        case Rarity.Epic: rarityLabel = "Épique"; break;
+        case Rarity.Legendary: rarityLabel = "Légendaire"; break;
+      }
+
+      if (rarityLabel && rarityGroups[rarityLabel]) {
+        rarityGroups[rarityLabel].count++;
+        rarityGroups[rarityLabel].names.push(card.name);
+      }
+    });
+
+    const dataPoints = Object.entries(rarityGroups)
+      .filter(([_, group]) => group.count > 0)
+      .map(([rarity, group]) => ({
+        label: rarity,
+        y: group.count,
+        toolTipContent: `<b>${rarity}</b><br/>${group.count} carte(s):<br/>${group.names.join('<br/>')}`
+      }));
+
+    this.chart1.options = {
+      animationEnabled: true,
+      theme: "light2",
+      title: {
+        text: "Répartition par rareté",
+        fontSize: 20
+      },
+      data: [{
+        type: "pie",
+        startAngle: 240,
+        yValueFormatString: "## cartes",
+        indexLabel: "{label} - {y}",
+        toolTipContent: "{toolTipContent}",
+        dataPoints: dataPoints
+      }]
+    };
+
+    this.chart1.render();
+  }
 }
