@@ -40,6 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage() {
     if (this.message != "") {
       this.matchService.sendMessage(this.message);
+      this.message = "";
     }
   }
 

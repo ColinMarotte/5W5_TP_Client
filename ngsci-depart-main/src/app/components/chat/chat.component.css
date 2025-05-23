@@ -4,7 +4,6 @@
     color: black;
     display: flex;
     flex-direction: column;
-    z-index: 1000;
 }
 
 .messages {
@@ -21,4 +20,10 @@
 .form {
     margin-top: auto;
     padding: 5px;
+}
+
+.small-btn {
+    padding: 0px;
+    font-size: 0.75rem;
+    height: 30px;
 }

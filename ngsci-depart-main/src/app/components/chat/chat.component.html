@@ -7,8 +7,14 @@
   </div>
   <div class="form">
     <form (submit)="sendMessage()">
-      <input matInput type="text" [(ngModel)]="message" name="message">
-      <button mat-raised-button color="primary">Envoyer</button>
+      <div class="row align-items-center g-1">
+        <div class="col">
+          <input matInput class="w-100" type="text" [(ngModel)]="message" name="message" placeholder="Message">
+        </div>
+        <div class="col-auto">
+          <button mat-raised-button color="primary" class="small-btn">Envoyer</button>
+        </div>
+      </div>
     </form>
   </div>
 </div>
