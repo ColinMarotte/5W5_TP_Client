@@ -10,6 +10,7 @@ import { DeckService } from '../services/deck.service';
 import { RouterModule } from '@angular/router';
 import { NgFor } from '@angular/common';
 import { Deck } from '../models/models';
+import { MatchService } from '../services/match.service';
 
 @Component({
   selector: 'app-statistiques',
@@ -19,7 +20,7 @@ import { Deck } from '../models/models';
   styleUrl: './statistiques.component.css'
 })
 export class StatistiquesComponent {
-  constructor(private apiService: ApiService, private deckservice: DeckService) { }
+  constructor(private apiService: ApiService, private deckservice: DeckService, private matchService: MatchService) { }
 
   chart1: any;
   chart2: any;
@@ -58,7 +59,23 @@ export class StatistiquesComponent {
 
 
     }
+    this.matchService.statsUpdated$.subscribe(() => {
+      const playerId = sessionStorage.getItem("playerId");
+      if (playerId) this.chargerStats(playerId);
+    });
   }
+
+  async chargerStats(playerId: string) {
+    this.cartes = await this.apiService.getPlayersCards();
+    this.decks = await this.apiService.getDecksStatistiques(playerId);
+    const stats = await this.apiService.getPlayerStats(playerId);
+
+    this.nbrVictoires = stats.totalWins;
+    this.nbrDefaites = stats.totalLosses;
+    this.updateChart(stats.cards);
+    this.updateCharts(stats.cards);
+  }
+
 
   async onDeckChange(event: any) {
     this.selectedDeckId = event.target.value;

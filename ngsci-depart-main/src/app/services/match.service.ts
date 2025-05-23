@@ -7,6 +7,7 @@ import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subject } from 'rxjs';
+import { ApiService } from './api.service';
 
 const hubUrl = 'https://localhost:7179/matchHub';
 
@@ -47,7 +48,12 @@ export class MatchService {
   // powerAnimate$ = this.powerAnimateSource.asObservable();
   private cardAnimateSource = new Subject<number>();
   cardAnimate$ = this.cardAnimateSource.asObservable();
-  constructor() {}
+
+  private statsUpdatedSubject = new Subject<void>();
+  public statsUpdated$ = this.statsUpdatedSubject.asObservable();
+
+
+  constructor(private apiService: ApiService) { }
 
   public async seDeconnecterDuHub() {
     await this.hubConnection
@@ -252,7 +258,7 @@ export class MatchService {
 
       //   break;
       // }
-      case 'Attack':{
+      case 'Attack': {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
           let playableCard = playerData.battleField[event.battlefieldIndex];
@@ -292,7 +298,16 @@ export class MatchService {
           this.MoneyReceivedSubject.next(event.moneyReceivedByLoser);
           console.log('Défaite pour le joueur ' + this.currentPlayerId);
         }
-
+        const playerId = sessionStorage.getItem("playerId");
+        if (playerId) {
+          try {
+            await this.apiService.getPlayerStats(playerId);
+            await this.apiService.getDecksStatistiques(playerId);
+            this.statsUpdatedSubject.next();
+          } catch (e) {
+            console.error("Erreur en rechargeant les statistiques après la partie :", e);
+          }
+        }
         break;
       }
       case 'PlayCard': {
