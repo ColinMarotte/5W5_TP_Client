@@ -1,11 +1,14 @@
 <div class="chat">
   <div class="messages">
-    messages
+    <p *ngFor="let message of messages" style="margin-bottom: 6px;">{{message}}</p>
   </div>
   <div class="users">
-    users
+    <p *ngFor="let user of usersList" style="margin-bottom: 6px;">{{user}}</p>
   </div>
   <div class="form">
-    mini formulaire
+    <form (submit)="sendMessage()">
+      <input matInput type="text" [(ngModel)]="message" name="message">
+      <button mat-raised-button color="primary">Envoyer</button>
+    </form>
   </div>
 </div>

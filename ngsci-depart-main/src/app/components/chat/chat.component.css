@@ -1,9 +1,10 @@
 .chat {
-    height: 80%;
+    height: 67%;
     background-color: white;
     color: black;
     display: flex;
     flex-direction: column;
+    z-index: 1000;
 }
 
 .messages {

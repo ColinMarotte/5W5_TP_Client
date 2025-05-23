@@ -47,7 +47,11 @@ export class MatchService {
   // powerAnimate$ = this.powerAnimateSource.asObservable();
   private cardAnimateSource = new Subject<number>();
   cardAnimate$ = this.cardAnimateSource.asObservable();
-  constructor() {}
+
+  private messageSubject = new Subject<string>();
+  public message$ = this.messageSubject.asObservable();
+
+  constructor() { }
 
   public async seDeconnecterDuHub() {
     await this.hubConnection
@@ -102,6 +106,11 @@ export class MatchService {
     await this.hubConnection.on('PlayCardEvent', (data) => {
       console.log('PlayCardEvent:', data);
       this.applyEvent(data);
+    });
+
+    await this.hubConnection.on('NewMessage', (data) => {
+      console.log('NewMessage:', data);
+      this.messageSubject.next(data);
     });
 
     await this.hubConnection
@@ -252,7 +261,7 @@ export class MatchService {
 
       //   break;
       // }
-      case 'Attack':{
+      case 'Attack': {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
           let playableCard = playerData.battleField[event.battlefieldIndex];
@@ -448,5 +457,15 @@ export class MatchService {
     await this.cardAnimateSource.next(playableCardId);
     await this.powerAnimateSource.next(powerIndex);
     await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  sendMessage(message: string) {
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    this.hubConnection.invoke('SendMessage', this.match!.id, message);
+    console.log('invoked SendMessage!')
   }
 }
