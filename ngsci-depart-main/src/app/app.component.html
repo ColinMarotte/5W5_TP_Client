@@ -14,6 +14,9 @@
   @if (isLogged()) {
   <button mat-raised-button [routerLink]="['/packs']" style="margin-left: 20px;">Paquets</button>
   }
+  @if (isLogged()) {
+  <button mat-raised-button [routerLink]="['/statistiques']" style="margin-left: 20px;">Stats</button>
+  }
   <span style="flex: 1 1 auto;"></span>
   <!--
   @if (isLogged()) {

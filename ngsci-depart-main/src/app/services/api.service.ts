@@ -28,4 +28,21 @@ export class ApiService {
     console.log("result2")
     return result;
   }
+
+  async getPlayerStats(playerId: string): Promise<any> {
+    let result = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Statistiques/GetPlayerStatistiques/" + playerId));
+
+    return result
+  }
+
+  async getdeckStats(deckid: string): Promise<any> {
+    let result = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Statistiques/GetDeckStatistiques/" + deckid));
+    return result
+  }
+
+  async getDecksStatistiques(userId: string): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Decks/GetPlayersDecksStatistiques/" + userId));
+    console.log(x);
+    return x;
+  }
 }

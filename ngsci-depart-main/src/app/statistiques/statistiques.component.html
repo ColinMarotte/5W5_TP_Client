@@ -1,0 +1,28 @@
+<label for="deckSelect">Choisissez un Deck</label>
+
+<select id="deckSelect" class="custom-select" (change)="onDeckChange($event)">
+    <option value="all">Toutes les cartes</option>
+    <option *ngFor="let deck of decks" [value]="deck.id">{{ deck.name }}</option>
+</select>
+<br><br>
+<p>Nombre de victoires : {{nbrVictoires}}</p>
+<p>Nombre de défaites : {{nbrDefaites}}</p>
+
+<div class="row">
+    <div class="col">
+        <canvasjs-chart [options]="chartOptions3" (chartInstance)="getChart3Instance($event)"
+            [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+    </div>
+
+    <div class="col">
+        <canvasjs-chart [options]="chartOptions" (chartInstance)="getChart1Instance($event)"
+            [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+    </div>
+</div>
+
+<br>
+
+<div>
+    <canvasjs-chart [options]="chartOptions2" (chartInstance)="getChart2Instance($event)"
+        [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+</div>
