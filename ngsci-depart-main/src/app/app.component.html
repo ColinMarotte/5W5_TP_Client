@@ -3,16 +3,15 @@
   <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
   <a routerLink="/"><span>Super Cartes Infinies</span></a>
   @if (isLogged()) {
-  <button mat-raised-button [routerLink]="['/mescartes']" style="margin-left: 20px;">Mes cartes</button>
-  }
-  @if (isLogged()) {
-  <button mat-raised-button [routerLink]="['/magasin']" style="margin-left: 20px;">Magasin</button>
-  }
-  @if (isLogged()) {
-  <button mat-raised-button [routerLink]="['/decks']" style="margin-left: 20px;">Decks</button>
-  }
-  @if (isLogged()) {
-  <button mat-raised-button [routerLink]="['/packs']" style="margin-left: 20px;">Paquets</button>
+    <button mat-raised-button [routerLink]="['/mescartes']" style="margin-left: 20px;">Mes cartes</button>
+  
+    <button mat-raised-button [routerLink]="['/magasin']" style="margin-left: 20px;">Magasin</button>
+  
+    <button mat-raised-button [routerLink]="['/decks']" style="margin-left: 20px;">Decks</button>
+  
+    <button mat-raised-button [routerLink]="['/packs']" style="margin-left: 20px;">Paquets</button>
+
+    <button mat-raised-button color="accent" [routerLink]="['/games']" style="margin-left: 20px;">Parties</button>
   }
   <span style="flex: 1 1 auto;"></span>
   <!--
@@ -20,18 +19,16 @@
   <button style="margin-right: 20px;" mat-raised-button (click)="test()">Test</button>
   }-->
   @if(isLogged()){
-  <h2 style="margin-right: 20px;">Votre solde : {{solde ? solde : 0}} &#8377;</h2>
-  }
-  @if (isLogged()) {
-  <mat-chip style="margin-right: 20px;">
-    {{getUsername()}}
-  </mat-chip>
-  }
-  @if (isLogged()) {
-  <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
+    <h2 style="margin-right: 20px;">Votre solde : {{solde ? solde : 0}} &#8377;</h2>
+  
+    <mat-chip style="margin-right: 20px;">
+      {{getUsername()}}
+    </mat-chip>
+  
+    <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
   }
   @if (isLogged() == false) {
-  <button mat-raised-button color="warn" (click)="login()">Connexion</button>
+    <button mat-raised-button color="warn" (click)="login()">Connexion</button>
   }
 </mat-toolbar>
 

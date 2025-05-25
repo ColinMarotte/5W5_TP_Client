@@ -25,3 +25,11 @@ export class DeckConfigDTO {
         public nbCardsMaxInDeck: number
     ) { }
 }
+
+export class MatchInfoDTO {
+    constructor(
+        public matchId: number,
+        public playerAName: string,
+        public playerBName: string
+    ) { }
+}

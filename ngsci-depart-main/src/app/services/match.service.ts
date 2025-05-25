@@ -7,6 +7,7 @@ import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subject } from 'rxjs';
+import { MatchInfoDTO } from '../models/dtos';
 
 const hubUrl = 'https://localhost:7179/matchHub';
 
@@ -50,6 +51,9 @@ export class MatchService {
 
   private messageSubject = new Subject<string>();
   public message$ = this.messageSubject.asObservable();
+
+  private currentMatchesSubject = new Subject<MatchInfoDTO[]>();
+  public currentMatches$ = this.currentMatchesSubject.asObservable();
 
   constructor() { }
 
@@ -109,8 +113,13 @@ export class MatchService {
     });
 
     await this.hubConnection.on('NewMessage', (data) => {
-      console.log('NewMessage:', data);
+      console.log('NewMessage: ', data);
       this.messageSubject.next(data);
+    });
+
+    await this.hubConnection.on('CurrentMatches', (data) => {
+      console.log('Current matches: ', data);
+      this.currentMatchesSubject.next(data);
     });
 
     await this.hubConnection
@@ -466,6 +475,18 @@ export class MatchService {
     }
 
     this.hubConnection.invoke('SendMessage', this.match!.id, message);
-    console.log('invoked SendMessage!')
+    console.log('invoked SendMessage')
+  }
+
+  async getCurrentMatches() {
+    await this.connectToHub();
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    this.hubConnection.invoke('GetCurrentMatches');
+    console.log('invoked GetCurrentMatches')
   }
 }

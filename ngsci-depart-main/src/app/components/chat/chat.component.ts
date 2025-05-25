@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private messageSubscription!: Subscription;
 
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+
   message: string = "";
 
   messages: string[] = [];
@@ -29,7 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.messageSubscription = this.matchService.message$.subscribe(newMessage => {
       console.log('Message reçu :', newMessage);
-      this.messages.push(newMessage);
+      this.showNewMessage(newMessage);
     });
   }
 
@@ -44,4 +46,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  showNewMessage(newMessage: string) {
+    this.messages.push(newMessage);
+    
+    setTimeout(() => {
+      const chat = this.messagesContainer.nativeElement;
+      chat.scrollTop = chat.scrollHeight;
+    }, 0);
+  }
 }
