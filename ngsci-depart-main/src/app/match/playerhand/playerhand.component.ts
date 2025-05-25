@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Card, PlayableCard } from 'src/app/models/models';
 import { CardComponent } from '../../components/card/card.component';
 import { MatchService } from 'src/app/services/match.service';
 import { transition, trigger, useAnimation } from '@angular/animations';
 import { flip } from 'ng-animate';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-playerhand',
@@ -19,20 +20,36 @@ import { flip } from 'ng-animate';
     ]),
   ]
 })
-export class PlayerhandComponent implements OnInit {
+export class PlayerhandComponent implements OnInit, OnDestroy {
   public playerMana: number = 0; // Mana du joueur
 
   @Input() cards: PlayableCard[] = [];
   mavar = 0;
   trigger = false;
+
+  private spectatorSubscription: Subscription | null = null;
+
+  spectating: boolean | null = null;
+
   constructor(public matchService: MatchService) { }
 
   ngOnInit() {
-    this.playerMana = this.matchService.playerData?.mana ?? 0; // Récupérer la mana du joueur
+    this.spectatorSubscription = this.matchService.spectating$.subscribe(value => {
+      this.spectating = value;
+    });
 
+    this.playerMana = this.matchService.playerData?.mana ?? 0; // Récupérer la mana du joueur
+  }
+
+  ngOnDestroy(): void {
+    this.spectatorSubscription?.unsubscribe();
   }
 
   async click(playableCard: PlayableCard) {
+    if (this.spectating) {
+      return;
+    }
+
     let player = this.matchService.playerData;
     if (!player) {
       console.log('Erreur: Impossible de trouver les données du joueur.');

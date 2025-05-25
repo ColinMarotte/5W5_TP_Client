@@ -55,6 +55,9 @@ export class MatchService {
   private currentMatchesSubject = new Subject<MatchInfoDTO[]>();
   public currentMatches$ = this.currentMatchesSubject.asObservable();
 
+  private spectatingVariable = new BehaviorSubject<any>(undefined);
+  public spectating$ = this.spectatingVariable.asObservable();
+
   constructor() { }
 
   public async seDeconnecterDuHub() {
@@ -82,7 +85,8 @@ export class MatchService {
       if (playerIdStorage) {
         this.currentPlayerId = parseInt(playerIdStorage);
       }
-      this.playMatch(data, this.currentPlayerId);
+      this.spectatingVariable.next(false);
+      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
     });
 
     await this.hubConnection.on('StartMatchEvent', (data) => {
@@ -122,6 +126,22 @@ export class MatchService {
       this.currentMatchesSubject.next(data);
     });
 
+    await this.hubConnection.on('SpectatingMatchData', (data) => {
+      console.log('SpectatingMatchData', data);
+      this.joiningMatchSubject.next(data);
+      let playerIdStorage: string | null = sessionStorage.getItem('playerId');
+      if (playerIdStorage) {
+        this.currentPlayerId = parseInt(playerIdStorage);
+      }
+      this.spectatingVariable.next(true);
+      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+    });
+
+    await this.hubConnection.on('Spectator', (data) => {
+      console.log('Spectator: ', data);
+      this.spectatingVariable.next(data);
+    });
+
     await this.hubConnection
       .start()
       .then(() => {
@@ -141,7 +161,9 @@ export class MatchService {
   }
 
   public async joinMatch() {
-    await this.connectToHub();
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
 
     if (!this.hubConnection) {
       console.error("La connexion SignalR n'est pas établie.");
@@ -203,14 +225,14 @@ export class MatchService {
     this.perdant = -1;
   }
 
-  playMatch(matchData: MatchData, currentPlayerId: number) {
+  playMatch(matchData: MatchData, currentPlayerId: number, spectator: boolean) {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
     this.match.playerDataA.battleField.sort((a) => a.index);
     this.match.playerDataB.battleField.sort((a) => a.index).reverse;
 
-    if (this.match.playerDataA.playerId == this.currentPlayerId) {
+    if (this.match.playerDataA.playerId == this.currentPlayerId || spectator) {
       this.playerData = this.match.playerDataA!;
       this.playerData.playerName = matchData.playerA.name;
       this.adversaryData = this.match.playerDataB!;
@@ -468,7 +490,7 @@ export class MatchService {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
-  sendMessage(message: string) {
+  public sendMessage(message: string) {
     if (!this.hubConnection) {
       console.error("La connexion SignalR n'est pas établie.");
       return;
@@ -479,7 +501,9 @@ export class MatchService {
   }
 
   async getCurrentMatches() {
-    await this.connectToHub();
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
 
     if (!this.hubConnection) {
       console.error("La connexion SignalR n'est pas établie.");
@@ -488,5 +512,33 @@ export class MatchService {
 
     this.hubConnection.invoke('GetCurrentMatches');
     console.log('invoked GetCurrentMatches')
+  }
+
+  public async spectateMatch(matchId: number) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    await this.hubConnection.invoke('SpectateMatch', matchId);
+    console.log('invoked SpectateMatch');
+  }
+
+  public async isPlayerSpectator(matchId: number) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected || !this.hubConnection) {
+      await this.connectToHub();
+    }
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    await this.hubConnection.invoke('IsPlayerSpecator', matchId);
+    console.log('invoked IsPlayerSpecator');
   }
 }

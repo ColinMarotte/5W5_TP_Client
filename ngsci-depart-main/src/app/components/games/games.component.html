@@ -22,7 +22,7 @@
         {{game.playerBName}}
       </div>
       <div class="col">
-        <button mat-raised-button color="accent">Regarder</button>
+        <button mat-raised-button color="accent" (click)="joinMatch(game.matchId)">Regarder</button>
       </div>
     </div>
   }
