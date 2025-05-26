@@ -1,7 +1,7 @@
 import { AppComponent } from './../app.component';
 import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { PlayerData } from '../models/models';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Match } from '../models/models';
 import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
@@ -67,7 +67,7 @@ export class MatchService {
   private statsUpdatedSubject = new Subject<void>();
   public statsUpdated$ = this.statsUpdatedSubject.asObservable();
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private zone: NgZone) { }
 
   public async seDeconnecterDuHub() {
     await this.hubConnection
@@ -89,64 +89,84 @@ export class MatchService {
 
     await this.hubConnection.on('JoiningMatchData', (data) => {
       console.log('JoiningMatchData', data);
-      this.joiningMatchSubject.next(data);
-      let playerIdStorage: string | null = sessionStorage.getItem('playerId');
-      if (playerIdStorage) {
-        this.currentPlayerId = parseInt(playerIdStorage);
-      }
-      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+      this.zone.run(() =>{
+        this.joiningMatchSubject.next(data);
+        let playerIdStorage: string | null = sessionStorage.getItem('playerId');
+        if (playerIdStorage) {
+          this.currentPlayerId = parseInt(playerIdStorage);
+        }
+        this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+      });
     });
 
     await this.hubConnection.on('StartMatchEvent', (data) => {
-      console.log('startMatchEvent:', data);
-      this.applyEvent(data);
+      this.zone.run(() =>{
+        console.log('startMatchEvent:', data);
+        this.applyEvent(data);
+      });
     });
 
     await this.hubConnection.on('EndTurnEvent', (data) => {
-      this.applyEvent(data);
-      console.log('endturnevent:', data);
+      this.zone.run(() =>{
+        this.applyEvent(data);
+        console.log('endturnevent:', data);
+      });
     });
 
     await this.hubConnection.on('SurrenderEvent', (data) => {
-      console.log('SurrenderEvent:', data);
-      this.applyEvent(data);
+      this.zone.run(() => {
+        console.log('SurrenderEvent:', data);
+        this.applyEvent(data);
+      });
     });
 
     await this.hubConnection.on('StoppedJoiningStatus', (data) => {
-      console.log(
-        data ? 'Stopped joining the match' : 'Failed to stop joining the match'
-      );
-      this.stoppedJoiningMatch = data;
+      this.zone.run(() =>{
+        console.log(
+          data ? 'Stopped joining the match' : 'Failed to stop joining the match'
+        );
+        this.stoppedJoiningMatch = data;
+      });
     });
 
     await this.hubConnection.on('PlayCardEvent', (data) => {
-      console.log('PlayCardEvent:', data);
-      this.applyEvent(data);
+      this.zone.run(() =>{
+        console.log('PlayCardEvent:', data);
+        this.applyEvent(data);
+      });
     });
 
     await this.hubConnection.on('NewMessage', (data) => {
-      console.log('NewMessage: ', data);
-      this.messageSubject.next(data);
+      this.zone.run(() => {
+        console.log('NewMessage: ', data);
+        this.messageSubject.next(data);
+      });
     });
 
     await this.hubConnection.on('CurrentMatches', (data) => {
-      console.log('Current matches: ', data);
-      this.currentMatchesSubject.next(data);
+      this.zone.run(() => {
+        console.log('Current matches: ', data);
+        this.currentMatchesSubject.next(data);
+      });
     });
 
     await this.hubConnection.on('SpectatingMatchData', (data) => {
-      console.log('SpectatingMatchData', data);
-      this.joiningMatchSubject.next(data);
-      let playerIdStorage: string | null = sessionStorage.getItem('playerId');
-      if (playerIdStorage) {
-        this.currentPlayerId = parseInt(playerIdStorage);
-      }
-      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+      this.zone.run(() => {
+        console.log('SpectatingMatchData', data);
+        this.joiningMatchSubject.next(data);
+        let playerIdStorage: string | null = sessionStorage.getItem('playerId');
+        if (playerIdStorage) {
+          this.currentPlayerId = parseInt(playerIdStorage);
+        }
+        this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+      });
     });
 
     await this.hubConnection.on('Spectator', (data) => {
-      console.log('Spectator: ', data);
-      this.spectatingVariable.next(data);
+      this.zone.run(() => {
+        console.log('Spectator: ', data);
+        this.spectatingVariable.next(data);
+      });
     });
 
     await this.hubConnection
