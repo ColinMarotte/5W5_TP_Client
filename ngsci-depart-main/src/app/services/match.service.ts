@@ -34,6 +34,8 @@ export class MatchService {
 
   stoppedJoiningMatch: boolean | undefined;
 
+  inGame: boolean = false;
+
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
 
@@ -85,7 +87,6 @@ export class MatchService {
       if (playerIdStorage) {
         this.currentPlayerId = parseInt(playerIdStorage);
       }
-      this.spectatingVariable.next(false);
       this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
     });
 
@@ -133,7 +134,6 @@ export class MatchService {
       if (playerIdStorage) {
         this.currentPlayerId = parseInt(playerIdStorage);
       }
-      this.spectatingVariable.next(true);
       this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
     });
 
@@ -151,6 +151,7 @@ export class MatchService {
   }
 
   public async stopJoiningMatch(): Promise<boolean> {
+    this.inGame = false;
     await this.hubConnection?.invoke('StopJoiningMatch');
 
     if (this.stoppedJoiningMatch) {
@@ -170,6 +171,7 @@ export class MatchService {
       return;
     }
 
+    this.inGame = true;
     await this.hubConnection.invoke('JoinMatch');
     console.log('invoked JoinMatch');
   }
@@ -223,6 +225,8 @@ export class MatchService {
     this.matchfini = false;
     this.victoire = false;
     this.perdant = -1;
+
+    this.inGame = false;
   }
 
   playMatch(matchData: MatchData, currentPlayerId: number, spectator: boolean) {
@@ -524,6 +528,7 @@ export class MatchService {
       return;
     }
 
+    this.inGame = true;
     await this.hubConnection.invoke('SpectateMatch', matchId);
     console.log('invoked SpectateMatch');
   }

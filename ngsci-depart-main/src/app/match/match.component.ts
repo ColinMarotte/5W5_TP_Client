@@ -62,9 +62,10 @@ export class MatchComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.MoneyreceivedSubscription?.unsubscribe();
     this.spectatorSubscription?.unsubscribe();
+    await this.matchService.seDeconnecterDuHub();
   }
 
   async endTurn() {
@@ -91,6 +92,11 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   async isPlayerSpectator() {
     await this.matchService.isPlayerSpectator(this.matchId);
+  }
+
+  async quitGame() {
+    this.matchService.clearMatch();
+    await this.router.navigate(['/games']);
   }
 
 }

@@ -32,10 +32,16 @@
 @if (matchService.playerData) {
 <div>
   <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
-  <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent"
+  @if (!spectating) {
+    <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent"
     style="margin-right: 20px;" (click)="endTurn()">Terminer</button>
   <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;"
     (click)="surrender()">Abandonner</button>
+  }
+  @if (spectating) {
+    <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;"
+    (click)="quitGame()">Quitter</button>
+  }
   <app-health [enemy]="true" [maxhealth]="matchService.adversaryData!.maxhealth"
     [health]="matchService.adversaryData!.health" [mana]="matchService.adversaryData!.mana"
     [playername]="matchService.adversaryData!.playerName"></app-health>
@@ -44,9 +50,16 @@
 </div>
 }
 
-
-<div class="loading-dialog" *ngIf="matchService.match?.isMatchCompleted" class="end">
-  <h1>{{ matchService.victoire ? 'Victoire!' : 'Défaite' }}</h1>
-  <h2>Montant reçu {{montantRecu}} &#8377;</h2>
-  <button mat-raised-button color="warn" (click)="endMatch()">Terminer la partie</button>
-</div>
+@if (!spectating) {
+  <div class="loading-dialog" *ngIf="matchService.match?.isMatchCompleted" class="end">
+    <h1>{{ matchService.victoire ? 'Victoire!' : 'Défaite' }}</h1>
+    <h2>Montant reçu {{montantRecu}} &#8377;</h2>
+    <button mat-raised-button color="warn" (click)="endMatch()">Terminer la partie</button>
+  </div>
+}
+@if (spectating) {
+  <div class="loading-dialog" *ngIf="matchService.match?.isMatchCompleted" class="end">
+    <h1>Partie terminée</h1>
+    <button mat-raised-button color="warn" (click)="quitGame()">Quitter</button>
+  </div>
+}
