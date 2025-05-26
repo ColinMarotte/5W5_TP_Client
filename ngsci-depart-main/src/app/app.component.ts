@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     //   this.getELO();
 
     // } );
-    //this.getELO();
+    this.getELO();
   }
 
   isLogged(): boolean {
@@ -73,11 +73,11 @@ export class AppComponent implements OnInit {
       this.solde = await this.httpService.getSolde();
     }
   }
-  // async getELO(){
-  //   if(this.isLogged()){
-  //     this.elo = await this.httpService.getELO();
-  //   }
-  // }
+  async getELO() {
+    if (this.isLogged()) {
+      this.elo = await this.httpService.getELO();
+    }
+  }
   logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("playerId");

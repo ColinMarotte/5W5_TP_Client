@@ -93,11 +93,11 @@ export class HttpService {
     console.log("solde", x);
     return x;
   }
-  // async getELO(): Promise<number> {
-  //   let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/ELO"));
-  //   console.log("ELO: ", x);
-  //   return x;
-  // }
+  async getELO(): Promise<number> {
+    let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/ELO"));
+    console.log("ELO: ", x);
+    return x;
+  }
 
   async getPlayerStats(playerId: string): Promise<any> {
     let result = await lastValueFrom(this.http.get<any>(domain + "api/Statistiques/GetPlayerStatistiques" + playerId));
