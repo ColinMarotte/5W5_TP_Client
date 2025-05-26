@@ -2,6 +2,7 @@ export interface Player {
     id: number;
     name: string;
     balance: number;
+    elo: number;
 }
 
 export interface Card {
@@ -21,6 +22,8 @@ export interface MatchData {
     playerA: Player;
     playerB: Player;
     winningPlayerId: number;
+    elo : number;
+    eloChanged: number;
 }
 
 export interface Match {

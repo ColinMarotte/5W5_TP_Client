@@ -29,14 +29,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 export class AppComponent implements OnInit {
   title = 'supercartesinfinies';
   solde: number = 0;
-
+  elo:number = 0;
   private MatchReveivedMoneySubscription: Subscription | null = null;
   private ConnectionReceivedMoeny: Subscription | null = null;
 
   constructor(public router: Router, public matchService: MatchService, public httpService: HttpService, public snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.getSolde();
+    // this.getSolde();
     this.ConnectionReceivedMoeny = this.httpService.MoneyReveiced$.subscribe(async (montantInital) => {
       if (montantInital) {
         this.solde = montantInital!;
@@ -51,7 +51,12 @@ export class AppComponent implements OnInit {
         sessionStorage.setItem("Solde", this.solde.toString());
       }
     });
-    this.solde = parseInt(sessionStorage.getItem("Solde")!)
+    this.solde = parseInt(sessionStorage.getItem("Solde")!);
+    // (async () => {
+    //   this.getELO();
+      
+    // } );
+    this.getELO();
   }
 
   isLogged(): boolean {
@@ -68,7 +73,11 @@ export class AppComponent implements OnInit {
       this.solde = await this.httpService.getSolde();
     }
   }
-
+  async getELO(){
+    if(this.isLogged()){
+      this.elo = await this.httpService.getELO();
+    }
+  }
   logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("playerId");

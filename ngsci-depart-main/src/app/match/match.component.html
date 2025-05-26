@@ -54,6 +54,7 @@
   <div class="loading-dialog" *ngIf="matchService.match?.isMatchCompleted" class="end">
     <h1>{{ matchService.victoire ? 'Victoire!' : 'Défaite' }}</h1>
     <h2>Montant reçu {{montantRecu}} &#8377;</h2>
+      <h2>{{ matchService.victoire ? 'Victoire ELO: ' + matchService.ELO + ' (+' + matchService.ELOChanged + ')' : 'Défaite ELO:' + matchService.ELO + ' (' + matchService.ELOChanged + ')' }}</h2>
     <button mat-raised-button color="warn" (click)="endMatch()">Terminer la partie</button>
   </div>
 }
