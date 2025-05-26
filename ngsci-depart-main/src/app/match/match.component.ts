@@ -81,7 +81,7 @@ export class MatchComponent implements OnInit, OnDestroy {
   async endMatch() {
     this.matchService.clearMatch();
     this.appComponent.getSolde();
-    this.appComponent.getELO();
+    //this.appComponent.getELO();
     await this.router.navigate(['/']);
   }
 
