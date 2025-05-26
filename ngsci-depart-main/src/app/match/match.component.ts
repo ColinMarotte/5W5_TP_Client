@@ -12,6 +12,7 @@ import { HealthComponent } from './health/health.component';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ChatComponent } from "../components/chat/chat.component";
 
 
 @Component({
@@ -19,16 +20,18 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css'],
   standalone: true,
-  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule]
+  imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent, CommonModule, ChatComponent]
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit, OnDestroy {
 
   matchId: number = 0;
   montantRecu = 0;
 
 
   private MoneyreceivedSubscription: Subscription | null = null;
+  private spectatorSubscription: Subscription | null = null;
 
+  spectating: boolean | null = null;
 
   constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, private appComponent: AppComponent) {
 
@@ -36,18 +39,37 @@ export class MatchComponent implements OnInit {
 
   async ngOnInit() {
     this.matchId = parseInt(this.route.snapshot.params["id"], 10);
+    this.isPlayerSpectator();
     let playerIdString: string | null = sessionStorage.getItem("playerId");
     let playerId: number | null = null;
     if (playerIdString) {
       playerId = parseInt(playerIdString);
     }
-    if (!this.matchService.match) {
-      this.matchService.joinMatch();
-    }
+
+    this.spectatorSubscription = this.matchService.spectating$.subscribe(value => {
+      if (value !== undefined && value !== null) {
+        this.spectating = value;
+        if (!this.matchService.match) {
+          if (this.spectating) {
+            this.matchService.spectateMatch(this.matchId);
+          } else {
+            this.matchService.joinMatch();
+          }
+        }
+      }
+    });
+
     this.MoneyreceivedSubscription = this.matchService.MoneyReveiced$.subscribe(async (montantRecu) => {
       this.montantRecu = montantRecu!
     });
   }
+
+  async ngOnDestroy() {
+    this.MoneyreceivedSubscription?.unsubscribe();
+    this.spectatorSubscription?.unsubscribe();
+    await this.matchService.seDeconnecterDuHub();
+  }
+
   async endTurn() {
     await this.matchService.endTurn();
   }
@@ -69,6 +91,15 @@ export class MatchComponent implements OnInit {
 
   isMatchCompleted(): boolean {
     return this.matchService.matchData?.match.isMatchCompleted ?? false;
+  }
+
+  async isPlayerSpectator() {
+    await this.matchService.isPlayerSpectator(this.matchId);
+  }
+
+  async quitGame() {
+    this.matchService.clearMatch();
+    await this.router.navigate(['/games']);
   }
 
 }

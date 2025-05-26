@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <h1>Parties en cours</h1>
+
+  @if (currentGames.length > 0) {
+    <div class="row font-weight-bold align-items-center">
+      <div class="col">
+        Joueur A
+      </div>
+      <div class="col">
+        Joueur B
+      </div>
+      <div class="col">
+        Action
+      </div>
+    </div>
+
+    <div class="row align-items-center" *ngFor="let game of currentGames">
+      <div class="col">
+        {{game.playerAName}}
+      </div>
+      <div class="col">
+        {{game.playerBName}}
+      </div>
+      <div class="col">
+        <button mat-raised-button color="accent" (click)="joinMatch(game.matchId)">Regarder</button>
+      </div>
+    </div>
+  }
+
+  <div *ngIf="currentGames.length == 0">
+    Il n'y a aucune partie présentement, commencez-en une dès maintenant!
+  </div>
+</div>

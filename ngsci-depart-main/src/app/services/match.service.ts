@@ -7,6 +7,8 @@ import { HubConnection } from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subject } from 'rxjs';
+import { MatchInfoDTO } from '../models/dtos';
+import { ApiService } from './api.service';
 
 const hubUrl = 'https://localhost:7179/matchHub';
 
@@ -36,6 +38,8 @@ export class MatchService {
 
   stoppedJoiningMatch: boolean | undefined;
 
+  inGame: boolean = false;
+
   private joiningMatchSubject = new BehaviorSubject<MatchData | null>(null);
   public joiningMatch$ = this.joiningMatchSubject.asObservable();
 
@@ -50,7 +54,20 @@ export class MatchService {
   // powerAnimate$ = this.powerAnimateSource.asObservable();
   private cardAnimateSource = new Subject<number>();
   cardAnimate$ = this.cardAnimateSource.asObservable();
-  constructor() {}
+
+  private messageSubject = new Subject<string>();
+  public message$ = this.messageSubject.asObservable();
+
+  private currentMatchesSubject = new Subject<MatchInfoDTO[]>();
+  public currentMatches$ = this.currentMatchesSubject.asObservable();
+
+  private spectatingVariable = new BehaviorSubject<any>(undefined);
+  public spectating$ = this.spectatingVariable.asObservable();
+
+  private statsUpdatedSubject = new Subject<void>();
+  public statsUpdated$ = this.statsUpdatedSubject.asObservable();
+
+  constructor(private apiService: ApiService) { }
 
   public async seDeconnecterDuHub() {
     await this.hubConnection
@@ -77,7 +94,7 @@ export class MatchService {
       if (playerIdStorage) {
         this.currentPlayerId = parseInt(playerIdStorage);
       }
-      this.playMatch(data, this.currentPlayerId);
+      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
     });
 
     await this.hubConnection.on('StartMatchEvent', (data) => {
@@ -107,6 +124,31 @@ export class MatchService {
       this.applyEvent(data);
     });
 
+    await this.hubConnection.on('NewMessage', (data) => {
+      console.log('NewMessage: ', data);
+      this.messageSubject.next(data);
+    });
+
+    await this.hubConnection.on('CurrentMatches', (data) => {
+      console.log('Current matches: ', data);
+      this.currentMatchesSubject.next(data);
+    });
+
+    await this.hubConnection.on('SpectatingMatchData', (data) => {
+      console.log('SpectatingMatchData', data);
+      this.joiningMatchSubject.next(data);
+      let playerIdStorage: string | null = sessionStorage.getItem('playerId');
+      if (playerIdStorage) {
+        this.currentPlayerId = parseInt(playerIdStorage);
+      }
+      this.playMatch(data, this.currentPlayerId, this.spectatingVariable.getValue());
+    });
+
+    await this.hubConnection.on('Spectator', (data) => {
+      console.log('Spectator: ', data);
+      this.spectatingVariable.next(data);
+    });
+
     await this.hubConnection
       .start()
       .then(() => {
@@ -116,6 +158,7 @@ export class MatchService {
   }
 
   public async stopJoiningMatch(): Promise<boolean> {
+    this.inGame = false;
     await this.hubConnection?.invoke('StopJoiningMatch');
 
     if (this.stoppedJoiningMatch) {
@@ -126,13 +169,16 @@ export class MatchService {
   }
 
   public async joinMatch() {
-    await this.connectToHub();
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
 
     if (!this.hubConnection) {
       console.error("La connexion SignalR n'est pas établie.");
       return;
     }
 
+    this.inGame = true;
     await this.hubConnection.invoke('JoinMatch');
     console.log('invoked JoinMatch');
   }
@@ -186,16 +232,18 @@ export class MatchService {
     this.matchfini = false;
     this.victoire = false;
     this.perdant = -1;
+
+    this.inGame = false;
   }
 
-  playMatch(matchData: MatchData, currentPlayerId: number) {
+  playMatch(matchData: MatchData, currentPlayerId: number, spectator: boolean) {
     this.matchData = matchData;
     this.match = matchData.match;
     this.currentPlayerId = currentPlayerId;
     this.match.playerDataA.battleField.sort((a) => a.index);
     this.match.playerDataB.battleField.sort((a) => a.index).reverse;
 
-    if (this.match.playerDataA.playerId == this.currentPlayerId) {
+    if (this.match.playerDataA.playerId == this.currentPlayerId || spectator) {
       this.playerData = this.match.playerDataA!;
       this.playerData.playerName = matchData.playerA.name;
       this.adversaryData = this.match.playerDataB!;
@@ -255,7 +303,7 @@ export class MatchService {
 
       //   break;
       // }
-      case 'Attack':{
+      case 'Attack': {
         let playerData = this.getPlayerData(event.playerId);
         if (playerData) {
           let playableCard = playerData.battleField[event.battlefieldIndex];
@@ -301,7 +349,16 @@ export class MatchService {
           this.ELO = event.losingPlayerELO;
           this.ELOChanged = event.losingPlayerELOLost;
         }
-
+        const playerId = sessionStorage.getItem("playerId");
+        if (playerId) {
+          try {
+            await this.apiService.getPlayerStats(playerId);
+            await this.apiService.getDecksStatistiques(playerId);
+            this.statsUpdatedSubject.next();
+          } catch (e) {
+            console.error("Erreur en rechargeant les statistiques après la partie :", e);
+          }
+        }
         break;
       }
       case 'PlayCard': {
@@ -457,5 +514,58 @@ export class MatchService {
     await this.cardAnimateSource.next(playableCardId);
     await this.powerAnimateSource.next(powerIndex);
     await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  public sendMessage(message: string) {
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    this.hubConnection.invoke('SendMessage', this.match!.id, message);
+    console.log('invoked SendMessage')
+  }
+
+  async getCurrentMatches() {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    this.hubConnection.invoke('GetCurrentMatches');
+    console.log('invoked GetCurrentMatches')
+  }
+
+  public async spectateMatch(matchId: number) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+      await this.connectToHub();
+    }
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    this.inGame = true;
+    await this.hubConnection.invoke('SpectateMatch', matchId);
+    console.log('invoked SpectateMatch');
+  }
+
+  public async isPlayerSpectator(matchId: number) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected || !this.hubConnection) {
+      await this.connectToHub();
+    }
+
+    if (!this.hubConnection) {
+      console.error("La connexion SignalR n'est pas établie.");
+      return;
+    }
+
+    await this.hubConnection.invoke('IsPlayerSpecator', matchId);
+    console.log('invoked IsPlayerSpecator');
   }
 }

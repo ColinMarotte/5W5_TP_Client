@@ -1,0 +1,20 @@
+<div class="chat">
+  <div #messagesContainer class="messages">
+    <p *ngFor="let message of messages" style="margin-bottom: 6px;">{{message}}</p>
+  </div>
+  <div class="users">
+    <p *ngFor="let user of usersList" style="margin-bottom: 6px;">{{user}}</p>
+  </div>
+  <div class="form">
+    <form (submit)="sendMessage()">
+      <div class="row align-items-center g-1">
+        <div class="col">
+          <input matInput class="w-100" type="text" [(ngModel)]="message" name="message" placeholder="Message">
+        </div>
+        <div class="col-auto">
+          <button mat-raised-button color="primary" class="small-btn">Envoyer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

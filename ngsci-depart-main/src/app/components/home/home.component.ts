@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.joiningMatchSubscription = this.matchService.joiningMatch$.subscribe(async (event) => {
-      if (event && !event.match.isMatchCompleted) {
+      if (event && !event.match.isMatchCompleted && this.matchService.inGame) {
         console.log("Received JoiningMatchEvent:", event);
         const matchId = event.match.id;
         this.redirigerAuMatch(matchId);

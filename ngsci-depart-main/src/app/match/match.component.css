@@ -21,18 +21,24 @@
 }
 
 .endturn {
-	position: absolute;
-	bottom: 0;
-	right: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .surrendertext {
-  font-size: 60px;
-  line-height: 75px;
+    font-size: 60px;
+    line-height: 75px;
 }
 
 .surrender {
-	position: absolute;
-	bottom: 40px;
-	right: 0;
+    position: absolute;
+    bottom: 40px;
+    right: 0;
+}
+
+.chat {
+    display: block;
+    height: 100%;
+    margin: 10px;
 }
