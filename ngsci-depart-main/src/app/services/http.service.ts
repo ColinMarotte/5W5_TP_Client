@@ -91,4 +91,10 @@ export class HttpService {
     console.log("solde", x);
     return x;
   }
+
+  async getPlayerStats(playerId: string): Promise<any> {
+    let result = await lastValueFrom(this.http.get<any>(domain + "api/Statistiques/GetPlayerStatistiques" + playerId));
+
+    return result
+  }
 }

@@ -8,6 +8,7 @@ import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subject } from 'rxjs';
 import { MatchInfoDTO } from '../models/dtos';
+import { ApiService } from './api.service';
 
 const hubUrl = 'https://localhost:7179/matchHub';
 
@@ -60,7 +61,10 @@ export class MatchService {
   private spectatingVariable = new BehaviorSubject<any>(undefined);
   public spectating$ = this.spectatingVariable.asObservable();
 
-  constructor() { }
+  private statsUpdatedSubject = new Subject<void>();
+  public statsUpdated$ = this.statsUpdatedSubject.asObservable();
+
+  constructor(private apiService: ApiService) { }
 
   public async seDeconnecterDuHub() {
     await this.hubConnection
@@ -336,7 +340,16 @@ export class MatchService {
           this.MoneyReceivedSubject.next(event.moneyReceivedByLoser);
           console.log('Défaite pour le joueur ' + this.currentPlayerId);
         }
-
+        const playerId = sessionStorage.getItem("playerId");
+        if (playerId) {
+          try {
+            await this.apiService.getPlayerStats(playerId);
+            await this.apiService.getDecksStatistiques(playerId);
+            this.statsUpdatedSubject.next();
+          } catch (e) {
+            console.error("Erreur en rechargeant les statistiques après la partie :", e);
+          }
+        }
         break;
       }
       case 'PlayCard': {

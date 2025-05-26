@@ -13,6 +13,7 @@ import { apiGuard } from './guard/api.guard';
 import { MesdecksComponent } from './components/mesdecks/mesdecks.component';
 import { PacksComponent } from './components/packs/packs.component';
 import { GamesComponent } from './components/games/games.component';
+import { StatistiquesComponent } from './statistiques/statistiques.component';
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent, canActivate: [apiGuard] },
@@ -23,7 +24,8 @@ const routes: Routes = [
       { path: 'magasin', component: MagasinComponent, canActivate: [apiGuard] },
       { path: 'decks', component: MesdecksComponent, canActivate: [apiGuard] },
       { path: 'packs', component: PacksComponent, canActivate: [apiGuard] },
-      { path: 'games', component: GamesComponent, canActivate: [apiGuard] }
+      { path: 'games', component: GamesComponent, canActivate: [apiGuard] },
+      { path: 'statistiques', component: StatistiquesComponent, canActivate: [apiGuard] }
     ]
   },
   { path: 'register', component: RegisterComponent },
