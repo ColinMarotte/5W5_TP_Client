@@ -9,8 +9,9 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subject } from 'rxjs';
 import { MatchInfoDTO } from '../models/dtos';
 import { ApiService } from './api.service';
+import { environment } from 'src/environments/environment';
 
-const hubUrl = 'https://localhost:7179/matchHub';
+const hubUrl = environment.apiUrl + 'matchHub';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +32,8 @@ export class MatchService {
   victoire: boolean = false;
   perdant: number = -1;
 
-  ELO : number = 0;
-  ELOChanged : number = 0;
+  ELO: number = 0;
+  ELOChanged: number = 0;
 
   hubConnection: HubConnection | undefined;
 
@@ -89,7 +90,7 @@ export class MatchService {
 
     await this.hubConnection.on('JoiningMatchData', (data) => {
       console.log('JoiningMatchData', data);
-      this.zone.run(() =>{
+      this.zone.run(() => {
         this.joiningMatchSubject.next(data);
         let playerIdStorage: string | null = sessionStorage.getItem('playerId');
         if (playerIdStorage) {
@@ -100,14 +101,14 @@ export class MatchService {
     });
 
     await this.hubConnection.on('StartMatchEvent', (data) => {
-      this.zone.run(() =>{
+      this.zone.run(() => {
         console.log('startMatchEvent:', data);
         this.applyEvent(data);
       });
     });
 
     await this.hubConnection.on('EndTurnEvent', (data) => {
-      this.zone.run(() =>{
+      this.zone.run(() => {
         this.applyEvent(data);
         console.log('endturnevent:', data);
       });
@@ -121,7 +122,7 @@ export class MatchService {
     });
 
     await this.hubConnection.on('StoppedJoiningStatus', (data) => {
-      this.zone.run(() =>{
+      this.zone.run(() => {
         console.log(
           data ? 'Stopped joining the match' : 'Failed to stop joining the match'
         );
@@ -130,7 +131,7 @@ export class MatchService {
     });
 
     await this.hubConnection.on('PlayCardEvent', (data) => {
-      this.zone.run(() =>{
+      this.zone.run(() => {
         console.log('PlayCardEvent:', data);
         this.applyEvent(data);
       });
@@ -189,7 +190,7 @@ export class MatchService {
   }
 
   public async joinMatch() {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected || !this.hubConnection) {
       await this.connectToHub();
     }
 
@@ -352,7 +353,7 @@ export class MatchService {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
         console.log('MatchEnded, winner: ' + this.matchData?.winningPlayerId);
-        
+
         if (event.winningPlayerId === this.currentPlayerId) {
           this.victoire = true;
           this.MoneyReceivedSubject.next(event.moneyReceivedByWinner);
@@ -547,7 +548,7 @@ export class MatchService {
   }
 
   async getCurrentMatches() {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected || !this.hubConnection) {
       await this.connectToHub();
     }
 
@@ -561,7 +562,7 @@ export class MatchService {
   }
 
   public async spectateMatch(matchId: number) {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected  || !this.hubConnection) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Disconnected || !this.hubConnection) {
       await this.connectToHub();
     }
 

@@ -3,8 +3,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginDTO, RegisterDTO } from '../models/dtos';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { Card } from '../models/models';
+import { environment } from 'src/environments/environment';
 
-const domain = "https://localhost:7179/"
+const domain = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
@@ -92,7 +93,7 @@ export class HttpService {
     console.log("solde", x);
     return x;
   }
-  async getELO(): Promise<number>{
+  async getELO(): Promise<number> {
     let x = await lastValueFrom(this.http.get<number>(domain + "api/Account/ELO"));
     console.log("ELO: ", x);
     return x;

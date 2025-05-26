@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Deck, DeckOwnedCard, OwnedCard } from '../models/models';
 import { DeckConfigDTO, NewDeckDTO } from '../models/dtos';
+import { environment } from 'src/environments/environment';
 
-const domain = "https://localhost:7179/"
+const domain = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
